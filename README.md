@@ -10,16 +10,6 @@
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 
-## Setting up development server
-
-1. Build and Run Container
-`docker compose -f docker-compose.debug.yml up --build`
-    (add flag --remove-orphans to kill deserted images of cygnet) 
-2. run `ssh -L localhost:3306:130.58.64.142:3306 gull` to direct traffic to server
-3. Visit http://localhost:3000
-As you edit project files, the page should update dynamically (no need to reload!).
-
-
 ### Install dependencies
 
 ```
