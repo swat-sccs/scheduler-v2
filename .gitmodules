@@ -1,0 +1,3 @@
+[submodule "swatscraper"]
+	path = swatscraper
+	url = git@github.com:swat-sccs/swatscraper.git
