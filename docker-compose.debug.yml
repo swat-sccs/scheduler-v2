@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+  schedulerv2:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    volumes:
+      - .:/usr/src/app
+    environment:
+      NODE_ENV: development
+      DOMAIN: http://127.0.0.1:3000/
+      DATABASE_URL: ""
+      #KEYCLOAK_ID: "rsdv2"
+      #KEYCLOAK_ISSUER: "https://auth.sccs.swarthmore.edu/realms/master"
+      #NEXTAUTH_URL: "http://localhost:3000"
+    ports:
+      - 3000:3000
+      - 9229:9229
+      - 5555:5555
+    command: sh -c "npm install --silent && npx prisma generate && npm run dev "
+
+  db:
+    image: postgres:16.4-bullseye
+    ports:
+      - 3306:3306
+    environment:
+      POSTGRES_PASSWORD: S3cret
+      POSTGRES_USER: scheduler
+      POSTGRES_DB: scheduler_db
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
