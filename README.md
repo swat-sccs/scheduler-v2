@@ -9,17 +9,19 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
+- [Golang](https://go.dev/)
 
 ### Install dependencies
+Install [Golang](https://go.dev/dl/)
 
-```
+``` bash
 npm install
 ```
 
 ### Run the development server
 
-```
-npm run dev
+``` bash
+docker compose -f path-to-docker-yml up -d
 ```
 
 
