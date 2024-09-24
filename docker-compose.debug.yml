@@ -10,23 +10,29 @@ services:
     environment:
       NODE_ENV: development
       DOMAIN: http://127.0.0.1:3000/
-      DATABASE_URL: ""
+      DATABASE_URL: "postgresql://postgres:example@postgres:5432/scheduler_db"
+      POSTGRES_DB: scheduler_db
       #KEYCLOAK_ID: "rsdv2"
       #KEYCLOAK_ISSUER: "https://auth.sccs.swarthmore.edu/realms/master"
       #NEXTAUTH_URL: "http://localhost:3000"
     ports:
       - 3000:3000
       - 9229:9229
-      - 5555:5555
+    networks:
+      - internal
     command: sh -c "npm install --silent && npx prisma generate && npm run dev "
 
-  db:
+  postgres:
     image: postgres:16.4-bullseye
     ports:
-      - 3306:3306
+      - 5432:5432
     environment:
-      POSTGRES_PASSWORD: S3cret
-      POSTGRES_USER: scheduler
+      POSTGRES_PASSWORD: example
       POSTGRES_DB: scheduler_db
+    networks:
+      - internal
     volumes:
       - ./postgres:/var/lib/postgresql/data
+
+networks:
+  internal:
