@@ -1,28 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "SCCS Class Planner",
+  description: "Version 2 of the Course Planner provided by SCCS",
   navItems: [
     {
-      label: "Home",
+      label: "Plan",
       href: "/",
     },
     {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
+      label: "Calendar",
+      href: "/calendar",
     },
   ],
   navMenuItems: [

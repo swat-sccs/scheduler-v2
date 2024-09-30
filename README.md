@@ -12,18 +12,23 @@
 - [Golang](https://go.dev/)
 
 ### Install dependencies
+
 Install [Golang](https://go.dev/dl/)
 
-``` bash
+```bash
 npm install
 ```
 
 ### Run the development server
 
-``` bash
-docker compose -f path-to-docker-yml up -d
+```bash
+cd YOUR_WORKING_DIR
+docker compose -f docker-compose.debug.yml up -d
 ```
 
+### View the dev site
+
+Head on over to http://localhost:3000
 
 ## License
 

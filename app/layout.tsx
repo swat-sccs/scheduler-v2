@@ -38,7 +38,7 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
@@ -48,15 +48,30 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
-              </Link>
+              <div className="columns-1 container max-w-4xl text-center">
+                <span className="text-xs ">
+                  The Course Planner is a student-run service, and displays
+                  classes from the Tri-College course database. We recommend
+                  confirming your schedule with the official course listings
+                  just in case. If there are any issues, email us.
+                </span>
+                <br />
+
+                <div className=" space-x-5">
+                  <Link
+                    isExternal
+                    href="https://www.sccs.swarthmore.edu/docs/policy"
+                    title="SCCS Usage & Data Policy"
+                  >
+                    <span className=" text-xs underline  ">
+                      Usage & Data Policy
+                    </span>
+                  </Link>
+                  <span className="text-xs ">
+                    © 2024 Swarthmore College Computer Society | v2.0.0
+                  </span>
+                </div>
+              </div>
             </footer>
           </div>
         </Providers>
