@@ -24,6 +24,7 @@ module.exports = {
           colors: {
             background: "#1D2125",
             foreground: "#D9D9D9",
+            light_foreground: "#282D34",
             primary: {
               DEFAULT: "#9FADBC",
               foreground: "#1D2125",

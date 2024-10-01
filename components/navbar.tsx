@@ -16,6 +16,8 @@ import { Spacer } from "@nextui-org/spacer";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { button as buttonStyles } from "@nextui-org/theme";
+import { Divider } from "@nextui-org/divider";
+import InputIcon from "@mui/icons-material/Input";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -46,75 +48,96 @@ export const Navbar = () => {
   );
 
   return (
-    <NextUINavbar className="mt-10" maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <span className={title({ size: "sm", color: "logo" })}>
-              SCCS&nbsp;
-            </span>
-            <span className={title({ size: "xs" })}>Course Planner&nbsp;</span>
-          </NextLink>
-        </NavbarBrand>
-      </NavbarContent>
+    <>
+      <NextUINavbar className="mt-10" maxWidth="xl" position="sticky">
+        <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+          <NavbarBrand as="li" className="gap-3 max-w-fit">
+            <NextLink
+              className="flex justify-start items-center gap-1"
+              href="/"
+            >
+              <span className={title({ size: "sm", color: "logo" })}>
+                SCCS&nbsp;
+              </span>
+              <span className={title({ size: "xs" })}>
+                Course Planner&nbsp;
+              </span>
+            </NextLink>
+          </NavbarBrand>
+        </NavbarContent>
 
-      <NavbarContent justify="start">
-        <Spacer x={24} />
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <>
-              <Link
-                key={item.href}
-                className={buttonStyles({
-                  color: "primary",
-                  radius: "full",
-                  variant: pathname == item.href ? "shadow" : "ghost",
-                })}
-                href={item.href}
-              >
-                {item.label}
-              </Link>
-            </>
-          ))}
-        </ul>
-      </NavbarContent>
+        <NavbarContent justify="start">
+          <Spacer x={24} />
+          <ul className="hidden lg:flex gap-4 justify-start ml-2">
+            {siteConfig.navItems.map((item) => (
+              <>
+                <Link
+                  key={item.href}
+                  className={buttonStyles({
+                    color: "primary",
+                    radius: "full",
+                    variant: pathname == item.href ? "shadow" : "ghost",
+                  })}
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              </>
+            ))}
+          </ul>
+        </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarContent
+          className="hidden sm:flex basis-1/5 sm:basis-full"
+          justify="end"
+        >
+          <NavbarItem className="hidden sm:flex gap-2">
+            <ThemeSwitch />
+          </NavbarItem>
+          <NavbarItem>
+            <Link
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: "ghost",
+              })}
+              href=""
+            >
+              Sign In <InputIcon />
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
+
+        <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
           <ThemeSwitch />
-        </NavbarItem>
-      </NavbarContent>
+          <NavbarMenuToggle />
+        </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <ThemeSwitch />
-        <NavbarMenuToggle />
-      </NavbarContent>
-
-      <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
-      </NavbarMenu>
-    </NextUINavbar>
+        {/* Mobile?*/}
+        <NavbarMenu>
+          {searchInput}
+          <div className="mx-4 mt-2 flex flex-col gap-2">
+            {siteConfig.navMenuItems.map((item, index) => (
+              <NavbarMenuItem key={`${item}-${index}`}>
+                <Link
+                  color={
+                    index === 2
+                      ? "primary"
+                      : index === siteConfig.navMenuItems.length - 1
+                        ? "danger"
+                        : "foreground"
+                  }
+                  href="#"
+                  size="lg"
+                >
+                  {item.label}
+                </Link>
+              </NavbarMenuItem>
+            ))}
+          </div>
+        </NavbarMenu>
+      </NextUINavbar>
+      <Divider className="my-4" />
+    </>
   );
 };

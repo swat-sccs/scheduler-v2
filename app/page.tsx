@@ -1,9 +1,12 @@
+"use client";
+
+import { CourseBig } from "@/components/course-big";
 export default function Home() {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center" />
-
-      <div className="flex gap-3" />
-    </section>
+    <div className="grid gap-4 max-h-8/12 overflow-scroll w-7/12">
+      <CourseBig color="bg-red-500" />
+      <CourseBig color="bg-yellow-500" />
+      <CourseBig color="bg-green-500" />
+    </div>
   );
 }
