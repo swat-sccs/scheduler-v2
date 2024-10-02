@@ -14,76 +14,90 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
+  id    Int          @id @default(autoincrement())
+  email String       @unique
   name  String?
+  plans CoursePlan[]
 }
 
-model Course{
-  id  Int   @id default(autoincrement())
-  courseId  Int 
+model CoursePlan {
+  id      Int      @id @default(autoincrement())
+  name    String
+  courses Course[]
+  User    User?    @relation(fields: [userId], references: [id])
+  userId  Int?
+}
+
+model Course {
+  id                      Int                @id @default(autoincrement())
+  courseId                Int
   courseReferenceNumber   Int
-  courseNumber  Int
-  subject   String
-  scheduleTypeDescription   String
-  courseTitle   String
-  descriptionUrl  String
-  description   String
-  creditHours   Int 
-  maximumEnrollment   Int
-  enrollment  Int
-  seatsAvailable  Int
-  instructor   Faculty   @relation(fields: [facultyId], references: [id])
-  facultyId Int
-  facultyMeet MeetingsFaculty  @relation(fields: [facultyMeetId], references: [id])
-  facultyMeetId Int
-  sectionAttributes sectionAttribute[]
+  courseNumber            Int
+  subject                 String
+  scheduleTypeDescription String
+  courseTitle             String
+  descriptionUrl          String
+  description             String
+  creditHours             Int
+  maximumEnrollment       Int
+  enrollment              Int
+  seatsAvailable          Int
+  instructor              Faculty            @relation(fields: [facultyId], references: [id])
+  facultyId               Int
+  facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
+  facultyMeetId           Int
+  sectionAttributes       sectionAttribute[]
+  CoursePlan              CoursePlan?        @relation(fields: [coursePlanId], references: [id])
+  coursePlanId            Int?
 }
 
 model Faculty {
-  id    Int     @id @default(autoincrement())
-  bannerId  Int
-  courseReferenceNumber   Int
-  displayName   String
-  emailAddress  String
+  id                    Int      @id @default(autoincrement())
+  bannerId              Int
+  courseReferenceNumber Int
+  displayName           String
+  emailAddress          String
+  courses               Course[]
 }
 
 model MeetingsFaculty {
-  id    Int     @id @default(autoincrement())
-  category Int
+  id                    Int         @id @default(autoincrement())
+  category              Int
   courseReferenceNumber Int
-  meetingTimes MeetingTime  @relation(fields: [meetingTimeID], references: [id])
-  facultyMeetId Int
+  meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
+  meetingTimeID         Int
+  courses               Course[]
 }
-
 
 model MeetingTime {
-  id    Int     @id @default(autoincrement())
-  beginTime   Int 
-  building String
-  buildingDescription String
-  room Int
-  category Int
-  courseReferenceNumber Int
-  endDate   Int 
-  endTime   Int 
-  startDate   String
-  hoursWeek   Int
-  meetingType   String
-  meetingTypeDescription  String
-  monday  Boolean
-  tuesday   Boolean
-  wednesday   Boolean
-  thursday  Boolean
-  friday  Boolean
-  saturday  Boolean
-  sunday  Boolean
+  id                     Int               @id @default(autoincrement())
+  beginTime              Int
+  building               String
+  buildingDescription    String
+  room                   Int
+  category               Int
+  courseReferenceNumber  Int
+  endDate                Int
+  endTime                Int
+  startDate              String
+  hoursWeek              Int
+  meetingType            String
+  meetingTypeDescription String
+  monday                 Boolean
+  tuesday                Boolean
+  wednesday              Boolean
+  thursday               Boolean
+  friday                 Boolean
+  saturday               Boolean
+  sunday                 Boolean
+  facultyMeet            MeetingsFaculty[]
 }
 
-model sectionAttribute{
-  id    Int     @id @default(autoincrement())
-  code String
-  description String
+model sectionAttribute {
+  id                    Int     @id @default(autoincrement())
+  code                  String
+  description           String
   courseReferenceNumber Int
-
+  Course                Course? @relation(fields: [courseId], references: [id])
+  courseId              Int?
 }
