@@ -18,3 +18,72 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Course{
+  id  Int   @id default(autoincrement())
+  courseId  Int 
+  courseReferenceNumber   Int
+  courseNumber  Int
+  subject   String
+  scheduleTypeDescription   String
+  courseTitle   String
+  descriptionUrl  String
+  description   String
+  creditHours   Int 
+  maximumEnrollment   Int
+  enrollment  Int
+  seatsAvailable  Int
+  instructor   Faculty   @relation(fields: [facultyId], references: [id])
+  facultyId Int
+  facultyMeet MeetingsFaculty  @relation(fields: [facultyMeetId], references: [id])
+  facultyMeetId Int
+  sectionAttributes sectionAttribute[]
+}
+
+model Faculty {
+  id    Int     @id @default(autoincrement())
+  bannerId  Int
+  courseReferenceNumber   Int
+  displayName   String
+  emailAddress  String
+}
+
+model MeetingsFaculty {
+  id    Int     @id @default(autoincrement())
+  category Int
+  courseReferenceNumber Int
+  meetingTimes MeetingTime  @relation(fields: [meetingTimeID], references: [id])
+  facultyMeetId Int
+}
+
+
+model MeetingTime {
+  id    Int     @id @default(autoincrement())
+  beginTime   Int 
+  building String
+  buildingDescription String
+  room Int
+  category Int
+  courseReferenceNumber Int
+  endDate   Int 
+  endTime   Int 
+  startDate   String
+  hoursWeek   Int
+  meetingType   String
+  meetingTypeDescription  String
+  monday  Boolean
+  tuesday   Boolean
+  wednesday   Boolean
+  thursday  Boolean
+  friday  Boolean
+  saturday  Boolean
+  sunday  Boolean
+}
+
+model sectionAttribute{
+  id    Int     @id @default(autoincrement())
+  code String
+  description String
+  courseReferenceNumber Int
+
+}
