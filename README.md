@@ -15,20 +15,36 @@
 
 Install [Golang](https://go.dev/dl/)
 
-```bash
-npm install
-```
-
 ### Run the development server
 
 ```bash
 cd YOUR_WORKING_DIR
 docker compose -f docker-compose.debug.yml up -d
+cd swatscraper
+```
+
+first run only:
+
+```bash
+go mod init github.com/swatscraper
+go mod tidy
+```
+
+```bash
+go run main.go
 ```
 
 ### View the dev site
 
 Head on over to http://localhost:3000
+
+### View the db vizually
+
+```bash
+npx prisma studio
+```
+
+Head on over to http://localhost:5555
 
 ## License
 

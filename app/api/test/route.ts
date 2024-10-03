@@ -1,10 +1,11 @@
 // api/test.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+
 import { NextResponse, NextRequest } from "next/server";
+
 import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
-  const users = await prisma.User.findMany();
+  const users = await prisma.faculty.findMany();
 
   return NextResponse.json(users, { status: 200 });
 }

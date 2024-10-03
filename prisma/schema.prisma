@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,29 +17,29 @@ model User {
 model CoursePlan {
   id      Int      @id @default(autoincrement())
   name    String
+  userId  Int?
   courses Course[]
   User    User?    @relation(fields: [userId], references: [id])
-  userId  Int?
 }
 
 model Course {
   id                      Int                @id @default(autoincrement())
   courseId                Int
-  courseReferenceNumber   Int
-  courseNumber            Int
+  courseReferenceNumber   String
+  courseNumber            String
   subject                 String
   scheduleTypeDescription String
   courseTitle             String
   descriptionUrl          String
   description             String
-  creditHours             Int
+  creditHours             Float
   maximumEnrollment       Int
   enrollment              Int
   seatsAvailable          Int
-  instructor              Faculty            @relation(fields: [facultyId], references: [id])
   facultyId               Int
-  facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
   facultyMeetId           Int
+  instructor              Faculty            @relation(fields: [facultyId], references: [id])
+  facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
   sectionAttributes       sectionAttribute[]
   CoursePlan              CoursePlan?        @relation(fields: [coursePlanId], references: [id])
   coursePlanId            Int?
@@ -53,8 +47,8 @@ model Course {
 
 model Faculty {
   id                    Int      @id @default(autoincrement())
-  bannerId              Int
-  courseReferenceNumber Int
+  bannerId              String
+  courseReferenceNumber String
   displayName           String
   emailAddress          String
   courses               Course[]
@@ -62,25 +56,25 @@ model Faculty {
 
 model MeetingsFaculty {
   id                    Int         @id @default(autoincrement())
-  category              Int
-  courseReferenceNumber Int
-  meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
+  category              String
+  courseReferenceNumber String
   meetingTimeID         Int
   courses               Course[]
+  meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
 }
 
 model MeetingTime {
   id                     Int               @id @default(autoincrement())
-  beginTime              Int
+  beginTime              String
   building               String
   buildingDescription    String
-  room                   Int
-  category               Int
-  courseReferenceNumber  Int
-  endDate                Int
-  endTime                Int
+  room                   String
+  category               String
+  courseReferenceNumber  String
+  endDate                String
+  endTime                String
   startDate              String
-  hoursWeek              Int
+  hoursWeek              Float
   meetingType            String
   meetingTypeDescription String
   monday                 Boolean
@@ -97,7 +91,7 @@ model sectionAttribute {
   id                    Int     @id @default(autoincrement())
   code                  String
   description           String
-  courseReferenceNumber Int
-  Course                Course? @relation(fields: [courseId], references: [id])
+  courseReferenceNumber String
   courseId              Int?
+  Course                Course? @relation(fields: [courseId], references: [id])
 }
