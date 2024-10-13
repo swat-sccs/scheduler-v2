@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -20,12 +21,13 @@ model CoursePlan {
   userId  Int?
   courses Course[]
   User    User?    @relation(fields: [userId], references: [id])
+  year    String
 }
 
 model Course {
   id                      Int                @id @default(autoincrement())
   courseId                Int
-  courseReferenceNumber   String
+  courseReferenceNumber   String             @unique
   courseNumber            String
   subject                 String
   scheduleTypeDescription String
@@ -43,24 +45,27 @@ model Course {
   sectionAttributes       sectionAttribute[]
   CoursePlan              CoursePlan?        @relation(fields: [coursePlanId], references: [id])
   coursePlanId            Int?
+  year                    String
 }
 
 model Faculty {
   id                    Int      @id @default(autoincrement())
   bannerId              String
-  courseReferenceNumber String
+  courseReferenceNumber String   @unique
   displayName           String
   emailAddress          String
   courses               Course[]
+  year                  String
 }
 
 model MeetingsFaculty {
   id                    Int         @id @default(autoincrement())
   category              String
-  courseReferenceNumber String
+  courseReferenceNumber String      @unique
   meetingTimeID         Int
   courses               Course[]
   meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
+  year                  String
 }
 
 model MeetingTime {
@@ -70,7 +75,7 @@ model MeetingTime {
   buildingDescription    String
   room                   String
   category               String
-  courseReferenceNumber  String
+  courseReferenceNumber  String            @unique
   endDate                String
   endTime                String
   startDate              String
@@ -85,13 +90,15 @@ model MeetingTime {
   saturday               Boolean
   sunday                 Boolean
   facultyMeet            MeetingsFaculty[]
+  year                   String
 }
 
 model sectionAttribute {
   id                    Int     @id @default(autoincrement())
   code                  String
   description           String
-  courseReferenceNumber String
+  courseReferenceNumber String  @unique
   courseId              Int?
   Course                Course? @relation(fields: [courseId], references: [id])
+  year                  String
 }
