@@ -15,7 +15,7 @@
 
 Install [Golang](https://go.dev/dl/)
 
-Install [NodeJ](https://nodejs.org/en) v18.18 or higher
+Install [NodeJS](https://nodejs.org/en) v18.18 or higher
 
 ### Clone the Repo(recursivly!)
 ```bash
@@ -45,7 +45,7 @@ go run main.go
 
 Head on over to http://localhost:3000
 
-### View the db vizually
+### (Optional) View the db visually
 
 ```bash
 npx prisma studio
