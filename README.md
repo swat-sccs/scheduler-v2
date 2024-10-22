@@ -14,6 +14,7 @@
 ### Install dependencies
 
 Install [Golang](https://go.dev/dl/)
+
 Install [NodeJ](https://nodejs.org/en) v18.18 or higher
 
 ### Clone the Repo(recursivly!)
