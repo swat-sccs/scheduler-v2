@@ -14,11 +14,17 @@
 ### Install dependencies
 
 Install [Golang](https://go.dev/dl/)
+Install [NodeJ](https://nodejs.org/en) v18.18 or higher
+
+### Clone the Repo(recursivly!)
+```bash
+  git clone --recursive https://github.com/swat-sccs/scheduler-v2.git
+  cd scheduler-v2
+```
 
 ### Run the development server
 
 ```bash
-cd YOUR_WORKING_DIR
 docker compose -f docker-compose.debug.yml up -d
 cd swatscraper
 ```
