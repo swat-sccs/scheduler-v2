@@ -1,43 +1,73 @@
 "use client";
-import { Card, CardBody } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Divider,
+  Link,
+  User,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@nextui-org/react";
 import { tv } from "tailwind-variants";
+
+import { InstructorCard } from "./InstructorCard";
 
 export const card = tv({
   slots: {
-    base: "bg-light_foreground min-h-40 max-h-96 w-full rounded-sm scroll-none",
-    avatar:
-      "w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
-    wrapper: "flex-1 pt-6 md:p-8 text-center md:text-left space-y-4",
-    description: "text-md font-medium ",
-    infoWrapper: "font-medium",
-    name: "text-sm text-sky-500 dark:text-sky-400",
+    base: "bg-light_foreground min-h-32 max-h-42 w-[98%] rounded-sm scroll-none drop-shadow-lg",
     role: "font-bold  text-primary ",
-    sideColor: "w-2 h-full bg-red-500",
   },
 });
 
 const {
   base,
-  avatar,
-  wrapper,
-  description,
-  infoWrapper,
-  name,
+
   role,
-  sideColor,
 } = card();
 
+const courseColors = [
+  "#D1FAFF",
+  "#9BD1E5",
+  "#6A8EAE",
+  "#57A773",
+  "#157145",
+  "#1E2D2F",
+  "#C57B57",
+  "#9B489B",
+  "#4ECDC4",
+];
+
+function generateColorFromName(name: string) {
+  let hash = 0;
+
+  for (let i = 0; i < name.length; i++) {
+    hash += name.charCodeAt(i);
+  }
+
+  return courseColors[hash % courseColors.length];
+}
+
 export default function CourseCard(props: any) {
+  let color = generateColorFromName(props.course.subject);
+
   return (
     <>
       <Card key={props.course.id} className={base()} shadow="sm">
         <div
-          className={`absolute top-0 left-0 h-full w-3 bg-red-500 rounded-full`}
+          className={`absolute top-0 left-0 h-full w-2 rounded-full`}
+          style={{ backgroundColor: color }}
         />
+
         <CardBody className="ml-4 overflow-clip ">
-          <div className="grid grid-cols-1  grid-rows-2">
-            <div className="flex justify-between w-11/12">
-              <span>
+          {/* 3 cols 2 rows*/}
+          <div className="grid grid-cols-7  grid-rows-3">
+            <div className="col-span-4 row-start-1 col-start-1">
+              <Link
+                isExternal
+                showAnchorIcon
+                href={props.course.descriptionUrl}
+              >
                 <p className={role()}>
                   {props.course.subject +
                     " " +
@@ -45,20 +75,60 @@ export default function CourseCard(props: any) {
                     " - " +
                     props.course.courseTitle}
                 </p>
-              </span>
-              <span className="text-center">
-                <div className="text-xs">
-                  {props.course.creditHours} credit(s)
-                </div>
-                <div className="text-xs ">
-                  {props.course.courseReferenceNumber.replace(
-                    props.course.year,
-                    ""
-                  )}
-                </div>
-              </span>
+              </Link>
+            </div>
+            <div className="row-start-1 row-span-3 col-start-6 ">
+              <Divider orientation="vertical" />
+            </div>
+            <div className="row-start-1  col-start-6 col-span-2 text-center">
+              {props.course.instructor ? (
+                <Popover showArrow placement="right">
+                  <PopoverTrigger>
+                    <User
+                      avatarProps={{
+                        size: "sm",
+
+                        isBordered: true,
+                        className:
+                          "base: bg-gradient-to-br from-[#333C44] to-[#9FADBC]",
+                      }}
+                      name={props.course.instructor.displayName}
+                    />
+                  </PopoverTrigger>
+                  <PopoverContent className="p-1 bg-gradient-to-br from-white/[0.2] backdrop-blur-5 shadow-sm">
+                    <InstructorCard
+                      instructor={props.course.instructor.displayName}
+                    />
+                  </PopoverContent>
+                </Popover>
+              ) : null}
             </div>
 
+            <div className="row-start-3 text-center col-start-6 col-span-2">
+              <div className="">{props.course.creditHours} credit(s)</div>
+            </div>
+            <div className="text-xs ">
+              {/*props.course.courseReferenceNumber.replace(
+                  props.course.year,
+                  ""
+                )*/}
+            </div>
+
+            <div className="row-start-2 col-start-6 col-span-2 text-center">
+              {/* <PersonIcon /> */}
+              {props.course.enrollment}/{props.course.maximumEnrollment}
+            </div>
+
+            <div className="row-start-2 col-start-1  ">
+              <div className={role()}>Attributes</div>
+              {props.course.sectionAttributes.map((attribute: any) => (
+                <div key={attribute.courseReferenceNumber} className="text-xs ">
+                  {attribute.code}
+                </div>
+              ))}
+            </div>
+
+            {/*
             <div className="flex w-11/12">
               <div>
                 <p className={role()}>Availability</p>
@@ -122,26 +192,26 @@ export default function CourseCard(props: any) {
                 </div>
               ) : null}
             </div>
-            <div className="grid-rows-2 grid-cols-1 ">
-              {props.course.instructor ? (
-                <div>
-                  <p className={role()}>Instructor</p>
-                  <div className="text-xs">
-                    {props.course.instructor.displayName}
-                  </div>
+            {props.course.instructor ? (
+              <div>
+                <p className={role()}>Instructor</p>
+                <div className="text-xs">
+                  {props.course.instructor.displayName}
                 </div>
-              ) : null}
-              {props.course.facultyMeet.meetingTimes ? (
-                <div className="mt-2">
-                  <p className={role()}>Room</p>
-                  <p className="text-xs">
-                    {props.course.facultyMeet.meetingTimes.buildingDescription}
-                    {<br />}
-                    {props.course.facultyMeet.meetingTimes.room}
-                  </p>
-                </div>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
+            {props.course.facultyMeet.meetingTimes ? (
+              <div className="mt-2">
+                <p className={role()}>Room</p>
+                <p className="text-xs">
+                  {props.course.facultyMeet.meetingTimes.buildingDescription}
+                  {<br />}
+                  {props.course.facultyMeet.meetingTimes.room}
+                </p>
+              </div>
+            ) : null}
+
+            */}
           </div>
         </CardBody>
       </Card>

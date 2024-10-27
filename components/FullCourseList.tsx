@@ -57,7 +57,7 @@ export async function FullCourseList({ query }: { query: string }) {
 
   return (
     <>
-      <div className="grid gap-4 overflow-scroll w-7/12">
+      <div className="grid gap-6 overflow-scroll w-8/12">
         {courseList?.map((course: any) => (
           <div key={course.id}>
             <CourseCard course={course} />

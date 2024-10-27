@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "SCCS Class Planner",
+  name: "SCCS Course Planner",
   description: "Version 2 of the Course Planner provided by SCCS",
   navItems: [
     {
