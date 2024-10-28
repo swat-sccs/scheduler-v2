@@ -48,8 +48,8 @@ export const Navbar = () => {
   );
 
   return (
-    <>
-      <NextUINavbar className="mt-10" maxWidth="xl" position="sticky">
+    <div className="bg-background_navbar">
+      <NextUINavbar className="mt-2 bg-inherit" maxWidth="xl" position="sticky">
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
@@ -70,19 +70,17 @@ export const Navbar = () => {
           <Spacer x={24} />
           <ul className="hidden lg:flex gap-4 justify-start ml-2">
             {siteConfig.navItems.map((item) => (
-              <>
-                <Link
-                  key={item.href}
-                  className={buttonStyles({
-                    color: "primary",
-                    radius: "full",
-                    variant: pathname == item.href ? "shadow" : "ghost",
-                  })}
-                  href={item.href}
-                >
-                  {item.label}
-                </Link>
-              </>
+              <Link
+                key={item.href}
+                className={buttonStyles({
+                  color: "primary",
+                  radius: "full",
+                  variant: pathname == item.href ? "shadow" : "ghost",
+                })}
+                href={item.href}
+              >
+                {item.label}
+              </Link>
             ))}
           </ul>
         </NavbarContent>
@@ -137,7 +135,6 @@ export const Navbar = () => {
           </div>
         </NavbarMenu>
       </NextUINavbar>
-      <Divider className="my-4" />
-    </>
+    </div>
   );
 };
