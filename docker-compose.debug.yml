@@ -18,7 +18,7 @@ services:
       - 9229:9229
     networks:
       - internal
-    command: sh -c "npm install --silent && npx prisma generate && npm run dev "
+    command: sh -c "npm install --silent && npx prisma migrate dev && npm run dev "
 
   postgres:
     image: postgres:16.4-bullseye

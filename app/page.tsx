@@ -5,14 +5,15 @@ import { Skeleton } from "@nextui-org/skeleton";
 import Search from "@/components/Search";
 import { FullCourseList } from "@/components/FullCourseList";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-  };
-}) {
+export default async function Page(
+  props: {
+    searchParams?: Promise<{
+      query?: string;
+      page?: string;
+    }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   var homePageProps: any = {};
 
