@@ -10,9 +10,8 @@ services:
       DOMAIN: http://127.0.0.1:3000/
       DATABASE_URL: "postgresql://postgres:example@postgres:5432/scheduler_db"
       POSTGRES_DB: scheduler_db
-      #KEYCLOAK_ID: "rsdv2"
-      #KEYCLOAK_ISSUER: "https://auth.sccs.swarthmore.edu/realms/master"
-      #NEXTAUTH_URL: "http://localhost:3000"
+    env_file:
+      - .env
     ports:
       - 3000:3000
       - 9229:9229
