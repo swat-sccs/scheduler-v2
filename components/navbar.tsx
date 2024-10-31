@@ -58,7 +58,7 @@ export const Navbar = (props: any) => {
   } else {
     if (status === "authenticated") {
       authenticated = true;
-      loginLink = <div onClick={() => signOut()}>Log out</div>;
+      loginLink = <div role="button" onClick={() => signOut()}>Log out</div>;
       // @ts-ignore
       if (session.user?.role === "admin") {
         adminDashLink = (
