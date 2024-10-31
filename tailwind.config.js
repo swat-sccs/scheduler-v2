@@ -11,7 +11,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)"],
-        mono: ["var(--font-mono)"],
+        mono: ["var(--font-sans)"],
       },
     },
   },
@@ -22,9 +22,10 @@ module.exports = {
         light: {},
         dark: {
           colors: {
-            background: "#1D2125",
+            background: "#0C1019",
+            background_navbar: "#151D2B",
             foreground: "#D9D9D9",
-            light_foreground: "#282D34",
+            light_foreground: "#181C25",
             primary: {
               DEFAULT: "#9FADBC",
               foreground: "#1D2125",

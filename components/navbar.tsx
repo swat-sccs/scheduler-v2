@@ -1,5 +1,8 @@
 "use client";
 //Just for pathname highlighting though, could always go back if it becomes too slow
+import React, { useContext } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -9,6 +12,15 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
+import { Button, ButtonGroup } from "@nextui-org/button";
+
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/dropdown";
 import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
@@ -24,32 +36,77 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon } from "@/components/icons";
 import { title } from "@/components/primitives";
 
-export const Navbar = () => {
+import HomeIcon from "@mui/icons-material/Home";
+import SendIcon from "@mui/icons-material/Send";
+const pages = {
+  Home: { link: "/", image: <HomeIcon /> },
+  Submit: { link: "/submit", image: <SendIcon /> },
+};
+
+export const Navbar = (props: any) => {
   const pathname = usePathname();
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          k
-        </Kbd>
+  const { data: session, status } = useSession();
+
+  let authenticated;
+  let loginLink;
+  let adminDashLink;
+  let nameButton;
+
+  if (props.hasOwnProperty("login")) {
+    loginLink = null;
+    nameButton = null;
+  } else {
+    if (status === "authenticated") {
+      authenticated = true;
+      loginLink = <div role="button" onClick={() => signOut()}>Log out</div>;
+      // @ts-ignore
+      if (session.user?.role === "admin") {
+        adminDashLink = (
+          <NavbarContent key="admin">
+            <Link href="/admin">
+              <div>Admin</div>
+            </Link>
+          </NavbarContent>
+        );
       }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
+      nameButton = session.user?.name;
+    } else {
+      authenticated = false;
+      loginLink = <></>;
+      nameButton = (
+        <div>
+          Log In <InputIcon />
+        </div>
+      );
+    }
+  }
+
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
   );
 
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   return (
-    <>
-      <NextUINavbar className="mt-10" maxWidth="xl" position="sticky">
+    <div className="bg-background_navbar">
+      <NextUINavbar className="mt-2 bg-inherit" maxWidth="xl" position="sticky">
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
@@ -70,19 +127,17 @@ export const Navbar = () => {
           <Spacer x={24} />
           <ul className="hidden lg:flex gap-4 justify-start ml-2">
             {siteConfig.navItems.map((item) => (
-              <>
-                <Link
-                  key={item.href}
-                  className={buttonStyles({
-                    color: "primary",
-                    radius: "full",
-                    variant: pathname == item.href ? "shadow" : "ghost",
-                  })}
-                  href={item.href}
-                >
-                  {item.label}
-                </Link>
-              </>
+              <Link
+                key={item.href}
+                className={buttonStyles({
+                  color: "primary",
+                  radius: "full",
+                  variant: pathname == item.href ? "shadow" : "ghost",
+                })}
+                href={item.href}
+              >
+                {item.label}
+              </Link>
             ))}
           </ul>
         </NavbarContent>
@@ -94,17 +149,38 @@ export const Navbar = () => {
           <NavbarItem className="hidden sm:flex gap-2">
             <ThemeSwitch />
           </NavbarItem>
+
           <NavbarItem>
-            <Link
-              className={buttonStyles({
-                color: "primary",
-                radius: "full",
-                variant: "ghost",
-              })}
-              href=""
-            >
-              Sign In <InputIcon />
-            </Link>
+            <Dropdown>
+              <DropdownTrigger>
+                <Link
+                  className={buttonStyles({
+                    color: "primary",
+                    radius: "full",
+                    variant: "ghost",
+                  })}
+                  onClick={
+                    authenticated
+                      ? () => {}
+                      : () => signIn("keycloak", { callbackUrl: "/" })
+                  }
+                >
+                  {nameButton}
+                </Link>
+              </DropdownTrigger>
+
+              {authenticated ? (
+                <DropdownMenu aria-label="Static Actions">
+                  <DropdownItem key="myCourses">My Courses</DropdownItem>
+                  <DropdownItem key="loginLink">{loginLink}</DropdownItem>
+                  <DropdownItem key="adminDashLink">
+                    {adminDashLink}
+                  </DropdownItem>
+                </DropdownMenu>
+              ) : (
+                <></>
+              )}
+            </Dropdown>
           </NavbarItem>
         </NavbarContent>
 
@@ -115,7 +191,6 @@ export const Navbar = () => {
 
         {/* Mobile?*/}
         <NavbarMenu>
-          {searchInput}
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {siteConfig.navMenuItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`}>
@@ -137,7 +212,6 @@ export const Navbar = () => {
           </div>
         </NavbarMenu>
       </NextUINavbar>
-      <Divider className="my-4" />
-    </>
+    </div>
   );
 };
