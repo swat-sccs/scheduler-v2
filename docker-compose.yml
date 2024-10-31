@@ -1,0 +1,64 @@
+services:
+  scheduler:
+    image: registry.sccs.swarthmore.edu/sccs/scheduler/scheduler:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DOMAIN: https://schedulerv2.sccs.swarthmore.edu
+    depends_on:
+      - scheduler-db
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network=traefik'
+        - 'traefik.http.routers.scheduler.entrypoints=https'
+        - 'traefik.http.routers.scheduler.rule=Host(`schedulerv2.sccs.swarthmore.edu`)'
+        - 'traefik.http.routers.scheduler.tls=true'
+        - 'traefik.http.routers.scheduler.tls.certresolver=letsEncrypt'
+        - 'traefik.http.services.scheduler.loadbalancer.server.port=3000'
+    command: sh -c "sleep 5 && npx prisma migrate deploy && npm start "
+    networks:
+      - traefik
+      - internal
+
+  scheduler-db:
+    hostname: scheduler-db
+    image: postgres:16.4-bullseye
+    volumes:
+      - scheduler-dbdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - internal
+
+  scheduler-cron:
+    image: registry.sccs.swarthmore.edu/sccs/scheduler/scheduler-cron:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile.cron
+    restart: unless-stopped
+    depends_on:
+      - scheduler-db
+    networks:
+      - internal
+
+# (re)define traefik proxy network
+networks:
+  internal:
+    driver: overlay
+  traefik:
+    # defined elsewhere
+    external: true
+
+volumes:
+  scheduler-dbdata:
+    name: scheduler-dbdata
+    driver_opts:
+      type: nfs
+      o: "nfsvers=4,addr=130.58.218.26,rw,nolock,soft"
+      device: ":/volumes/scheduler-dbdata"
