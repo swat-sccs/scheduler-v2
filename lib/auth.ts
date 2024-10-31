@@ -40,6 +40,8 @@ export const config = {
       if (session && session.user) {
         // @ts-ignore
         session.user.role = token.role;
+        // @ts-ignore
+        session.user.id = token.sub;
       }
       return session;
     },

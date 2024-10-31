@@ -11,7 +11,6 @@ export default function Search(props: any) {
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
-
     if (term) {
       params.set("query", term);
     } else {
