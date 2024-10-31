@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "relationJoins"]
 }
 
 datasource db {
@@ -10,6 +10,7 @@ datasource db {
 
 model User {
   id    Int          @id @default(autoincrement())
+  uuid  String       @unique
   email String       @unique
   name  String?
   plans CoursePlan[]
@@ -43,8 +44,7 @@ model Course {
   instructor              Faculty            @relation(fields: [facultyId], references: [id])
   facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
   sectionAttributes       sectionAttribute[]
-  CoursePlan              CoursePlan?        @relation(fields: [coursePlanId], references: [id])
-  coursePlanId            Int?
+  CoursePlan              CoursePlan[]
   year                    String
 }
 

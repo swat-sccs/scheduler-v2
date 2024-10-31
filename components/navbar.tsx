@@ -38,6 +38,8 @@ import { title } from "@/components/primitives";
 
 import HomeIcon from "@mui/icons-material/Home";
 import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
+
 const pages = {
   Home: { link: "/", image: <HomeIcon /> },
   Submit: { link: "/submit", image: <SendIcon /> },
@@ -58,7 +60,22 @@ export const Navbar = (props: any) => {
   } else {
     if (status === "authenticated") {
       authenticated = true;
-      loginLink = <div role="button" onClick={() => signOut()}>Log out</div>;
+      axios
+        .post("/api/user", {
+          session: session,
+        })
+        .then(function (response) {
+          //console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      loginLink = (
+        <div role="button" onClick={() => signOut()}>
+          Log out
+        </div>
+      );
       // @ts-ignore
       if (session.user?.role === "admin") {
         adminDashLink = (

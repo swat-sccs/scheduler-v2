@@ -1,9 +1,7 @@
 import { Course } from "@prisma/client";
-
 import prisma from "../lib/prisma";
-
 import CourseCard from "./CourseCard";
-
+import { getPlanCookie } from "@/app/actions";
 async function getCourses(query: string) {
   return await prisma.course.findMany({
     include: {
@@ -57,7 +55,7 @@ export async function FullCourseList({ query }: { query: string }) {
 
   return (
     <>
-      <div className="grid gap-6 overflow-scroll w-8/12">
+      <div className="grid gap-4 ">
         {courseList?.map((course: any) => (
           <div key={course.id}>
             <CourseCard course={course} />
