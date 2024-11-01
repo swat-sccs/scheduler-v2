@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
           //@ts-ignore
           uuid: session?.user.id,
         },
-        id: parseInt(planCookie),
+        //id: parseInt(planCookie),
       },
     },
     include: {

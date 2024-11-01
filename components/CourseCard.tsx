@@ -29,15 +29,19 @@ const {
 } = card();
 
 const courseColors = [
-  "#D1FAFF",
-  "#9BD1E5",
-  "#6A8EAE",
-  "#57A773",
-  "#157145",
+  "#FF8360",
+  "#E8E288",
+  "#7DCE82",
+  "#3CDBD3",
+  "#A491D3",
   "#1E2D2F",
-  "#C57B57",
-  "#9B489B",
-  "#4ECDC4",
+  "#7CC6FE",
+  "#5DFDCB",
+  "#C3423F",
+  "#05668D",
+  "#037171",
+  "#9067C6",
+  "#E6AF2E",
 ];
 
 function generateColorFromName(name: string) {

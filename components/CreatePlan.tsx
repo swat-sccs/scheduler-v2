@@ -41,7 +41,7 @@ export default function CreatePlan(props: any) {
 
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  const [coursePlanName, setCoursePlanName] = useState();
+  const [coursePlanName, setCoursePlanName]: any = useState("");
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
 
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
@@ -64,7 +64,10 @@ export default function CreatePlan(props: any) {
           planName: coursePlanName,
         })
         .then(function (response: any) {
-          setPlanCookie(response.id);
+          setCoursePlanName("");
+          setSelectedCoursePlan([response.data.id]);
+          setPlanCookie(response.data.id);
+
           //console.log(response);
         })
         .catch(function (error) {
@@ -81,6 +84,7 @@ export default function CreatePlan(props: any) {
           },
         })
         .then(function (response) {
+          setSelectedCoursePlan([]);
           //setPlanCookie("-55");
           //console.log(response);
         })
@@ -97,17 +101,20 @@ export default function CreatePlan(props: any) {
   };
 
   const courseColors = [
-    "#D1FAFF",
-    "#9BD1E5",
-    "#6A8EAE",
-    "#57A773",
-    "#157145",
+    "#FF8360",
+    "#E8E288",
+    "#7DCE82",
+    "#3CDBD3",
+    "#A491D3",
     "#1E2D2F",
-    "#C57B57",
-    "#9B489B",
-    "#4ECDC4",
+    "#7CC6FE",
+    "#5DFDCB",
+    "#C3423F",
+    "#05668D",
+    "#037171",
+    "#9067C6",
+    "#E6AF2E",
   ];
-
   function generateColorFromName(name: string) {
     let hash = 0;
 
@@ -123,7 +130,7 @@ export default function CreatePlan(props: any) {
     setSelectedCoursePlan([cookies.get("plan")]);
     var objDiv: any = document.getElementById("scrollMe");
     objDiv.scrollTop = objDiv.scrollHeight;
-  }, [cookies.get("plan")]);
+  }, [data]);
 
   const CoursesList = () => {
     let output: any = [];
@@ -131,32 +138,33 @@ export default function CreatePlan(props: any) {
       return <Skeleton></Skeleton>;
     }
     if (data && !isLoading) {
-      for (let i = 0; i < data.length; i++) {
-        if ((data.id = selectedCoursePlan)) {
-          data[i].courses.map((course: any) =>
-            output.push(
-              <Card
-                key={course.id}
-                className={
-                  "bg-light_foreground  h-10 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
-                }
-                shadow="sm"
-                isHoverable
-              >
-                <div
-                  className={`absolute top-0 left-0 h-full w-2 rounded-full`}
-                  style={{
-                    backgroundColor: generateColorFromName(course.subject),
-                  }}
-                />
+      let filtered_data = data.filter(
+        (course: any) => course.id == selectedCoursePlan[0]
+      );
+      for (let i = 0; i < filtered_data.length; i++) {
+        filtered_data[i].courses.map((course: any) =>
+          output.push(
+            <Card
+              key={course.id}
+              className={
+                "bg-light_foreground  h-10 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
+              }
+              shadow="sm"
+              isHoverable
+            >
+              <div
+                className={`absolute top-0 left-0 h-full w-2 rounded-full`}
+                style={{
+                  backgroundColor: generateColorFromName(course.subject),
+                }}
+              />
 
-                <CardBody className="ml-4 overflow-clip ">
-                  {course.courseTitle}
-                </CardBody>
-              </Card>
-            )
-          );
-        }
+              <CardBody className="ml-4 overflow-clip ">
+                {course.courseTitle}
+              </CardBody>
+            </Card>
+          )
+        );
       }
     }
 
@@ -173,8 +181,9 @@ export default function CreatePlan(props: any) {
           <Input
             isRequired
             label="Give your plan a name..."
-            size="sm"
-            className="col-span-2"
+            size="lg"
+            className="col-span-2 "
+            value={coursePlanName}
             onChange={(event: any) => {
               setCoursePlanName(event.target.value);
             }}
@@ -199,15 +208,14 @@ export default function CreatePlan(props: any) {
 
         {/* --------------------------------- or --------------------------- */}
 
-        <div className=" font-bold gap-0">Select a Plan</div>
-        <div className="grid grid-cols-3 gap-2 ">
+        <div className="font-bold gap-0">Select a Plan</div>
+        <div className="grid grid-cols-5 gap-2">
           <Select
             selectionMode="single"
             label="Select Plan"
             size="sm"
-            className=""
+            className="col-span-3"
             onChange={handleSelectionChange}
-            //onSelectionChange={setSelectedCoursePlan}
             selectedKeys={selectedCoursePlan}
           >
             {coursePlans != null
@@ -218,15 +226,17 @@ export default function CreatePlan(props: any) {
           </Select>
 
           <Button
+            isIconOnly
             size="md"
+            className=""
             onClick={deletePlan}
             startContent={<DeleteIcon></DeleteIcon>}
-          >
-            Remove
-          </Button>
-          <Button size="md" startContent={<IosShareIcon></IosShareIcon>}>
-            Share
-          </Button>
+          ></Button>
+          <Button
+            isIconOnly
+            size="md"
+            startContent={<IosShareIcon></IosShareIcon>}
+          ></Button>
         </div>
 
         <div
