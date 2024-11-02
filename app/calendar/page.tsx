@@ -7,6 +7,7 @@ import Calendar from "@/components/Calendar";
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { getPlanCookie } from "@/app/actions";
+import { BorderColor } from "@mui/icons-material";
 
 export default async function DocsPage() {
   async function getEvents() {
@@ -24,7 +25,6 @@ export default async function DocsPage() {
       return courseColors[hash % courseColors.length];
     }
     const courseColors = [
-      "#FF8360",
       "#E8E288",
       "#7DCE82",
       "#3CDBD3",
@@ -33,116 +33,70 @@ export default async function DocsPage() {
       "#7CC6FE",
       "#5DFDCB",
       "#C3423F",
-      "#05668D",
-      "#037171",
+
       "#9067C6",
       "#E6AF2E",
     ];
-
-    let plans = await prisma.coursePlan.findMany({
-      where: {
-        AND: {
-          User: {
-            //@ts-ignore
-            uuid: session?.user.id,
-          },
-          //id: parseInt(planCookie),
-        },
-      },
-
-      include: {
-        courses: true,
-      },
-    });
-    /*FIX ME
-    let courses1 = await prisma.course.findMany({
-      where: {
-        CoursePlan: {
+    let courses;
+    if (planCookie) {
+      let plan = await prisma.coursePlan.findUnique({
+        where: {
           id: parseInt(planCookie),
         },
-      },
-
-      include: {
-        CoursePlan: true,
-      },
-    });
-*/
-    let filtered_data = plans.filter(
-      (plan: any) => plan.id == parseInt(planCookie)
-    );
-
-    let courses = filtered_data[0].courses;
-
-    for (let i = 0; i < courses.length; i++) {
-      let color = generateColorFromName(courses[i].subject);
-
-      let num: string = courses[i].courseReferenceNumber;
-      let meetingTimes = await prisma.meetingTime.findFirst({
-        where: {
-          courseReferenceNumber: num,
+        include: {
+          courses: true,
         },
       });
-      output.push({
-        title: courses[i]?.courseTitle,
-        color: color,
-        daysOfWeek: [
-          meetingTimes?.sunday && "0",
-          meetingTimes?.monday && "1",
-          meetingTimes?.tuesday && "2",
-          meetingTimes?.wednesday && "3",
-          meetingTimes?.thursday && "4",
-          meetingTimes?.friday && "5",
-          meetingTimes?.saturday && "6",
-        ],
-        startTime:
-          meetingTimes?.beginTime.slice(0, 2) +
-          ":" +
-          meetingTimes?.beginTime.slice(2),
-        endTime:
-          meetingTimes?.endTime.slice(0, 2) +
-          ":" +
-          meetingTimes?.endTime.slice(2),
-      });
+
+      courses = plan?.courses;
     }
 
-    /*
-    {
-      groupId: 'blueEvents', // recurrent events in this group move together
-      daysOfWeek: [ '4' ],
-      startTime: '10:45:00',
-      endTime: '12:45:00'
-    },
+    if (courses) {
+      for (let i = 0; i < courses.length; i++) {
+        let color = generateColorFromName(courses[i].subject);
 
-
-
-      let num: string = filtered_data[i].courseReferenceNumber;
-      let meetingTimes = await prisma.meetingTime.findFirst({
-        where: {
-          courseReferenceNumber: num,
-        },
-      });
-      output.push({
-        title: filtered_data[i]?.courseTitle,
-        daysOfWeek: [meetingTimes?.monday && "1", meetingTimes?.tuesday && "2"],
-        startTime:
-          meetingTimes?.beginTime.slice(0, 2) +
-          ":" +
-          meetingTimes?.beginTime.slice(2),
-        endTime:
-          meetingTimes?.endTime.slice(0, 2) +
-          ":" +
-          meetingTimes?.endTime.slice(2),
-      });
-
-    */
-
+        let num: string = courses[i].courseReferenceNumber;
+        let meetingTimes = await prisma.meetingTime.findFirst({
+          where: {
+            courseReferenceNumber: num,
+          },
+        });
+        output.push({
+          classNames: "font-sans ",
+          textColor: "white",
+          title: courses[i]?.courseTitle,
+          daColor: color,
+          color: "rgba(0,0,0,0)",
+          borderColor: "rgba(0,0,0,0)",
+          borderWidth: "0px",
+          daysOfWeek: [
+            meetingTimes?.sunday && "0",
+            meetingTimes?.monday && "1",
+            meetingTimes?.tuesday && "2",
+            meetingTimes?.wednesday && "3",
+            meetingTimes?.thursday && "4",
+            meetingTimes?.friday && "5",
+            meetingTimes?.saturday && "6",
+          ],
+          startTime:
+            meetingTimes?.beginTime.slice(0, 2) +
+            ":" +
+            meetingTimes?.beginTime.slice(2),
+          endTime:
+            meetingTimes?.endTime.slice(0, 2) +
+            ":" +
+            meetingTimes?.endTime.slice(2),
+        });
+      }
+    }
+    console.log(output);
     return output;
   }
 
   let events = await getEvents();
   return (
-    <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-0">
-      <div className=" col-start-1 h-[70vh] w-[50vw] col-span-2 ">
+    <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-20">
+      <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
         <Calendar events={events} />
       </div>
       <div className="">

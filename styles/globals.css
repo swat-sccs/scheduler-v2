@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* override fullcalendar white shadow and border; add filters */
+.fc-timegrid-event-harness-inset .fc-timegrid-event {
+  border: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(4px 6px 10px #00000044) brightness(100%) !important;
+  -webkit-filter: drop-shadow(4px 6px 10px #00000044) brightness(100%);
+  font-family: var(--font-sans);
+}
+
+.fc-timegrid-event-harness-inset .fc-timegrid-event:hover {
+  box-shadow: none !important;
+  filter: drop-shadow(4px 6px 10px #00000044) brightness(80%) !important;
+  -webkit-filter: drop-shadow(4px 6px 10px #00000044) brightness(80%);
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  font-family: var(--font-sans);
+}
+
+.fc-col-header-cell-cushion {
+  color: white;
+}
+
+.fc-col-header-cell-cushion:hover {
+  color: white;
+  font-family: var(--font-sans);
+}
+
+.fc-col-header {
+  background-color: #151d2b;
+  font-family: var(--font-sans);
+}
+
+.fc-event-main-frame {
+  cursor: pointer;
+}
+
+.fc-event-title {
+  text-overflow: ellipsis;
+}
+
+h2 {
+  font-size: 1.1em;
+}
+
+.smallFont {
+  font-size: small;
+  margin: 0;
+}
