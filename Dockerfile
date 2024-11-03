@@ -1,4 +1,4 @@
-FROM node:lts-bookworm
+FROM node:lts-bullseye
 ARG DATABASE_URL
 ENV NODE_ENV=production
 
