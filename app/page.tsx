@@ -45,7 +45,7 @@ export default async function Page(props: {
 async function Home(props: any) {
   return (
     <>
-      <div className="grid grid-cols-3 p-4 -mt-10">
+      <div className="grid grid-cols-3 p-4 -mt-10 ">
         <div className="col-span-2 col-start-1">
           <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
             <div className="row-start-1">
@@ -56,7 +56,7 @@ async function Home(props: any) {
             </div>
           </div>
         </div>
-        <div className="col-start-3 h-[62vh]">
+        <div className="col-start-3">
           <CreatePlan />
         </div>
       </div>

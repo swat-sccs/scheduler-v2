@@ -11,6 +11,7 @@ import {
   Input,
   Button,
   Skeleton,
+  CardHeader,
 } from "@nextui-org/react";
 import {
   Dropdown,
@@ -27,6 +28,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import { tv } from "tailwind-variants";
 import axios from "axios";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 import { InstructorCard } from "./InstructorCard";
 import { usePathname } from "next/navigation";
@@ -35,13 +37,14 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { setPlanCookie } from "@/app/actions";
 import { useCookies } from "next-client-cookies";
-
+import { courseColors } from "@/components/primitives";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
+  const router = useRouter();
 
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  const [coursePlanName, setCoursePlanName] = useState();
+  const [coursePlanName, setCoursePlanName]: any = useState("");
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
 
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
@@ -64,13 +67,30 @@ export default function CreatePlan(props: any) {
           planName: coursePlanName,
         })
         .then(function (response: any) {
-          setPlanCookie(response.id);
+          setCoursePlanName("");
+          setSelectedCoursePlan([response.data.id]);
+          setPlanCookie(response.data.id);
+
           //console.log(response);
         })
         .catch(function (error) {
           console.log(error);
         });
     }
+  }
+  async function removeCourseFromPlan(plan: any, course: any) {
+    await axios
+      .post("/api/getplancourses", {
+        plan: plan,
+        course: course,
+      })
+      .then(function (response: any) {
+        //console.log(response);
+        router.refresh();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
   async function deletePlan() {
     if (cookies.get("plan")) {
@@ -81,6 +101,7 @@ export default function CreatePlan(props: any) {
           },
         })
         .then(function (response) {
+          setSelectedCoursePlan([]);
           //setPlanCookie("-55");
           //console.log(response);
         })
@@ -95,18 +116,6 @@ export default function CreatePlan(props: any) {
     //cookies.set("plan", e.target.value);
     setPlanCookie(e.target.value);
   };
-
-  const courseColors = [
-    "#D1FAFF",
-    "#9BD1E5",
-    "#6A8EAE",
-    "#57A773",
-    "#157145",
-    "#1E2D2F",
-    "#C57B57",
-    "#9B489B",
-    "#4ECDC4",
-  ];
 
   function generateColorFromName(name: string) {
     let hash = 0;
@@ -123,7 +132,7 @@ export default function CreatePlan(props: any) {
     setSelectedCoursePlan([cookies.get("plan")]);
     var objDiv: any = document.getElementById("scrollMe");
     objDiv.scrollTop = objDiv.scrollHeight;
-  }, [cookies.get("plan")]);
+  }, [data]);
 
   const CoursesList = () => {
     let output: any = [];
@@ -131,32 +140,46 @@ export default function CreatePlan(props: any) {
       return <Skeleton></Skeleton>;
     }
     if (data && !isLoading) {
-      for (let i = 0; i < data.length; i++) {
-        if ((data.id = selectedCoursePlan)) {
-          data[i].courses.map((course: any) =>
-            output.push(
-              <Card
-                key={course.id}
-                className={
-                  "bg-light_foreground  h-10 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
-                }
-                shadow="sm"
-                isHoverable
-              >
-                <div
-                  className={`absolute top-0 left-0 h-full w-2 rounded-full`}
-                  style={{
-                    backgroundColor: generateColorFromName(course.subject),
-                  }}
-                />
+      let filtered_data = data.filter(
+        (course: any) => course.id == selectedCoursePlan[0]
+      );
+      for (let i = 0; i < filtered_data.length; i++) {
+        filtered_data[i].courses.map((course: any) =>
+          output.push(
+            <Card
+              key={course.id}
+              className={
+                "bg-light_foreground min-h-14 max-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
+              }
+              shadow="sm"
 
-                <CardBody className="ml-4 overflow-clip ">
-                  {course.courseTitle}
-                </CardBody>
-              </Card>
-            )
-          );
-        }
+              // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
+            >
+              <div
+                className={`absolute top-0 left-0 h-full w-2 rounded-full`}
+                style={{
+                  backgroundColor: generateColorFromName(course.subject),
+                }}
+              />
+
+              <CardHeader className="justify-between ">
+                <div className="ml-4">
+                  {course.courseTitle.replace(/&amp;/g, "&")}
+                </div>
+                <Button
+                  size={"sm"}
+                  className=""
+                  isIconOnly
+                  onClick={() =>
+                    removeCourseFromPlan(selectedCoursePlan[0], course)
+                  }
+                >
+                  X
+                </Button>
+              </CardHeader>
+            </Card>
+          )
+        );
       }
     }
 
@@ -165,7 +188,7 @@ export default function CreatePlan(props: any) {
 
   return (
     <>
-      <Divider className="h-4/6 absolute mt-10" orientation="vertical" />
+      <Divider className="h-[60vh] absolute mt-20" orientation="vertical" />
 
       <div className="grid grid-cols-1 grid-rows-10 ml-10 gap-5 h-[66vh] mt-10 overflow-clip">
         <div className="font-bold text-primary h1">Create a Plan</div>
@@ -173,19 +196,19 @@ export default function CreatePlan(props: any) {
           <Input
             isRequired
             label="Give your plan a name..."
-            size="sm"
-            className="col-span-2"
+            size="lg"
+            className="col-span-2 "
+            value={coursePlanName}
             onChange={(event: any) => {
               setCoursePlanName(event.target.value);
             }}
           />
           <Button
             size="lg"
-            className=""
             startContent={<AddIcon></AddIcon>}
             onClick={() => createPlan()}
           >
-            Create
+            <div>Create</div>
           </Button>
         </div>
 
@@ -199,15 +222,14 @@ export default function CreatePlan(props: any) {
 
         {/* --------------------------------- or --------------------------- */}
 
-        <div className=" font-bold gap-0">Select a Plan</div>
-        <div className="grid grid-cols-3 gap-2 ">
+        <div className="font-bold gap-0">Select a Plan</div>
+        <div className="grid grid-cols-5 gap-2">
           <Select
             selectionMode="single"
             label="Select Plan"
             size="sm"
-            className=""
+            className="col-span-3"
             onChange={handleSelectionChange}
-            //onSelectionChange={setSelectedCoursePlan}
             selectedKeys={selectedCoursePlan}
           >
             {coursePlans != null
@@ -218,15 +240,17 @@ export default function CreatePlan(props: any) {
           </Select>
 
           <Button
+            isIconOnly
             size="md"
+            className=""
             onClick={deletePlan}
             startContent={<DeleteIcon></DeleteIcon>}
-          >
-            Remove
-          </Button>
-          <Button size="md" startContent={<IosShareIcon></IosShareIcon>}>
-            Share
-          </Button>
+          ></Button>
+          <Button
+            isIconOnly
+            size="md"
+            startContent={<IosShareIcon></IosShareIcon>}
+          ></Button>
         </div>
 
         <div
