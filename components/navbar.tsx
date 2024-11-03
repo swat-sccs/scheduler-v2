@@ -77,6 +77,7 @@ export const Navbar = (props: any) => {
         </div>
       );
       // @ts-ignore
+      /*
       if (session.user?.role === "admin") {
         adminDashLink = (
           <NavbarContent key="admin">
@@ -85,7 +86,7 @@ export const Navbar = (props: any) => {
             </Link>
           </NavbarContent>
         );
-      }
+      }*/
       nameButton = session.user?.name;
     } else {
       authenticated = false;
@@ -190,9 +191,6 @@ export const Navbar = (props: any) => {
                 <DropdownMenu aria-label="Static Actions">
                   <DropdownItem key="myCourses">My Courses</DropdownItem>
                   <DropdownItem key="loginLink">{loginLink}</DropdownItem>
-                  <DropdownItem key="adminDashLink">
-                    {adminDashLink}
-                  </DropdownItem>
                 </DropdownMenu>
               ) : (
                 <></>

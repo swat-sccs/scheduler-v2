@@ -10,6 +10,14 @@ import { getServerSession } from "next-auth";
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
+  //Set custom redirect pages
+  pages: {
+    signIn: "/login",
+    //signOut: "/auth/signout",
+    error: "/error", // Error code passed in query string as ?error=
+    //verifyRequest: "/auth/verify-request", // (used for check email message)
+    //newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
   providers: [
     KeycloakProvider({
       profile(profile, tokens) {
@@ -33,7 +41,7 @@ export const config = {
   callbacks: {
     jwt({ token, user }) {
       // @ts-ignore
-      //if (user) token.role = user.role;
+      if (user) token.role = user.role;
       return token;
     },
     session({ session, token }) {
