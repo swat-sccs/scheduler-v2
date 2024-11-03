@@ -25,3 +25,26 @@ export async function GET(request: NextRequest) {
   });
   return NextResponse.json(courses, { status: 200 });
 }
+
+export async function POST(request: NextRequest) {
+  const data = await request.json();
+
+  const course = data.course;
+  const plan = data.plan;
+  const session = await auth();
+
+  let courses = await prisma.coursePlan.update({
+    where: {
+      id: parseInt(plan),
+    },
+    data: {
+      courses: {
+        disconnect: {
+          id: course.id,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json(courses, { status: 200 });
+}

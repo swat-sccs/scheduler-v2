@@ -54,3 +54,29 @@ export const subtitle = tv({
     fullWidth: true,
   },
 });
+
+export const courseColors = [
+  "#093145",
+  "#107896",
+  "#829356",
+
+  "#C2571A",
+  "#9A2617",
+  "#636363",
+  "#087E8B",
+  "#590925",
+  "#034748",
+  "#19381F",
+  "#631D76",
+  "#4B4E6D",
+];
+
+export function generateColorFromName(name: string) {
+  let hash = 0;
+
+  for (let i = 0; i < name.length; i++) {
+    hash += name.charCodeAt(i);
+  }
+
+  return courseColors[hash % courseColors.length];
+}

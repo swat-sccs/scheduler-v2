@@ -11,6 +11,7 @@ import {
   Input,
   Button,
   Skeleton,
+  CardHeader,
 } from "@nextui-org/react";
 import {
   Dropdown,
@@ -27,6 +28,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import { tv } from "tailwind-variants";
 import axios from "axios";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 import { InstructorCard } from "./InstructorCard";
 import { usePathname } from "next/navigation";
@@ -35,9 +37,10 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { setPlanCookie } from "@/app/actions";
 import { useCookies } from "next-client-cookies";
-
+import { courseColors } from "@/components/primitives";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
+  const router = useRouter();
 
   const pathname = usePathname();
   const { data: session, status } = useSession();
@@ -75,6 +78,20 @@ export default function CreatePlan(props: any) {
         });
     }
   }
+  async function removeCourseFromPlan(plan: any, course: any) {
+    await axios
+      .post("/api/getplancourses", {
+        plan: plan,
+        course: course,
+      })
+      .then(function (response: any) {
+        //console.log(response);
+        router.refresh();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
   async function deletePlan() {
     if (cookies.get("plan")) {
       axios
@@ -100,21 +117,6 @@ export default function CreatePlan(props: any) {
     setPlanCookie(e.target.value);
   };
 
-  const courseColors = [
-    "#FF8360",
-    "#E8E288",
-    "#7DCE82",
-    "#3CDBD3",
-    "#A491D3",
-    "#1E2D2F",
-    "#7CC6FE",
-    "#5DFDCB",
-    "#C3423F",
-    "#05668D",
-    "#037171",
-    "#9067C6",
-    "#E6AF2E",
-  ];
   function generateColorFromName(name: string) {
     let hash = 0;
 
@@ -147,10 +149,11 @@ export default function CreatePlan(props: any) {
             <Card
               key={course.id}
               className={
-                "bg-light_foreground  h-10 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
+                "bg-light_foreground min-h-14 max-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
               }
               shadow="sm"
-              isHoverable
+
+              // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
             >
               <div
                 className={`absolute top-0 left-0 h-full w-2 rounded-full`}
@@ -159,9 +162,21 @@ export default function CreatePlan(props: any) {
                 }}
               />
 
-              <CardBody className="ml-4 overflow-clip ">
-                {course.courseTitle}
-              </CardBody>
+              <CardHeader className="justify-between ">
+                <div className="ml-4">
+                  {course.courseTitle.replace(/&amp;/g, "&")}
+                </div>
+                <Button
+                  size={"sm"}
+                  className=""
+                  isIconOnly
+                  onClick={() =>
+                    removeCourseFromPlan(selectedCoursePlan[0], course)
+                  }
+                >
+                  X
+                </Button>
+              </CardHeader>
             </Card>
           )
         );
@@ -173,7 +188,7 @@ export default function CreatePlan(props: any) {
 
   return (
     <>
-      <Divider className="h-4/6 absolute mt-10" orientation="vertical" />
+      <Divider className="h-[60vh] absolute mt-20" orientation="vertical" />
 
       <div className="grid grid-cols-1 grid-rows-10 ml-10 gap-5 h-[66vh] mt-10 overflow-clip">
         <div className="font-bold text-primary h1">Create a Plan</div>
@@ -190,11 +205,10 @@ export default function CreatePlan(props: any) {
           />
           <Button
             size="lg"
-            className=""
             startContent={<AddIcon></AddIcon>}
             onClick={() => createPlan()}
           >
-            Create
+            <div>Create</div>
           </Button>
         </div>
 

@@ -11,6 +11,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
+import { courseColors } from "@/components/primitives";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,22 +28,6 @@ const {
 
   role,
 } = card();
-
-const courseColors = [
-  "#FF8360",
-  "#E8E288",
-  "#7DCE82",
-  "#3CDBD3",
-  "#A491D3",
-  "#1E2D2F",
-  "#7CC6FE",
-  "#5DFDCB",
-  "#C3423F",
-  "#05668D",
-  "#037171",
-  "#9067C6",
-  "#E6AF2E",
-];
 
 function generateColorFromName(name: string) {
   let hash = 0;

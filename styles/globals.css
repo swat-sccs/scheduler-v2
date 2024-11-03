@@ -22,7 +22,9 @@
   transition: all 0.5s ease;
   font-family: var(--font-sans);
 }
-
+.fc-day-today {
+  background-color: inherit !important;
+}
 .fc-col-header-cell-cushion {
   color: white;
 }

@@ -8,10 +8,10 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { getPlanCookie } from "@/app/actions";
 import { BorderColor } from "@mui/icons-material";
+import { courseColors } from "@/components/primitives";
 
-export default async function DocsPage() {
+export default async function CalendarPage() {
   async function getEvents() {
-    const session = await auth();
     let output: any = [];
     let planCookie: any = await getPlanCookie();
 
@@ -24,19 +24,7 @@ export default async function DocsPage() {
 
       return courseColors[hash % courseColors.length];
     }
-    const courseColors = [
-      "#E8E288",
-      "#7DCE82",
-      "#3CDBD3",
-      "#A491D3",
-      "#1E2D2F",
-      "#7CC6FE",
-      "#5DFDCB",
-      "#C3423F",
 
-      "#9067C6",
-      "#E6AF2E",
-    ];
     let courses;
     if (planCookie) {
       let plan = await prisma.coursePlan.findUnique({
@@ -62,12 +50,13 @@ export default async function DocsPage() {
           },
         });
         output.push({
-          classNames: "font-sans ",
+          classNames: "font-sans",
           textColor: "white",
           title: courses[i]?.courseTitle,
           daColor: color,
+          subject: courses[i]?.subject,
           color: "rgba(0,0,0,0)",
-          borderColor: "rgba(0,0,0,0)",
+
           borderWidth: "0px",
           daysOfWeek: [
             meetingTimes?.sunday && "0",
@@ -78,6 +67,7 @@ export default async function DocsPage() {
             meetingTimes?.friday && "5",
             meetingTimes?.saturday && "6",
           ],
+
           startTime:
             meetingTimes?.beginTime.slice(0, 2) +
             ":" +
@@ -89,7 +79,7 @@ export default async function DocsPage() {
         });
       }
     }
-    console.log(output);
+
     return output;
   }
 
@@ -99,7 +89,7 @@ export default async function DocsPage() {
       <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
         <Calendar events={events} />
       </div>
-      <div className="">
+      <div className="col-start-3 h-[62vh] ">
         <CreatePlan />
       </div>
     </div>
