@@ -1,7 +1,7 @@
 import { Course } from "@prisma/client";
 import prisma from "../lib/prisma";
 import CourseCard from "./CourseCard";
-import { getPlanCookie } from "@/app/actions";
+import { getPlanCookie } from "../app/actions";
 async function getCourses(query: string) {
   return await prisma.course.findMany({
     include: {

@@ -2,13 +2,13 @@ import * as React from "react";
 import { Suspense } from "react";
 import { Skeleton } from "@nextui-org/skeleton";
 
-import Search from "@/components/Search";
-import { FullCourseList } from "@/components/FullCourseList";
-import CreatePlan from "@/components/CreatePlan";
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import Search from "../components/Search";
+import { FullCourseList } from "../components/FullCourseList";
+import CreatePlan from "../components/CreatePlan";
+import { auth } from "../lib/auth";
+import prisma from "../lib/prisma";
 import { Course, CoursePlan } from "@prisma/client";
-import { getPlanCookie } from "@/app/actions";
+import { getPlanCookie } from "../app/actions";
 
 export default async function Page(props: {
   searchParams?: Promise<{

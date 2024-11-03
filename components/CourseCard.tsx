@@ -11,7 +11,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
-import { courseColors } from "@/components/primitives";
+import { courseColors } from "../components/primitives";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";

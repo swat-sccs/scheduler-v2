@@ -35,9 +35,9 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { setPlanCookie } from "@/app/actions";
+import { setPlanCookie } from "../app/actions";
 import { useCookies } from "next-client-cookies";
-import { courseColors } from "@/components/primitives";
+import { courseColors } from "../components/primitives";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();

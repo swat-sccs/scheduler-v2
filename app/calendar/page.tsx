@@ -1,14 +1,14 @@
-import { title } from "@/components/primitives";
+import { title } from "../../components/primitives";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
-import CreatePlan from "@/components/CreatePlan";
+import CreatePlan from "../../components/CreatePlan";
 import moment from "moment";
-import Calendar from "@/components/Calendar";
-import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { getPlanCookie } from "@/app/actions";
+import Calendar from "../../components/Calendar";
+import prisma from "../../lib/prisma";
+import { auth } from "../../lib/auth";
+import { getPlanCookie } from "../actions";
 import { BorderColor } from "@mui/icons-material";
-import { courseColors } from "@/components/primitives";
+import { courseColors } from "../../components/primitives";
 
 export default async function CalendarPage() {
   async function getEvents() {
