@@ -7,6 +7,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
 
 export default function Search(props: any) {
+  let router = useRouter();
   const searchParams = useSearchParams();
   const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
 
@@ -28,10 +29,39 @@ export default function Search(props: any) {
   const handleSelectionChange = (e: any) => {
     console.log(e.target.value);
     setSelectedTerm([e.target.value]);
+    const params = new URLSearchParams(searchParams);
+    if (e.target.value) {
+      params.set("term", e.target.value);
+    } else {
+      params.delete("term");
+    }
+    replace(`${pathname}?${params.toString()}`);
+
     //handleSearch();
     //cookies.set("plan", e.target.value);
     //setPlanCookie(e.target.value);
   };
+
+  const RenderSelectOptions = () => {
+    let output = [];
+
+    for (let i = 0; i < props.terms?.length; i++) {
+      let sem = props.terms[i].substring(0, 1);
+      let year = props.terms[i].substring(1);
+      if (sem.toLowerCase() == "s") {
+        output.push({ key: props.terms[i], title: "Spring " + year });
+      } else if (sem.toLowerCase() == "f") {
+        output.push({ key: props.terms[i], title: "Fall " + year });
+      }
+    }
+
+    return output
+      .sort(function (a: any, b: any) {
+        return b.key - a.key;
+      })
+      .map((term: any) => <SelectItem key={term.key}>{term.title}</SelectItem>);
+  };
+  console.log(props.terms);
 
   return (
     <div className="grid grid-cols-2">
@@ -55,8 +85,7 @@ export default function Search(props: any) {
         selectionMode={"single"}
         onChange={handleSelectionChange}
       >
-        <SelectItem key={"F2024"}>Fall 2024</SelectItem>
-        <SelectItem key={"S2025"}>Spring 2025</SelectItem>
+        {RenderSelectOptions()}
       </Select>
     </div>
   );

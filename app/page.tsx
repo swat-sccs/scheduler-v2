@@ -10,6 +10,18 @@ import prisma from "../lib/prisma";
 import { Course, CoursePlan } from "@prisma/client";
 import { getPlanCookie } from "../app/actions";
 
+async function getCourses() {
+  const courses = await prisma.course.findMany();
+  let output: any = [];
+
+  for (let i = 0; i < courses.length; i++) {
+    if (!output.includes(courses[i].year)) {
+      output.push(courses[i].year);
+    }
+  }
+  return output;
+}
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
@@ -45,13 +57,15 @@ export default async function Page(props: {
   return <Home {...homePageProps} />; // return with no events
 }
 async function Home(props: any) {
+  const terms = await getCourses();
+
   return (
     <>
       <div className="grid grid-cols-3 p-4 -mt-10 ">
         <div className="col-span-2 col-start-1">
           <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
             <div className="row-start-1">
-              <Search />
+              <Search terms={terms} />
             </div>
             <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
               {props.fullCourseList}
