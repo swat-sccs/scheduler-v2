@@ -51,7 +51,7 @@ async function Home(props: any) {
             <div className="row-start-1">
               <Search />
             </div>
-            <div className="row-start-2 h-[62vh] overflow-scroll">
+            <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
               {props.fullCourseList}
             </div>
           </div>

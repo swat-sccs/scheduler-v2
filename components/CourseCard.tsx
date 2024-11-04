@@ -11,7 +11,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
-import { courseColors } from "../components/primitives";
+import { generateColorFromName } from "../components/primitives";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,16 +28,6 @@ const {
 
   role,
 } = card();
-
-function generateColorFromName(name: string) {
-  let hash = 0;
-
-  for (let i = 0; i < name.length; i++) {
-    hash += name.charCodeAt(i);
-  }
-
-  return courseColors[hash % courseColors.length];
-}
 
 async function updatePlan(course: any) {
   console.log("updating");

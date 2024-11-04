@@ -15,7 +15,7 @@ export default function Calendar(props: any) {
     console.log(eventInfo);
     return (
       <Card
-        className=" fc-event-main-frame w-[100%] rounded-md hover:h-[20vh] z-0 hover:z-10 hover:transition-all duration-700 "
+        className="fc-event-main-frame w-[100%] rounded-md hover:h-[20vh] ease-in-out z-0 hover:z-10 hover:transition-all duration-700 "
         style={{ backgroundColor: eventInfo.event.extendedProps.daColor }}
       >
         {/*

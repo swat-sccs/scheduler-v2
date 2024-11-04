@@ -8,22 +8,11 @@ import prisma from "../../lib/prisma";
 import { auth } from "../../lib/auth";
 import { getPlanCookie } from "../actions";
 import { BorderColor } from "@mui/icons-material";
-import { courseColors } from "../../components/primitives";
-
+import { generateColorFromName } from "../../components/primitives";
 export default async function CalendarPage() {
   async function getEvents() {
     let output: any = [];
     let planCookie: any = await getPlanCookie();
-
-    function generateColorFromName(name: string) {
-      let hash = 0;
-
-      for (let i = 0; i < name.length; i++) {
-        hash += name.charCodeAt(i);
-      }
-
-      return courseColors[hash % courseColors.length];
-    }
 
     let courses;
     if (planCookie) {

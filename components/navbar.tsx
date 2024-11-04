@@ -33,7 +33,6 @@ import InputIcon from "@mui/icons-material/Input";
 
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "../components/theme-switch";
-import { SearchIcon } from "../components/icons";
 import { title } from "../components/primitives";
 
 import HomeIcon from "@mui/icons-material/Home";

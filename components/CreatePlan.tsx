@@ -37,7 +37,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { setPlanCookie } from "../app/actions";
 import { useCookies } from "next-client-cookies";
-import { courseColors } from "../components/primitives";
+import { generateColorFromName } from "../components/primitives";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();
@@ -116,16 +116,6 @@ export default function CreatePlan(props: any) {
     //cookies.set("plan", e.target.value);
     setPlanCookie(e.target.value);
   };
-
-  function generateColorFromName(name: string) {
-    let hash = 0;
-
-    for (let i = 0; i < name.length; i++) {
-      hash += name.charCodeAt(i);
-    }
-
-    return courseColors[hash % courseColors.length];
-  }
 
   useEffect(() => {
     // Update the document title using the browser API
