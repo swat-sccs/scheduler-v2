@@ -2,7 +2,7 @@ import { Course } from "@prisma/client";
 import prisma from "../lib/prisma";
 import CourseCard from "./CourseCard";
 import { getPlanCookie } from "../app/actions";
-async function getCourses(query: string) {
+async function getCourses(query: string, term: string) {
   return await prisma.course.findMany({
     include: {
       sectionAttributes: true,
@@ -20,6 +20,7 @@ async function getCourses(query: string) {
     where: {
       ...(query
         ? {
+            year: term,
             OR: [
               {
                 courseTitle: {
@@ -50,8 +51,14 @@ async function getCourses(query: string) {
   });
 }
 
-export async function FullCourseList({ query }: { query: string }) {
-  const courseList: Course[] = await getCourses(query);
+export async function FullCourseList({
+  query,
+  term,
+}: {
+  query: string;
+  term: string;
+}) {
+  const courseList: Course[] = await getCourses(query, term);
 
   return (
     <>
