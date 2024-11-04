@@ -65,7 +65,10 @@ export default function CourseCard(props: any) {
                 " " +
                 props.course.courseNumber +
                 " - " +
-                props.course.courseTitle}
+                props.course.courseTitle +
+                " (" +
+                props.course.facultyMeet.category +
+                ")"}
             </p>
           </div>
           <div className="row-start-1 row-span-3 col-start-6 mb-5">

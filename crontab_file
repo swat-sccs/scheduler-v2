@@ -1,1 +1,1 @@
-0 * * * * /app/swatscraper
+0 * * * * /app/swatscraper -semester=spring -year=2025
