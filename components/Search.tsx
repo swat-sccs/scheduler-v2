@@ -10,6 +10,7 @@ export default function Search(props: any) {
   let router = useRouter();
   const searchParams = useSearchParams();
   const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
+  const [selectedDOTW, setSelectedDOTW]: any = useState([]);
 
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -18,16 +19,13 @@ export default function Search(props: any) {
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("query", term);
-      params.set("term", selectedTerm[0]);
     } else {
       params.delete("query");
-      params.delete("term");
     }
     replace(`${pathname}?${params.toString()}`);
   });
 
   const handleSelectionChange = (e: any) => {
-    console.log(e.target.value);
     setSelectedTerm([e.target.value]);
     const params = new URLSearchParams(searchParams);
     if (e.target.value) {
@@ -40,6 +38,19 @@ export default function Search(props: any) {
     //handleSearch();
     //cookies.set("plan", e.target.value);
     //setPlanCookie(e.target.value);
+  };
+
+  const handleDOTWChange = (e: any) => {
+    //console.log(Array.from(e).join(", "));
+
+    setSelectedDOTW(...[e]);
+    const params = new URLSearchParams(searchParams);
+    if (e.size > 0) {
+      params.set("dotw", Array.from(e).join(","));
+    } else {
+      params.delete("dotw");
+    }
+    replace(`${pathname}?${params.toString()}`);
   };
 
   const RenderSelectOptions = () => {
@@ -61,13 +72,12 @@ export default function Search(props: any) {
       })
       .map((term: any) => <SelectItem key={term.key}>{term.title}</SelectItem>);
   };
-  console.log(props.terms);
 
   return (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-5 gap-5">
       <Input
         isClearable
-        className="max-w-xs"
+        className="max-w-xs col-span-2"
         defaultValue={searchParams.get("query")?.toString()}
         label="Search"
         labelPlacement="inside"
@@ -79,13 +89,30 @@ export default function Search(props: any) {
 
       <Select
         label="Select Term"
-        className="w-48"
+        disallowEmptySelection={true}
+        className="max-w-xs col-span-1"
         selectedKeys={selectedTerm}
         defaultSelectedKeys={searchParams.get("term")?.toString()}
         selectionMode={"single"}
         onChange={handleSelectionChange}
       >
         {RenderSelectOptions()}
+      </Select>
+      <Select
+        label="Day of the Week"
+        className="max-w-xs"
+        selectedKeys={selectedDOTW}
+        selectionMode="multiple"
+        defaultSelectedKeys={searchParams.get("dotw")?.toString()}
+        onSelectionChange={handleDOTWChange}
+      >
+        <SelectItem key={"sunday"}>Sunday</SelectItem>
+        <SelectItem key={"monday"}>Monday</SelectItem>
+        <SelectItem key={"tuesday"}>Tuesday</SelectItem>
+        <SelectItem key={"wednesday"}>Wednesday</SelectItem>
+        <SelectItem key={"thursday"}>Thursday</SelectItem>
+        <SelectItem key={"friday"}>Friday</SelectItem>
+        <SelectItem key={"saturday"}>Saturday</SelectItem>
       </Select>
     </div>
   );

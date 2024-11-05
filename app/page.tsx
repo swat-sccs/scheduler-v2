@@ -27,11 +27,13 @@ export default async function Page(props: {
     query?: string;
     page?: string;
     term?: string;
+    dotw?: Array<String>;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const term = searchParams?.term || "";
+  const dotw = searchParams?.dotw || [];
   var homePageProps: any = {};
 
   homePageProps["fullCourseList"] = (
@@ -40,7 +42,7 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-full align-top justify-start" />
       }
     >
-      <FullCourseList query={query} term={term} />
+      <FullCourseList query={query} term={term} dotw={dotw} />
     </Suspense>
   );
 
