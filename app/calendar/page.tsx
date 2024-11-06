@@ -38,6 +38,7 @@ export default async function CalendarPage() {
             courseReferenceNumber: num,
           },
         });
+
         output.push({
           classNames: "font-sans",
           textColor: "white",
@@ -58,13 +59,13 @@ export default async function CalendarPage() {
           ],
 
           startTime:
-            meetingTimes?.beginTime?.slice(0, 2) +
+            meetingTimes?.beginTime.slice(0, 2) +
             ":" +
-            meetingTimes?.beginTime?.slice(2),
+            meetingTimes?.beginTime.slice(2),
           endTime:
-            meetingTimes?.endTime?.slice(0, 2) +
+            meetingTimes?.endTime.slice(0, 2) +
             ":" +
-            meetingTimes?.endTime?.slice(2),
+            meetingTimes?.endTime.slice(2),
         });
       }
     }
