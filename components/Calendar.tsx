@@ -46,11 +46,13 @@ export default function Calendar(props: any) {
       expandRows
       slotDuration="01:00:00"
       slotMinTime="08:00:00"
-      slotMaxTime="22:00:00"
+      slotMaxTime="23:00:00"
+      weekends={false}
       dayHeaderFormat={dayHeaderContent}
       events={props.events}
       headerToolbar={false}
       eventContent={renderEventContent}
+      editable={false}
     />
   );
 }

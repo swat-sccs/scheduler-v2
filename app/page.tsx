@@ -9,6 +9,7 @@ import { auth } from "../lib/auth";
 import prisma from "../lib/prisma";
 import { Course, CoursePlan } from "@prisma/client";
 import { getPlanCookie } from "../app/actions";
+import { PlanCardList } from "../components/PlanCardList";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();
@@ -22,18 +23,45 @@ async function getCourses() {
   return output;
 }
 
+async function getUniqueStartEndTimes() {
+  const meetingTimes = await prisma.meetingTime.findMany({
+    where: {
+      beginTime: { not: "" },
+    },
+    orderBy: {
+      beginTime: "asc",
+    },
+  });
+  let startTimes: any = [];
+  let endTimes: any = [];
+
+  for (let i = 0; i < meetingTimes.length; i++) {
+    if (!startTimes.includes(meetingTimes[i].beginTime)) {
+      startTimes.push(meetingTimes[i].beginTime);
+    }
+    if (!endTimes.includes(meetingTimes[i].endTime)) {
+      endTimes.push(meetingTimes[i].endTime);
+    }
+  }
+
+  let times = { startTimes: startTimes, endTimes: endTimes };
+  return times;
+}
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
     term?: string;
     dotw?: Array<String>;
+    stime?: Array<string>;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const term = searchParams?.term || "";
   const dotw = searchParams?.dotw || [];
+  const stime = searchParams?.stime || [];
   var homePageProps: any = {};
 
   homePageProps["fullCourseList"] = (
@@ -42,7 +70,7 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-full align-top justify-start" />
       }
     >
-      <FullCourseList query={query} term={term} dotw={dotw} />
+      <FullCourseList query={query} term={term} dotw={dotw} stime={stime} />
     </Suspense>
   );
 
@@ -60,6 +88,7 @@ export default async function Page(props: {
 }
 async function Home(props: any) {
   const terms = await getCourses();
+  const uniqueTimes = await getUniqueStartEndTimes();
 
   return (
     <>
@@ -67,7 +96,7 @@ async function Home(props: any) {
         <div className="col-span-2 col-start-1">
           <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
             <div className="row-start-1">
-              <Search terms={terms} />
+              <Search terms={terms} times={uniqueTimes} />
             </div>
             <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
               {props.fullCourseList}

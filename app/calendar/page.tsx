@@ -58,13 +58,13 @@ export default async function CalendarPage() {
           ],
 
           startTime:
-            meetingTimes?.beginTime.slice(0, 2) +
+            meetingTimes?.beginTime?.slice(0, 2) +
             ":" +
-            meetingTimes?.beginTime.slice(2),
+            meetingTimes?.beginTime?.slice(2),
           endTime:
-            meetingTimes?.endTime.slice(0, 2) +
+            meetingTimes?.endTime?.slice(0, 2) +
             ":" +
-            meetingTimes?.endTime.slice(2),
+            meetingTimes?.endTime?.slice(2),
         });
       }
     }
@@ -72,11 +72,40 @@ export default async function CalendarPage() {
     return output;
   }
 
+  async function getUniqueStartEndTimes() {
+    const maxstart = await prisma.meetingTime.findFirst({
+      where: {
+        beginTime: { not: "" },
+      },
+      orderBy: {
+        beginTime: "desc",
+      },
+    });
+    const maxend = await prisma.meetingTime.findFirst({
+      where: {
+        endTime: { not: "" },
+      },
+      orderBy: {
+        beginTime: "desc",
+      },
+    });
+
+    let times = {
+      minTime:
+        maxstart?.beginTime.slice(0, 2) + ":" + maxstart?.beginTime.slice(2),
+      maxTime:
+        maxstart?.endTime.slice(0, 2) + ":" + maxstart?.beginTime.slice(2),
+    };
+    console.log(times);
+    return times;
+  }
+
   let events = await getEvents();
+  let times = await getUniqueStartEndTimes();
   return (
     <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-20">
       <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
-        <Calendar events={events} />
+        <Calendar events={events} times={times} />
       </div>
       <div className="col-start-3 h-[62vh] ">
         <CreatePlan />

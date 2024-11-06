@@ -3,10 +3,17 @@ import prisma from "../lib/prisma";
 import CourseCard from "./CourseCard";
 import { getPlanCookie } from "../app/actions";
 
-async function getCourses(query: string, term: string, dotw: Array<String>) {
+async function getCourses(
+  query: string,
+  term: string,
+  dotw: Array<String>,
+  stime: Array<string>
+) {
   //let DOTW: Array<String> = dotw.split(",");
-  let times = ["0955"];
 
+  let startTime = stime.toString().split(",").filter(Number);
+
+  console.log(startTime);
   return await prisma.course.findMany({
     relationLoadStrategy: "join", // or 'query'
 
@@ -20,15 +27,35 @@ async function getCourses(query: string, term: string, dotw: Array<String>) {
       instructor: true,
     },
 
-    orderBy: {
-      _relevance: {
-        fields: ["courseTitle", "subject", "courseNumber"],
-        search: query.replace(/[\s\n\t]/g, "_"),
-        sort: "desc",
+    orderBy: [
+      {
+        _relevance: {
+          fields: ["courseTitle", "subject", "courseNumber"],
+          search: query.replace(/[\s\n\t]/g, "_"),
+          sort: "desc",
+        },
       },
-    },
+      {},
+    ],
     where: {
-      year: term,
+      ...(term
+        ? {
+            year: term,
+          }
+        : {}),
+      //year: term,
+
+      ...(startTime.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                beginTime: {
+                  in: startTime,
+                },
+              },
+            },
+          }
+        : {}),
 
       OR: [
         {
@@ -48,215 +75,6 @@ async function getCourses(query: string, term: string, dotw: Array<String>) {
         },
       ],
     },
-
-    /*
-
-      {
-      courseTitle: {
-        search: query.replace(/[\s\n\t]/g, "_"),
-      },
-
-      subject: {
-        search: query.replace(/[\s\n\t]/g, "_"),
-      },
-
-      courseNumber: {
-        search: query.replace(/[\s\n\t]/g, "_"),
-      },
-
-      instructor: {
-        displayName: {
-          search: query.replace(/[\s\n\t]/g, "_"),
-        },
-      },
-    },
-
-    facultyMeet: {
-        meetingTimes: {
-          OR: [
-            {
-              monday: dotw.includes("monday"),
-            },
-            {
-              tuesday: dotw.includes("tuesday"),
-            },
-            {
-              wednesday: dotw.includes("wednesday"),
-            },
-            {
-              thursday: dotw.includes("thursday"),
-            },
-            {
-              friday: dotw.includes("friday"),
-            },
-            {
-              saturday: dotw.includes("saturday"),
-            },
-            {
-              sunday: dotw.includes("sunday"),
-            },
-          ],
-        },
-      },
-    where: {
-      AND: [
-        {
-        OR: [
-          { year: term },
-          {
-            
-                facultyMeet: {
-                  OR: [
-                    {
-                      meetingTimes: {
-                        monday: dotw.includes("monday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        tuesday: dotw.includes("tuesday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        wednesday: dotw.includes("wednesday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        thursday: dotw.includes("thursday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        friday: dotw.includes("friday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        saturday: dotw.includes("saturday"),
-                      },
-                    },
-                    {
-                      meetingTimes: {
-                        sunday: dotw.includes("sunday"),
-                      },
-                    },
-                  ],
-                },
-          }
-
-        ],}
-        
-
-       
-        /*
-        times.length > 0
-          ? {
-              facultyMeet: {
-                OR: [
-                  {
-                    meetingTimes: {
-                      monday: dotw.includes("monday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      tuesday: dotw.includes("tuesday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      wednesday: dotw.includes("wednesday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      thursday: dotw.includes("thursday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      friday: dotw.includes("friday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      saturday: dotw.includes("saturday"),
-                    },
-                  },
-                  {
-                    meetingTimes: {
-                      sunday: dotw.includes("sunday"),
-                    },
-                  },
-                ],
-              },
-            }
-          : {},
-        {
-          OR: [
-            {
-              courseTitle: {
-                search: query.replace(/[\s\n\t]/g, "_"),
-              },
-            },
-            {
-              subject: {
-                search: query.replace(/[\s\n\t]/g, "_"),
-              },
-            },
-
-            {
-              courseNumber: {
-                search: query.replace(/[\s\n\t]/g, "_"),
-              },
-            },
-            {
-              instructor: {
-                displayName: {
-                  search: query.replace(/[\s\n\t]/g, "_"),
-                },
-              },
-            },
-          ],
-        },
-      ],
-    },
-
-    */
-    /* Old where
-    where: {
-      ...(query || term
-        ? {
-            OR: [
-              {
-                courseTitle: {
-                  search: query.replace(/[\s\n\t]/g, "_"),
-                },
-              },
-              {
-                subject: {
-                  search: query.replace(/[\s\n\t]/g, "_"),
-                },
-              },
-              {
-                courseNumber: {
-                  search: query.replace(/[\s\n\t]/g, "_"),
-                },
-              },
-              {
-                instructor: {
-                  displayName: {
-                    search: query.replace(/[\s\n\t]/g, "_"),
-                  },
-                },
-              },
-            ],
-          }
-        : {}),
-        
-    },*/
   });
 }
 
@@ -264,12 +82,14 @@ export async function FullCourseList({
   query,
   term,
   dotw,
+  stime,
 }: {
   query: string;
   term: string;
   dotw: Array<String>;
+  stime: Array<string>;
 }) {
-  const courseList: Course[] = await getCourses(query, term, dotw);
+  const courseList: Course[] = await getCourses(query, term, dotw, stime);
 
   return (
     <>

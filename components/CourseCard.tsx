@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 export const card = tv({
   slots: {
-    base: "bg-light_foreground min-h-32 max-h-32 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",
+    base: "bg-light_foreground min-h-48 max-h-48 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",
     role: "font-bold  text-primary ",
   },
 });

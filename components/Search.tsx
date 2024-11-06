@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 export default function Search(props: any) {
   let router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
+  const [selectedTerm, setSelectedTerm]: any = useState([]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
+  const [selectedStartTime, setSelectedStartTime]: any = useState([]);
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -42,7 +43,12 @@ export default function Search(props: any) {
   useEffect(() => {
     // Update the document title using the browser API
     setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
-  }, [searchParams.get("term")?.toString()]);
+    setSelectedStartTime(searchParams.get("stime")?.toString().split(","));
+    //handleSelectionChange({ target: { value: selectedTerm } });
+  }, [
+    searchParams.get("term")?.toString(),
+    searchParams.get("stime")?.toString(),
+  ]);
 
   const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);
@@ -51,6 +57,17 @@ export default function Search(props: any) {
       params.set("dotw", Array.from(e).join(","));
     } else {
       params.delete("dotw");
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleSTimeChange = (e: any) => {
+    setSelectedStartTime(...[e]);
+    const params = new URLSearchParams(searchParams);
+    if (e.size > 0) {
+      params.set("stime", Array.from(e).join(","));
+    } else {
+      params.delete("stime");
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -84,6 +101,9 @@ export default function Search(props: any) {
         label="Search"
         labelPlacement="inside"
         variant="bordered"
+        onClear={() => {
+          handleSearch("");
+        }}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
@@ -91,7 +111,7 @@ export default function Search(props: any) {
 
       <Select
         label="Select Term"
-        disallowEmptySelection={true}
+        //disallowEmptySelection={true}
         className="max-w-xs col-span-1"
         selectedKeys={selectedTerm}
         defaultSelectedKeys={searchParams.get("term")?.toString()}
@@ -129,6 +149,22 @@ export default function Search(props: any) {
         <SelectItem key={"saturday"} value={"saturday"}>
           Saturday
         </SelectItem>
+      </Select>
+
+      <Select
+        label="Start Time"
+        className="max-w-xs"
+        selectedKeys={selectedStartTime}
+        selectionMode={"multiple"}
+        onSelectionChange={handleSTimeChange}
+      >
+        {props.times.startTimes.map((startTime: any) => {
+          return (
+            <SelectItem key={startTime} value={startTime}>
+              {startTime.slice(0, 2) + ":" + startTime.slice(2)}
+            </SelectItem>
+          );
+        })}
       </Select>
     </div>
   );

@@ -70,14 +70,14 @@ model MeetingsFaculty {
 
 model MeetingTime {
   id                     Int               @id @default(autoincrement())
-  beginTime              String
+  beginTime              String?
   building               String
   buildingDescription    String
   room                   String
   category               String
   courseReferenceNumber  String            @unique
   endDate                String
-  endTime                String
+  endTime                String?
   startDate              String
   hoursWeek              Float
   meetingType            String
