@@ -1,27 +1,12 @@
 "use client";
 import {
   Card,
-  CardBody,
   Divider,
-  Link,
-  User,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
   Input,
   Button,
   Skeleton,
   CardHeader,
 } from "@nextui-org/react";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  RadioGroup,
-  Radio,
-} from "@nextui-org/react";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IosShareIcon from "@mui/icons-material/IosShare";
@@ -33,11 +18,13 @@ import { useRouter } from "next/navigation";
 import { InstructorCard } from "./InstructorCard";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 import { setPlanCookie } from "../app/actions";
 import { useCookies } from "next-client-cookies";
 import { generateColorFromName } from "../components/primitives";
+import { FullCourseList } from "./FullCourseList";
+import { PlanCardList } from "./PlanCardList";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();
@@ -57,7 +44,7 @@ export default function CreatePlan(props: any) {
     isLoading: coursePlansIsLoading,
     error: coursePlansError,
   } = useSWR("/api/getcourseplans", fetcher, {
-    refreshInterval: 1000,
+    refreshInterval: 2000,
   });
 
   async function createPlan() {

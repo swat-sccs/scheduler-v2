@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "MeetingTime" ALTER COLUMN "beginTime" SET DATA TYPE TEXT,
+ALTER COLUMN "endTime" SET DATA TYPE TEXT;
