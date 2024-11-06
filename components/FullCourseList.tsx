@@ -6,8 +6,10 @@ import { getPlanCookie } from "../app/actions";
 async function getCourses(query: string, term: string, dotw: Array<String>) {
   //let DOTW: Array<String> = dotw.split(",");
   let times = ["0955"];
-  console.log(dotw);
+
   return await prisma.course.findMany({
+    relationLoadStrategy: "join", // or 'query'
+
     include: {
       sectionAttributes: true,
       facultyMeet: {
@@ -19,7 +21,11 @@ async function getCourses(query: string, term: string, dotw: Array<String>) {
     },
 
     orderBy: {
-      courseTitle: "desc",
+      _relevance: {
+        fields: ["courseTitle", "subject", "courseNumber"],
+        search: query.replace(/[\s\n\t]/g, "_"),
+        sort: "desc",
+      },
     },
     where: {
       year: term,
@@ -40,29 +46,30 @@ async function getCourses(query: string, term: string, dotw: Array<String>) {
             },
           },
         },
-        {
-          courseTitle: {
-            search: query.replace(/[\s\n\t]/g, "_"),
-          },
-
-          subject: {
-            search: query.replace(/[\s\n\t]/g, "_"),
-          },
-
-          courseNumber: {
-            search: query.replace(/[\s\n\t]/g, "_"),
-          },
-
-          instructor: {
-            displayName: {
-              search: query.replace(/[\s\n\t]/g, "_"),
-            },
-          },
-        },
       ],
     },
 
     /*
+
+      {
+      courseTitle: {
+        search: query.replace(/[\s\n\t]/g, "_"),
+      },
+
+      subject: {
+        search: query.replace(/[\s\n\t]/g, "_"),
+      },
+
+      courseNumber: {
+        search: query.replace(/[\s\n\t]/g, "_"),
+      },
+
+      instructor: {
+        displayName: {
+          search: query.replace(/[\s\n\t]/g, "_"),
+        },
+      },
+    },
 
     facultyMeet: {
         meetingTimes: {

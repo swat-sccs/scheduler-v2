@@ -4,14 +4,13 @@ import { Input } from "@nextui-org/input";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Search(props: any) {
   let router = useRouter();
   const searchParams = useSearchParams();
   const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
-
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -40,9 +39,12 @@ export default function Search(props: any) {
     //setPlanCookie(e.target.value);
   };
 
-  const handleDOTWChange = (e: any) => {
-    //console.log(Array.from(e).join(", "));
+  useEffect(() => {
+    // Update the document title using the browser API
+    setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
+  }, [searchParams.get("term")?.toString()]);
 
+  const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);
     const params = new URLSearchParams(searchParams);
     if (e.size > 0) {
@@ -102,17 +104,31 @@ export default function Search(props: any) {
         label="Day of the Week"
         className="max-w-xs"
         selectedKeys={selectedDOTW}
-        selectionMode="multiple"
-        defaultSelectedKeys={searchParams.get("dotw")?.toString()}
+        selectionMode={"multiple"}
+        //defaultSelectedKeys={searchParams.get("dotw")?.toString()}
         onSelectionChange={handleDOTWChange}
       >
-        <SelectItem key={"sunday"}>Sunday</SelectItem>
-        <SelectItem key={"monday"}>Monday</SelectItem>
-        <SelectItem key={"tuesday"}>Tuesday</SelectItem>
-        <SelectItem key={"wednesday"}>Wednesday</SelectItem>
-        <SelectItem key={"thursday"}>Thursday</SelectItem>
-        <SelectItem key={"friday"}>Friday</SelectItem>
-        <SelectItem key={"saturday"}>Saturday</SelectItem>
+        <SelectItem key={"sunday"} value="sunday">
+          Sunday
+        </SelectItem>
+        <SelectItem key={"monday"} value={"monday"}>
+          Monday
+        </SelectItem>
+        <SelectItem key={"tuesday"} value={"tuesday"}>
+          Tuesday
+        </SelectItem>
+        <SelectItem key={"wednesday"} value={"wednesday"}>
+          Wednesday
+        </SelectItem>
+        <SelectItem key={"thursday"} value={"thursday"}>
+          Thursday
+        </SelectItem>
+        <SelectItem key={"friday"} value={"monfridayday"}>
+          Friday
+        </SelectItem>
+        <SelectItem key={"saturday"} value={"saturday"}>
+          Saturday
+        </SelectItem>
       </Select>
     </div>
   );
