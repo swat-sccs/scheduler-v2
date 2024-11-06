@@ -90,22 +90,23 @@ export default async function CalendarPage() {
       },
     });
 
+    /*
     let times = {
       minTime:
         maxstart?.beginTime.slice(0, 2) + ":" + maxstart?.beginTime.slice(2),
       maxTime:
         maxstart?.endTime.slice(0, 2) + ":" + maxstart?.beginTime.slice(2),
-    };
-    console.log(times);
-    return times;
+    };*/
+    console.log(maxstart);
+    return maxstart;
   }
 
   let events = await getEvents();
-  let times = await getUniqueStartEndTimes();
+  //let times = await getUniqueStartEndTimes();
   return (
     <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-20">
       <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
-        <Calendar events={events} times={times} />
+        <Calendar events={events} />
       </div>
       <div className="col-start-3 h-[62vh] ">
         <CreatePlan />
