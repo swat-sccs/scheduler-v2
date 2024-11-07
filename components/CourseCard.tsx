@@ -12,6 +12,7 @@ import {
 } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
 import { generateColorFromName } from "../components/primitives";
+import { ScrollShadow } from "@nextui-org/react";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";

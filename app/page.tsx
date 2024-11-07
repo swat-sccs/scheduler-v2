@@ -9,7 +9,6 @@ import { auth } from "../lib/auth";
 import prisma from "../lib/prisma";
 import { Course, CoursePlan } from "@prisma/client";
 import { getPlanCookie } from "../app/actions";
-import { PlanCardList } from "../components/PlanCardList";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();

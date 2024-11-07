@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "relationJoins", "strictUndefinedChecks"]
+  previewFeatures = ["fullTextSearch", "relationJoins", "strictUndefinedChecks","fullTextIndex"]
 }
 
 datasource db {
@@ -46,6 +46,7 @@ model Course {
   sectionAttributes       sectionAttribute[]
   CoursePlan              CoursePlan[]
   year                    String
+  @@index([subject, courseNumber], map: "subj_course")
 }
 
 model Faculty {

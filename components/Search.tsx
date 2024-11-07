@@ -42,6 +42,7 @@ export default function Search(props: any) {
 
   useEffect(() => {
     // Update the document title using the browser API
+    setSelectedTerm(searchParams.get("term")?.toString().split(","));
     setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
     setSelectedStartTime(searchParams.get("stime")?.toString().split(","));
     //handleSelectionChange({ target: { value: selectedTerm } });
@@ -111,7 +112,7 @@ export default function Search(props: any) {
 
       <Select
         label="Select Term"
-        //disallowEmptySelection={true}
+        disallowEmptySelection={true}
         className="max-w-xs col-span-1"
         selectedKeys={selectedTerm}
         defaultSelectedKeys={searchParams.get("term")?.toString()}

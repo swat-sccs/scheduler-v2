@@ -16,7 +16,6 @@ async function getCourses(
   console.log(startTime);
   return await prisma.course.findMany({
     relationLoadStrategy: "join", // or 'query'
-
     include: {
       sectionAttributes: true,
       facultyMeet: {
@@ -31,11 +30,10 @@ async function getCourses(
       {
         _relevance: {
           fields: ["courseTitle", "subject", "courseNumber"],
-          search: query.replace(/[\s\n\t]/g, "_"),
+          search: query.trim().split(" ").join(" & "),
           sort: "desc",
         },
       },
-      {},
     ],
     where: {
       ...(term
@@ -44,6 +42,12 @@ async function getCourses(
           }
         : {}),
       //year: term,
+
+      OR: [
+        { courseTitle: { search: query.trim().split(" ").join(" & ") } },
+        { subject: { search: query.trim().split(" ").join(" & ") } },
+        { courseNumber: { search: query.trim().split(" ").join(" & ") } },
+      ],
 
       ...(startTime.length > 0
         ? {
@@ -57,23 +61,23 @@ async function getCourses(
           }
         : {}),
 
-      OR: [
-        {
-          facultyMeet: {
-            meetingTimes: {
-              is: {
-                monday: dotw.includes("monday") ? true : Prisma.skip,
-                tuesday: dotw.includes("tuesday") ? true : Prisma.skip,
-                wednesday: dotw.includes("wednesday") ? true : Prisma.skip,
-                thursday: dotw.includes("thursday") ? true : Prisma.skip,
-                friday: dotw.includes("friday") ? true : Prisma.skip,
-                saturday: dotw.includes("saturday") ? true : Prisma.skip,
-                sunday: dotw.includes("sunday") ? true : Prisma.skip,
+      ...(dotw.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                is: {
+                  monday: dotw.includes("monday") ? true : Prisma.skip,
+                  tuesday: dotw.includes("tuesday") ? true : Prisma.skip,
+                  wednesday: dotw.includes("wednesday") ? true : Prisma.skip,
+                  thursday: dotw.includes("thursday") ? true : Prisma.skip,
+                  friday: dotw.includes("friday") ? true : Prisma.skip,
+                  saturday: dotw.includes("saturday") ? true : Prisma.skip,
+                  sunday: dotw.includes("sunday") ? true : Prisma.skip,
+                },
               },
             },
-          },
-        },
-      ],
+          }
+        : {}),
     },
   });
 }
