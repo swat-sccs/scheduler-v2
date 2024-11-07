@@ -23,6 +23,13 @@ Install [NodeJS](https://nodejs.org/en) v18.18 or higher
   cd scheduler-v2
 ```
 
+### Configure your .env file
+Paste the following into a .env in the root of the project.
+```env
+DATABASE_URL="postgresql://postgres:example@localhost:5432/scheduler_db"
+
+```
+
 ### Run the development server
 
 ```bash
@@ -38,20 +45,26 @@ go mod tidy
 ```
 
 ```bash
-go run main.go
+go run main.go -semester=[spring|fall] -year=[202x] #defautl is fall 2024
+
 ```
+
+
 
 ### View the dev site
 
 Head on over to http://localhost:3000
 
-### (Optional) View the db visually
+
+
+### (Optional) View the database visually and in the browser!
 
 ```bash
 npx prisma studio
 ```
+Head on over to http://localhost:5555. Use this to confirm your database is populated. 
 
-Head on over to http://localhost:5555
+
 
 ## License
 
