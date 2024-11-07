@@ -5,7 +5,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-
+import moment from "moment";
 export default function Search(props: any) {
   let router = useRouter();
   const searchParams = useSearchParams();
@@ -159,9 +159,13 @@ export default function Search(props: any) {
         onSelectionChange={handleSTimeChange}
       >
         {props.times.startTimes.map((startTime: any) => {
+          var time = startTime.slice(0, 2) + ":" + startTime.slice(2);
+          var daTime = moment(time, "HH:mm").format("hh:mm A");
+
+          console.log(daTime);
           return (
             <SelectItem key={startTime} value={startTime}>
-              {startTime.slice(0, 2) + ":" + startTime.slice(2)}
+              {daTime}
             </SelectItem>
           );
         })}

@@ -15,6 +15,7 @@ import { generateColorFromName } from "../components/primitives";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";
+import moment from "moment";
 import axios from "axios";
 export const card = tv({
   slots: {
@@ -142,14 +143,19 @@ export default function CourseCard(props: any) {
             <div className="mt-2">
               <p className={role()}>Time</p>
               <div className="text-xs ">
-                {" "}
-                {props.course.facultyMeet.meetingTimes.beginTime.slice(0, 2) +
-                  ":" +
-                  props.course.facultyMeet.meetingTimes.beginTime.slice(2)}{" "}
-                -{" "}
-                {props.course.facultyMeet.meetingTimes.endTime.slice(0, 2) +
-                  ":" +
-                  props.course.facultyMeet.meetingTimes.endTime.slice(2)}
+                {moment(
+                  props.course.facultyMeet.meetingTimes.beginTime.slice(0, 2) +
+                    ":" +
+                    props.course.facultyMeet.meetingTimes.beginTime.slice(2),
+                  "HH:mm"
+                ).format("hh:mm a")}
+                -
+                {moment(
+                  props.course.facultyMeet.meetingTimes.endTime.slice(0, 2) +
+                    ":" +
+                    props.course.facultyMeet.meetingTimes.endTime.slice(2),
+                  "HH:mm"
+                ).format("hh:mm a")}
               </div>
             </div>
           ) : null}
