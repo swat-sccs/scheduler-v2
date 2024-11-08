@@ -80,7 +80,7 @@ export default function CourseCard(props: any) {
     return null;
   });
 
-  const attributeCodes = props.course.sectionAttributes.map((item, index: number) => {
+  const attributeCodes = props.course.sectionAttributes.map((item: any, index: number) => {
     if (item) {
       return <p key={index}>{item.code}</p>
     }
