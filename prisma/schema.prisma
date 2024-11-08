@@ -99,7 +99,7 @@ model sectionAttribute {
   code                  String
   description           String
   courseReferenceNumber String  @unique
-  courseId              Int?
+  courseId              Int
   Course                Course? @relation(fields: [courseId], references: [id])
   year                  String
 }

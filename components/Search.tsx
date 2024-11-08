@@ -6,19 +6,42 @@ import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { Autocomplete, TextField, Chip } from "@mui/material";
+
 export default function Search(props: any) {
   let router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedTerm, setSelectedTerm]: any = useState([]);
+  const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
+  const [selectedCodes, setSelectedCodes]: any = useState([]);
+
   const [selectedStartTime, setSelectedStartTime]: any = useState([]);
+  const [search, setSearch]: any = useState();
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const replaceText = (text: any) => {
+    setSearch(text?.replace(/\w+:/, <Chip>{text}</Chip>));
+    console.log(search);
+  };
+
   const handleSearch = useDebouncedCallback((term: string) => {
+    //replaceText(term);
+    //setSearch(term);
+    //const term_regex = new RegExp(\w, "g");
+    let filtered_term = term.replace(/[^a-zA-Z0-9 ]+/gi, "");
+    let include_colons = term.replace(/[^a-zA-Z0-9: ]+/gi, "");
+    let term_list = include_colons.split(" ");
+
+    for (var i = 0; i < term_list.length; i++) {
+      if (/\w+:/.test(term_list[i])) {
+        console.log(term_list[i]);
+      }
+    }
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set("query", term);
+      decodeURIComponent;
+      params.set("query", filtered_term);
     } else {
       params.delete("query");
     }
@@ -28,6 +51,7 @@ export default function Search(props: any) {
   const handleSelectionChange = (e: any) => {
     setSelectedTerm([e.target.value]);
     const params = new URLSearchParams(searchParams);
+
     if (e.target.value) {
       params.set("term", e.target.value);
     } else {
@@ -38,6 +62,18 @@ export default function Search(props: any) {
     //handleSearch();
     //cookies.set("plan", e.target.value);
     //setPlanCookie(e.target.value);
+  };
+
+  const handleCodeChange = (e: any) => {
+    setSelectedCodes([e.target.value]);
+    const params = new URLSearchParams(searchParams);
+
+    if (e.target.value) {
+      params.set("codes", e.target.value);
+    } else {
+      params.delete("codes");
+    }
+    replace(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -102,6 +138,7 @@ export default function Search(props: any) {
         label="Search"
         labelPlacement="inside"
         variant="bordered"
+        value={search}
         onClear={() => {
           handleSearch("");
         }}
@@ -163,7 +200,6 @@ export default function Search(props: any) {
           var time = startTime.slice(0, 2) + ":" + startTime.slice(2);
           var daTime = moment(time, "HH:mm").format("hh:mm A");
 
-          console.log(daTime);
           return (
             <SelectItem key={startTime} value={startTime}>
               {daTime}
@@ -171,6 +207,24 @@ export default function Search(props: any) {
           );
         })}
       </Select>
+      {/*
+      <Select
+        label="Division"
+        className="max-w-xs"
+        selectedKeys={selectedCodes}
+        selectionMode={"multiple"}
+        //defaultSelectedKeys={searchParams.get("dotw")?.toString()}
+        onSelectionChange={handleCodeChange}
+      >
+        {props.codes.map((code: any) => {
+          return (
+            <SelectItem key={code} value={code}>
+              {code.toUpperCase()}
+            </SelectItem>
+          );
+        })}
+      </Select>
+       */}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { auth } from "../lib/auth";
 import prisma from "../lib/prisma";
 import { Course, CoursePlan } from "@prisma/client";
 import { getPlanCookie } from "../app/actions";
+import { dA } from "@fullcalendar/core/internal-common";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();
@@ -45,6 +46,19 @@ async function getUniqueStartEndTimes() {
 
   let times = { startTimes: startTimes, endTimes: endTimes };
   return times;
+}
+
+async function getUniquCodes() {
+  const codes = await prisma.sectionAttribute.findMany();
+  let daCodes: any = [];
+
+  for (let i = 0; i < codes.length; i++) {
+    if (!daCodes.includes(codes[i].code)) {
+      daCodes.push(codes[i].code);
+    }
+  }
+  console.log(daCodes);
+  return daCodes;
 }
 
 export default async function Page(props: {
@@ -88,6 +102,7 @@ export default async function Page(props: {
 async function Home(props: any) {
   const terms = await getCourses();
   const uniqueTimes = await getUniqueStartEndTimes();
+  const codes = await getUniquCodes();
 
   return (
     <>
@@ -95,7 +110,7 @@ async function Home(props: any) {
         <div className="col-span-2 col-start-1">
           <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
             <div className="row-start-1">
-              <Search terms={terms} times={uniqueTimes} />
+              <Search terms={terms} times={uniqueTimes} codes={codes} />
             </div>
             <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
               {props.fullCourseList}
