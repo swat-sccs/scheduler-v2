@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "relationJoins", "strictUndefinedChecks","fullTextIndex"]
+  previewFeatures = ["fullTextIndex", "fullTextSearch", "relationJoins", "strictUndefinedChecks"]
 }
 
 datasource db {
@@ -9,20 +9,21 @@ datasource db {
 }
 
 model User {
-  id    Int          @id @default(autoincrement())
-  uuid  String       @unique
-  email String       @unique
-  name  String?
-  plans CoursePlan[]
+  id      Int          @id @default(autoincrement())
+  email   String       @unique
+  name    String?
+  uuid    String       @unique
+  plans   CoursePlan[]
+  ratings Rating[]
 }
 
 model CoursePlan {
   id      Int      @id @default(autoincrement())
   name    String
   userId  Int?
-  courses Course[]
-  User    User?    @relation(fields: [userId], references: [id])
   year    String
+  User    User?    @relation(fields: [userId], references: [id])
+  courses Course[] @relation("CourseToCoursePlan")
 }
 
 model Course {
@@ -41,11 +42,14 @@ model Course {
   seatsAvailable          Int
   facultyId               Int
   facultyMeetId           Int
+  year                    String
+  avgRating               Float?
   instructor              Faculty            @relation(fields: [facultyId], references: [id])
   facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
+  Rating                  Rating[]
   sectionAttributes       sectionAttribute[]
-  CoursePlan              CoursePlan[]
-  year                    String
+  CoursePlan              CoursePlan[]       @relation("CourseToCoursePlan")
+
   @@index([subject, courseNumber], map: "subj_course")
 }
 
@@ -55,8 +59,10 @@ model Faculty {
   courseReferenceNumber String   @unique
   displayName           String
   emailAddress          String
-  courses               Course[]
   year                  String
+  avgRating             Float?
+  courses               Course[]
+  Rating                Rating[]
 }
 
 model MeetingsFaculty {
@@ -64,21 +70,19 @@ model MeetingsFaculty {
   category              String
   courseReferenceNumber String      @unique
   meetingTimeID         Int
+  year                  String
   courses               Course[]
   meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
-  year                  String
 }
 
 model MeetingTime {
   id                     Int               @id @default(autoincrement())
-  beginTime              String
   building               String
   buildingDescription    String
   room                   String
   category               String
   courseReferenceNumber  String            @unique
   endDate                String
-  endTime                String
   startDate              String
   hoursWeek              Float
   meetingType            String
@@ -90,16 +94,37 @@ model MeetingTime {
   friday                 Boolean
   saturday               Boolean
   sunday                 Boolean
-  facultyMeet            MeetingsFaculty[]
   year                   String
+  beginTime              String
+  endTime                String
+  facultyMeet            MeetingsFaculty[]
 }
 
 model sectionAttribute {
-  id                    Int     @id @default(autoincrement())
+  id                    Int    @id @default(autoincrement())
   code                  String
   description           String
-  courseReferenceNumber String  @unique
-  courseId              Int
-  Course                Course? @relation(fields: [courseId], references: [id])
+  courseReferenceNumber String @unique
   year                  String
+  courseId              Int
+  Course                Course @relation(fields: [courseId], references: [id])
+}
+
+model Rating {
+  id            Int      @id @default(autoincrement())
+  courseID      Int
+  facultyID     Int
+  overallRating Int?
+  quality       Int?
+  difficulty    Int?
+  takeAgain     Boolean?
+  review        String?
+  grade         String?
+  forCredit     Boolean?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  course        Course   @relation(fields: [courseID], references: [id])
+  faculty       Faculty  @relation(fields: [facultyID], references: [id])
+  User          User?    @relation(fields: [userId], references: [id])
+  userId        Int?
 }

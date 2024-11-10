@@ -2,6 +2,7 @@
 import {
   Card,
   CardBody,
+  CardHeader,
   Divider,
   Link,
   User,
@@ -9,27 +10,27 @@ import {
   PopoverTrigger,
   PopoverContent,
   Button,
+  Chip,
 } from "@nextui-org/react";
+import Image from "next/image";
 import { tv } from "tailwind-variants";
 import { generateColorFromName } from "../components/primitives";
 import { ScrollShadow } from "@nextui-org/react";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";
-import moment from "moment";
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
+
 import axios from "axios";
+
 export const card = tv({
   slots: {
-    base: "bg-light_foreground min-h-48 max-h-48 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",
+    base: "bg-light_foreground min-h-32 max-h-62 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",
     role: "font-bold  text-primary ",
   },
 });
 
-const {
-  base,
-
-  role,
-} = card();
+const { base, role } = card();
 
 async function updatePlan(course: any) {
   console.log("updating");
@@ -38,7 +39,7 @@ async function updatePlan(course: any) {
       course: course,
     })
     .then(function (response) {
-      //console.log(response);
+      // Handle response
     })
     .catch(function (error) {
       console.log(error);
@@ -46,207 +47,162 @@ async function updatePlan(course: any) {
 }
 
 export default function CourseCard(props: any) {
+  console.log(props.course);
   let color = generateColorFromName(props.course.subject);
+
+  const color_mappings: { [key: string]: string } = {
+    "0": "#4CB944",
+    "1": "#fb5607",
+    "2": "#ff006e",
+    "3": "#8338ec",
+    "4": "#3a86ff",
+  };
+
+  const days = {
+    M: props.course.facultyMeet.meetingTimes.monday,
+    T: props.course.facultyMeet.meetingTimes.tuesday,
+    W: props.course.facultyMeet.meetingTimes.wednesday,
+    TH: props.course.facultyMeet.meetingTimes.thursday,
+    F: props.course.facultyMeet.meetingTimes.friday,
+  };
+
+  const coloredDays = Object.entries(days).map((item, index) => {
+    if (item[1]) {
+      return (
+        <div
+          key={index}
+          className="flex w-8 h-8 rounded-md justify-center items-center"
+          style={{ backgroundColor: color_mappings[index] }}
+        >
+          <p className="font-bold text-white">{item[0]}</p>
+        </div>
+      );
+    }
+    return null;
+  });
+
+  const attributeCodes = props.course.sectionAttributes.map(
+    (item: any, index: number) => {
+      if (item) {
+        return (
+          <Chip variant={"bordered"} size="sm" key={index}>
+            <p> {item.code}</p>
+          </Chip>
+        );
+      }
+
+      return null;
+    }
+  );
 
   return (
     <Card key={props.course.id} className={base()} shadow="sm" isHoverable>
       <div
-        className={`absolute top-0 left-0 h-full w-2 rounded-full`}
+        className="absolute top-0 left-0 h-full w-2 rounded-full"
         style={{ backgroundColor: color }}
       />
-
-      <CardBody
-        className="ml-4 overflow-clip "
-        onClick={() => updatePlan(props.course)}
-      >
-        {/* 3 cols 2 rows*/}
-        <div className="grid grid-cols-7  grid-rows-3">
-          <div className="col-span-4 row-start-1 col-start-1">
-            <p className={role()}>
-              {props.course.subject +
-                " " +
-                props.course.courseNumber +
-                " - " +
-                props.course.courseTitle +
-                " (" +
-                props.course.facultyMeet.category +
-                ")" +
-                " " +
-                props.course.year}
-            </p>
-          </div>
-          <div className="row-start-1 row-span-3 col-start-6 mb-5">
-            <Divider orientation="vertical" />
-          </div>
-          <div className="row-start-1  col-start-6 col-span-2 text-center">
-            {props.course.instructor ? (
-              <Popover showArrow placement="right">
-                <PopoverTrigger>
-                  <User
-                    avatarProps={{
-                      size: "sm",
-
-                      isBordered: true,
-                      className:
-                        "base: bg-gradient-to-br from-[#333C44] to-[#9FADBC]",
-                    }}
-                    name={props.course.instructor.displayName}
-                  />
-                </PopoverTrigger>
-                <PopoverContent className="p-1 bg-gradient-to-br from-white/[0.2] backdrop-blur-5 shadow-sm">
-                  <InstructorCard
-                    instructor={props.course.instructor.displayName}
-                  />
-                </PopoverContent>
-              </Popover>
-            ) : null}
-          </div>
-
-          <div className="row-start-3 text-center col-start-6 col-span-2">
-            <div className="">{props.course.creditHours} credit(s)</div>
-          </div>
-          <div className="text-xs ">
-            {/*props.course.courseReferenceNumber.replace(
-                  props.course.year,
-                  ""
-                )*/}
-          </div>
-
-          <div className="row-start-2 col-start-6 col-span-2 text-center">
-            {/* <PersonIcon /> */}
-            {props.course.enrollment}/{props.course.maximumEnrollment}
-          </div>
-
-          <div className="row-start-2 col-start-1  ">
-            <div className={role()}>Attributes</div>
-            {props.course.sectionAttributes.map((attribute: any) => (
-              <div key={attribute.courseReferenceNumber} className="text-xs ">
-                {attribute.code}
-              </div>
-            ))}
-          </div>
-
-          {props.course.facultyMeet.meetingTimes ? (
-            <div>
-              <p className={role()}>Days</p>
-              <div className="text-xs mt-2">
-                {props.course.facultyMeet.meetingTimes.monday ? "M" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.tuesday ? "T" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.wednesday ? "W" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.thursday ? "TH" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.friday ? "F" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.saturday ? "Sat" : null}{" "}
-                {props.course.facultyMeet.meetingTimes.sunday ? "Sun" : null}
-              </div>
+      <div className="pl-6">
+        <CardHeader onClick={() => updatePlan(props.course)}>
+          <div className="flex items-center flex-row justify-between w-full">
+            <div className="flex flex-col">
+              <h1 className="font-bold text-3xl text-left">
+                {props.course.courseTitle.replace("&amp;", "&")}
+              </h1>
+              <h2 className=" flex text-left">
+                {props.course.subject} {props.course.courseNumber} |{" "}
+                {props.course.creditHours} credit(s) | &nbsp;
+                {props.course.sectionAttributes.length > 0 && (
+                  <div>{attributeCodes}</div>
+                )}
+              </h2>
             </div>
-          ) : null}
-          {props.course.facultyMeet.meetingTimes ? (
-            <div className="mt-2">
-              <p className={role()}>Time</p>
-              <div className="text-xs ">
-                {moment(
-                  props.course.facultyMeet.meetingTimes.beginTime.slice(0, 2) +
-                    ":" +
-                    props.course.facultyMeet.meetingTimes.beginTime.slice(2),
-                  "HH:mm"
-                ).format("hh:mm a")}
-                -
-                {moment(
-                  props.course.facultyMeet.meetingTimes.endTime.slice(0, 2) +
-                    ":" +
-                    props.course.facultyMeet.meetingTimes.endTime.slice(2),
-                  "HH:mm"
-                ).format("hh:mm a")}
-              </div>
+            <div className="flex items-center ml-auto mr-8">
+              <Image
+                // src={"https://www.swarthmore.edu/sites/default/files/styles/headshot/public/assets/images/user_photos/cmurphy4.jpg.webp"}
+                src={
+                  "https://cdn.vectorstock.com/i/500p/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg"
+                }
+                width={100}
+                height={100}
+                alt="Professor"
+                className="object-cover rounded-md absolute top-6 right-6"
+              />
             </div>
-          ) : null}
+          </div>
+        </CardHeader>
 
-          {/*
-            <div className="flex w-11/12">
-              <div>
-                <p className={role()}>Availability</p>
-                <div className="text-xs">
-                  {props.course.enrollment}/{props.course.maximumEnrollment}
-                </div>
-              </div>
-              <div>
-                <p className={role()}>Attributes</p>
-                {props.course.sectionAttributes.map((attribute: any) => (
-                  <div
-                    key={attribute.courseReferenceNumber}
-                    className="text-xs "
-                  >
-                    {attribute.code}
+        <CardBody className="mt-0 mb-2">
+          <div className="flex justify-between flex-row">
+            <div className="gap-10">
+              {props.course.facultyMeet.meetingTimes.room ? (
+                <div className="bg-[#2C2C33] p-3 w-64 rounded-md">
+                  <div className="font-semibold text-lg text-white">
+                    {props.course.facultyMeet.meetingTimes.buildingDescription}{" "}
+                    {props.course.facultyMeet.meetingTimes.room}
                   </div>
-                ))}
+                  <div className="text-base">
+                    {props.course.facultyMeet.meetingTimes ? (
+                      <div className="mt-2">
+                        <div className="font-normal">
+                          {" "}
+                          {props.course.facultyMeet.meetingTimes.beginTime.slice(
+                            0,
+                            2
+                          ) +
+                            ":" +
+                            props.course.facultyMeet.meetingTimes.beginTime.slice(
+                              2
+                            )}{" "}
+                          -{" "}
+                          {props.course.facultyMeet.meetingTimes.endTime.slice(
+                            0,
+                            2
+                          ) +
+                            ":" +
+                            props.course.facultyMeet.meetingTimes.endTime.slice(
+                              2
+                            )}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-[#2C2C33] p-4 w-64 rounded-md">
+                  <p className="font-semibold">
+                    Contact your Professor for additional details.
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-row">
+                <div className="flex flex-row gap-2 mt-5">{coloredDays}</div>
               </div>
-
-              {props.course.facultyMeet.meetingTimes ? (
+            </div>
+            <div className="flex flex-col pr-3 pt-10">
+              <div className="flex flex-row gap-5 justify-end">
                 <div>
-                  <p className={role()}>Days</p>
-                  <div className="text-xs mt-2">
-                    {props.course.facultyMeet.meetingTimes.monday ? "M" : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.tuesday ? "T" : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.wednesday
-                      ? "W"
-                      : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.thursday
-                      ? "TH"
-                      : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.friday ? "F" : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.saturday
-                      ? "Sat"
-                      : null}{" "}
-                    {props.course.facultyMeet.meetingTimes.sunday
-                      ? "Sun"
-                      : null}
+                  <div className="text-right font-medium">Instructor</div>
+                  <div className="text-2xl font-bold">
+                    {props.course.instructor.displayName.replace("&#39;", "'")}
                   </div>
                 </div>
-              ) : null}
-
-              {props.course.facultyMeet.meetingTimes ? (
-                <div className="mt-2">
-                  <p className={role()}>Time</p>
-                  <div className="text-xs ">
-                    {" "}
-                    {props.course.facultyMeet.meetingTimes.beginTime.slice(
-                      0,
-                      2
-                    ) +
-                      ":" +
-                      props.course.facultyMeet.meetingTimes.beginTime.slice(
-                        2
-                      )}{" "}
-                    -{" "}
-                    {props.course.facultyMeet.meetingTimes.endTime.slice(0, 2) +
-                      ":" +
-                      props.course.facultyMeet.meetingTimes.endTime.slice(2)}
-                  </div>
+                <div className="flex bg-green-500 w-16 h-16 items-center justify-center rounded-md">
+                  <div className="font-black text-3xl">?</div>
                 </div>
-              ) : null}
+              </div>
+              {props.course.seatsAvailable >= 0 && (
+                <div className="flex flex-row items-end pt-4 gap-2">
+                  <div className="font-medium text-slate">
+                    No available seats left for this section
+                  </div>
+                  {/*                   <ErrorRoundedIcon color="error" />
+                   */}
+                </div>
+              )}
             </div>
-            {props.course.instructor ? (
-              <div>
-                <p className={role()}>Instructor</p>
-                <div className="text-xs">
-                  {props.course.instructor.displayName}
-                </div>
-              </div>
-            ) : null}
-            {props.course.facultyMeet.meetingTimes ? (
-              <div className="mt-2">
-                <p className={role()}>Room</p>
-                <p className="text-xs">
-                  {props.course.facultyMeet.meetingTimes.buildingDescription}
-                  {<br />}
-                  {props.course.facultyMeet.meetingTimes.room}
-                </p>
-              </div>
-            ) : null}
-
-            */}
-        </div>
-      </CardBody>
+          </div>
+        </CardBody>
+      </div>
     </Card>
   );
 }
