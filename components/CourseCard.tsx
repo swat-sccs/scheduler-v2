@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   Button,
+  Chip,
 } from "@nextui-org/react";
 import Image from "next/image";
 import { tv } from "tailwind-variants";
@@ -18,7 +19,7 @@ import { ScrollShadow } from "@nextui-org/react";
 
 import { InstructorCard } from "./InstructorCard";
 import AddIcon from "@mui/icons-material/Add";
-import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 
 import axios from "axios";
 
@@ -46,7 +47,7 @@ async function updatePlan(course: any) {
 }
 
 export default function CourseCard(props: any) {
-  console.log(props.course)
+  console.log(props.course);
   let color = generateColorFromName(props.course.subject);
 
   const color_mappings: { [key: string]: string } = {
@@ -58,11 +59,11 @@ export default function CourseCard(props: any) {
   };
 
   const days = {
-    "M": props.course.facultyMeet.meetingTimes.monday,
-    "T": props.course.facultyMeet.meetingTimes.tuesday,
-    "W": props.course.facultyMeet.meetingTimes.wednesday,
-    "TH": props.course.facultyMeet.meetingTimes.thursday,
-    "F": props.course.facultyMeet.meetingTimes.friday
+    M: props.course.facultyMeet.meetingTimes.monday,
+    T: props.course.facultyMeet.meetingTimes.tuesday,
+    W: props.course.facultyMeet.meetingTimes.wednesday,
+    TH: props.course.facultyMeet.meetingTimes.thursday,
+    F: props.course.facultyMeet.meetingTimes.friday,
   };
 
   const coloredDays = Object.entries(days).map((item, index) => {
@@ -80,13 +81,19 @@ export default function CourseCard(props: any) {
     return null;
   });
 
-  const attributeCodes = props.course.sectionAttributes.map((item: any, index: number) => {
-    if (item) {
-      return <p key={index}>{item.code}</p>
-    }
+  const attributeCodes = props.course.sectionAttributes.map(
+    (item: any, index: number) => {
+      if (item) {
+        return (
+          <Chip variant={"bordered"} size="sm" key={index}>
+            <p> {item.code}</p>
+          </Chip>
+        );
+      }
 
-    return null;
-  });
+      return null;
+    }
+  );
 
   return (
     <Card key={props.course.id} className={base()} shadow="sm" isHoverable>
@@ -95,22 +102,26 @@ export default function CourseCard(props: any) {
         style={{ backgroundColor: color }}
       />
       <div className="pl-6">
-        <CardHeader>
+        <CardHeader onClick={() => updatePlan(props.course)}>
           <div className="flex items-center flex-row justify-between w-full">
             <div className="flex flex-col">
               <h1 className="font-bold text-3xl text-left">
-                {props.course.courseTitle}
+                {props.course.courseTitle.replace("&amp;", "&")}
               </h1>
-              <h2 className="flex text-left">
+              <h2 className=" flex text-left">
                 {props.course.subject} {props.course.courseNumber} |{" "}
-                {props.course.creditHours} credit(s) |
-                {props.course.sectionAttributes.length > 0 && attributeCodes}
+                {props.course.creditHours} credit(s) | &nbsp;
+                {props.course.sectionAttributes.length > 0 && (
+                  <div>{attributeCodes}</div>
+                )}
               </h2>
             </div>
             <div className="flex items-center ml-auto mr-8">
               <Image
                 // src={"https://www.swarthmore.edu/sites/default/files/styles/headshot/public/assets/images/user_photos/cmurphy4.jpg.webp"}
-                src={"https://cdn.vectorstock.com/i/500p/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg"}
+                src={
+                  "https://cdn.vectorstock.com/i/500p/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg"
+                }
                 width={100}
                 height={100}
                 alt="Professor"
@@ -123,50 +134,71 @@ export default function CourseCard(props: any) {
         <CardBody className="mt-0 mb-2">
           <div className="flex justify-between flex-row">
             <div className="gap-10">
-              {props.course.facultyMeet.meetingTimes.room ? (<div className="bg-[#2C2C33] p-3 w-64 rounded-md">
-                <p className="font-semibold text-lg text-white">
-                  {props.course.facultyMeet.meetingTimes.buildingDescription}{" "}
-                  {props.course.facultyMeet.meetingTimes.room}
-                </p>
-                <div className="text-base">
-                  {props.course.facultyMeet.meetingTimes ? (
-                    <div className="mt-2">
-                      <p className="font-normal">
-                        {" "}
-                        {props.course.facultyMeet.meetingTimes.beginTime.slice(0, 2) +
-                          ":" +
-                          props.course.facultyMeet.meetingTimes.beginTime.slice(2)}{" "}
-                        -{" "}
-                        {props.course.facultyMeet.meetingTimes.endTime.slice(0, 2) +
-                          ":" +
-                          props.course.facultyMeet.meetingTimes.endTime.slice(2)}
-                      </p>
-                    </div>
-                  ) : null}
+              {props.course.facultyMeet.meetingTimes.room ? (
+                <div className="bg-[#2C2C33] p-3 w-64 rounded-md">
+                  <div className="font-semibold text-lg text-white">
+                    {props.course.facultyMeet.meetingTimes.buildingDescription}{" "}
+                    {props.course.facultyMeet.meetingTimes.room}
+                  </div>
+                  <div className="text-base">
+                    {props.course.facultyMeet.meetingTimes ? (
+                      <div className="mt-2">
+                        <div className="font-normal">
+                          {" "}
+                          {props.course.facultyMeet.meetingTimes.beginTime.slice(
+                            0,
+                            2
+                          ) +
+                            ":" +
+                            props.course.facultyMeet.meetingTimes.beginTime.slice(
+                              2
+                            )}{" "}
+                          -{" "}
+                          {props.course.facultyMeet.meetingTimes.endTime.slice(
+                            0,
+                            2
+                          ) +
+                            ":" +
+                            props.course.facultyMeet.meetingTimes.endTime.slice(
+                              2
+                            )}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              </div>) : <div className="bg-[#2C2C33] p-4 w-64 rounded-md">
-                <p className="font-semibold">Contact your Professor for additional details.</p>
-              </div>}
+              ) : (
+                <div className="bg-[#2C2C33] p-4 w-64 rounded-md">
+                  <p className="font-semibold">
+                    Contact your Professor for additional details.
+                  </p>
+                </div>
+              )}
               <div className="flex flex-row">
-                <div className="flex flex-row gap-2 mt-5">
-                  {coloredDays}
-                </div>
+                <div className="flex flex-row gap-2 mt-5">{coloredDays}</div>
               </div>
             </div>
             <div className="flex flex-col pr-3 pt-10">
               <div className="flex flex-row gap-5 justify-end">
                 <div>
-                  <p className="text-right font-medium">Instructor</p>
-                  <p className="text-2xl font-bold">{props.course.instructor.displayName}</p>
+                  <div className="text-right font-medium">Instructor</div>
+                  <div className="text-2xl font-bold">
+                    {props.course.instructor.displayName.replace("&#39;", "'")}
+                  </div>
                 </div>
                 <div className="flex bg-green-500 w-16 h-16 items-center justify-center rounded-md">
-                  <p className="font-black text-3xl">?</p>
+                  <div className="font-black text-3xl">?</div>
                 </div>
               </div>
-              {props.course.seatsAvailable >= 0 && <div className="flex flex-row items-end pt-4 gap-2">
-                <p className="font-medium text-slate">No available seats left for this section</p>
-                <ErrorRoundedIcon color="error" />
-              </div>}
+              {props.course.seatsAvailable >= 0 && (
+                <div className="flex flex-row items-end pt-4 gap-2">
+                  <div className="font-medium text-slate">
+                    No available seats left for this section
+                  </div>
+                  {/*                   <ErrorRoundedIcon color="error" />
+                   */}
+                </div>
+              )}
             </div>
           </div>
         </CardBody>
