@@ -5,7 +5,7 @@ import { tv } from "tailwind-variants";
 import axios from "axios";
 
 import { generateColorFromName } from "../components/primitives";
-import { Error } from "@Mui/icons-material";
+import { Error } from "@mui/icons-material";
 export const card = tv({
   slots: {
     base: "bg-light_foreground min-h-32 max-h-62 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",

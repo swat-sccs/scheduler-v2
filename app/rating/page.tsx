@@ -24,7 +24,11 @@ import useSWR from "swr";
 import { useState } from "react";
 import React from "react";
 
-import { Search, Person, Class, Star } from "@Mui/icons-material";
+//import { Search, Person, Class, Star } from "@mui/icons-material";
+import Person from "@mui/icons-material/Person";
+import Class from "@mui/icons-material/Class";
+import Star from "@mui/icons-material/Star";
+
 import Rating from "@mui/material/Rating";
 
 import axios from "axios";
