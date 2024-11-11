@@ -33,7 +33,7 @@ export default function CreatePlan(props: any) {
 
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
   const { data, isLoading, error } = useSWR("/api/getplancourses", fetcher, {
-    refreshInterval: 1000,
+    refreshInterval: 800,
   });
 
   const {

@@ -38,15 +38,15 @@ async function getCourses(
       },
     ],
     where: {
+      ...(term
+        ? {
+            year: term,
+          }
+        : {}),
+      //year: term,
+
       ...(query
         ? {
-            ...(term
-              ? {
-                  year: term,
-                }
-              : {}),
-            //year: term,
-
             OR: [
               {
                 courseTitle: {
@@ -85,42 +85,36 @@ async function getCourses(
                 },
               },
             ],
+          }
+        : {}),
 
-            ...(startTime.length > 0
-              ? {
-                  facultyMeet: {
-                    meetingTimes: {
-                      beginTime: {
-                        in: startTime,
-                      },
-                    },
-                  },
-                }
-              : {}),
+      ...(startTime.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                beginTime: {
+                  in: startTime,
+                },
+              },
+            },
+          }
+        : {}),
 
-            ...(dotw.length > 0
-              ? {
-                  facultyMeet: {
-                    meetingTimes: {
-                      is: {
-                        monday: dotw.includes("monday") ? true : Prisma.skip,
-                        tuesday: dotw.includes("tuesday") ? true : Prisma.skip,
-                        wednesday: dotw.includes("wednesday")
-                          ? true
-                          : Prisma.skip,
-                        thursday: dotw.includes("thursday")
-                          ? true
-                          : Prisma.skip,
-                        friday: dotw.includes("friday") ? true : Prisma.skip,
-                        saturday: dotw.includes("saturday")
-                          ? true
-                          : Prisma.skip,
-                        sunday: dotw.includes("sunday") ? true : Prisma.skip,
-                      },
-                    },
-                  },
-                }
-              : {}),
+      ...(dotw.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                is: {
+                  monday: dotw.includes("monday") ? true : Prisma.skip,
+                  tuesday: dotw.includes("tuesday") ? true : Prisma.skip,
+                  wednesday: dotw.includes("wednesday") ? true : Prisma.skip,
+                  thursday: dotw.includes("thursday") ? true : Prisma.skip,
+                  friday: dotw.includes("friday") ? true : Prisma.skip,
+                  saturday: dotw.includes("saturday") ? true : Prisma.skip,
+                  sunday: dotw.includes("sunday") ? true : Prisma.skip,
+                },
+              },
+            },
           }
         : {}),
     },

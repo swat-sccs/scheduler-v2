@@ -31,8 +31,10 @@ export default function Calendar(props: any) {
         />
         */}
 
-        <b className="font-sans p-2"> {eventInfo.timeText}</b>
-        <div className="font-sans p-2">{eventInfo.event.title}</div>
+        <b className="font-sans text-[9px] ml-1 mt-1">{eventInfo.timeText}</b>
+        <div className="font-sans text-[10px] ml-1 ">
+          {eventInfo.event.title}
+        </div>
       </Card>
     );
   }
