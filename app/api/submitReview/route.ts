@@ -40,46 +40,48 @@ export async function POST(request: NextRequest) {
 
   let count: any = { one: 0, two: 0, three: 0, four: 0, five: 0 };
 
-  if (profs.Rating.length > 0) {
-    for (const rating of profs.Rating) {
-      //@ts-ignore
-      if (rating.overallRating == 1) {
-        count.one += 1;
+  if (profs) {
+    if (profs?.Rating?.length > 0) {
+      for (const rating of profs.Rating) {
+        //@ts-ignore
+        if (rating.overallRating == 1) {
+          count.one += 1;
+        }
+        if (rating.overallRating == 2) {
+          count.two += 1;
+        }
+        if (rating.overallRating == 3) {
+          count.three += 1;
+        }
+        if (rating.overallRating == 4) {
+          count.four += 1;
+        }
+        if (rating.overallRating == 5) {
+          count.five += 1;
+        }
       }
-      if (rating.overallRating == 2) {
-        count.two += 1;
-      }
-      if (rating.overallRating == 3) {
-        count.three += 1;
-      }
-      if (rating.overallRating == 4) {
-        count.four += 1;
-      }
-      if (rating.overallRating == 5) {
-        count.five += 1;
-      }
+
+      let avg = parseInt(
+        (
+          (count.one * 1 +
+            count.two * 2 +
+            count.three * 3 +
+            count.four * 4 +
+            count.five * 5) /
+          profs.Rating.length
+        ).toFixed(1)
+      );
+
+      const newAvg = await prisma.faculty.update({
+        data: {
+          avgRating: avg,
+        },
+        where: {
+          id: facultyID,
+        },
+      });
+      return NextResponse.json(newAvg, { status: 200 });
     }
-
-    let avg = parseInt(
-      (
-        (count.one * 1 +
-          count.two * 2 +
-          count.three * 3 +
-          count.four * 4 +
-          count.five * 5) /
-        profs.Rating.length
-      ).toFixed(1)
-    );
-
-    const newAvg = await prisma.faculty.update({
-      data: {
-        avgRating: avg,
-      },
-      where: {
-        id: facultyID,
-      },
-    });
-    return NextResponse.json(newAvg, { status: 200 });
   }
 
   //console.log(plans);
