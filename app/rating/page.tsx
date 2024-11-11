@@ -116,7 +116,6 @@ export default function RatingPage() {
     setSelectedProf(key);
   };
   const onClassSelectionChange = (key: any) => {
-    console.log(key);
     setSelectedClass(key);
   };
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

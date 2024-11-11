@@ -18,7 +18,5 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  //console.log(plans);
-  console.log(courses);
   return NextResponse.json(courses, { status: 200 });
 }
