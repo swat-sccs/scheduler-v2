@@ -5,21 +5,18 @@ import { Skeleton } from "@nextui-org/skeleton";
 import Search from "../components/Search";
 import { FullCourseList } from "../components/FullCourseList";
 import CreatePlan from "../components/CreatePlan";
-import { auth } from "../lib/auth";
 import prisma from "../lib/prisma";
-import { Course, CoursePlan } from "@prisma/client";
-import { getPlanCookie } from "../app/actions";
-import { dA } from "@fullcalendar/core/internal-common";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();
-  let output: any = [];
+  const output: any = [];
 
   for (let i = 0; i < courses.length; i++) {
     if (!output.includes(courses[i].year)) {
       output.push(courses[i].year);
     }
   }
+
   return output;
 }
 
@@ -32,8 +29,8 @@ async function getUniqueStartEndTimes() {
       beginTime: "asc",
     },
   });
-  let startTimes: any = [];
-  let endTimes: any = [];
+  const startTimes: any = [];
+  const endTimes: any = [];
 
   for (let i = 0; i < meetingTimes.length; i++) {
     if (!startTimes.includes(meetingTimes[i].beginTime)) {
@@ -44,13 +41,14 @@ async function getUniqueStartEndTimes() {
     }
   }
 
-  let times = { startTimes: startTimes, endTimes: endTimes };
+  const times = { startTimes: startTimes, endTimes: endTimes };
+
   return times;
 }
 
 async function getUniquCodes() {
   const codes = await prisma.sectionAttribute.findMany();
-  let daCodes: any = [];
+  const daCodes: any = [];
 
   for (let i = 0; i < codes.length; i++) {
     if (!daCodes.includes(codes[i].code)) {
@@ -58,6 +56,7 @@ async function getUniquCodes() {
     }
   }
   console.log(daCodes);
+
   return daCodes;
 }
 
@@ -66,7 +65,7 @@ export default async function Page(props: {
     query?: string;
     page?: string;
     term?: string;
-    dotw?: Array<String>;
+    dotw?: Array<string>;
     stime?: Array<string>;
   }>;
 }) {
@@ -75,7 +74,7 @@ export default async function Page(props: {
   const term = searchParams?.term || "";
   const dotw = searchParams?.dotw || [];
   const stime = searchParams?.stime || [];
-  var homePageProps: any = {};
+  const homePageProps: any = {};
 
   homePageProps["fullCourseList"] = (
     <Suspense
@@ -83,7 +82,7 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-full align-top justify-start" />
       }
     >
-      <FullCourseList query={query} term={term} dotw={dotw} stime={stime} />
+      <FullCourseList dotw={dotw} query={query} stime={stime} term={term} />
     </Suspense>
   );
 
@@ -110,7 +109,7 @@ async function Home(props: any) {
         <div className="col-span-2 col-start-1">
           <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
             <div className="row-start-1">
-              <Search terms={terms} times={uniqueTimes} codes={codes} />
+              <Search codes={codes} terms={terms} times={uniqueTimes} />
             </div>
             <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
               {props.fullCourseList}

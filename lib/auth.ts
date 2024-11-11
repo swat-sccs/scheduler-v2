@@ -4,6 +4,7 @@ import type {
   NextApiResponse,
 } from "next";
 import type { NextAuthOptions } from "next-auth";
+
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { getServerSession } from "next-auth";
 
@@ -42,6 +43,7 @@ export const config = {
     jwt({ token, user }) {
       // @ts-ignore
       if (user) token.role = user.role;
+
       return token;
     },
     session({ session, token }) {
@@ -51,6 +53,7 @@ export const config = {
         // @ts-ignore
         session.user.id = token.sub;
       }
+
       return session;
     },
   },

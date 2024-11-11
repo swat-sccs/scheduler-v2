@@ -1,8 +1,7 @@
 "use client";
 //Just for pathname highlighting though, could always go back if it becomes too slow
-import React, { useContext } from "react";
+import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -12,32 +11,25 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Button, ButtonGroup } from "@nextui-org/button";
-
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownSection,
   DropdownItem,
 } from "@nextui-org/dropdown";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import { Spacer } from "@nextui-org/spacer";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { button as buttonStyles } from "@nextui-org/theme";
-import { Divider } from "@nextui-org/divider";
 import InputIcon from "@mui/icons-material/Input";
+import HomeIcon from "@mui/icons-material/Home";
+import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
 
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "../components/theme-switch";
 import { title } from "../components/primitives";
-
-import HomeIcon from "@mui/icons-material/Home";
-import SendIcon from "@mui/icons-material/Send";
-import axios from "axios";
 
 const pages = {
   Home: { link: "/", image: <HomeIcon /> },
@@ -123,7 +115,11 @@ export const Navbar = (props: any) => {
 
   return (
     <div className="bg-background_navbar">
-      <NextUINavbar className="mt-2 bg-inherit" maxWidth="xl" position="sticky">
+      <NextUINavbar
+        className="mt-2 bg-inherit"
+        maxWidth="full"
+        position="sticky"
+      >
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
@@ -188,7 +184,6 @@ export const Navbar = (props: any) => {
 
               {authenticated ? (
                 <DropdownMenu aria-label="Static Actions">
-                  <DropdownItem key="myCourses">My Courses</DropdownItem>
                   <DropdownItem key="loginLink">{loginLink}</DropdownItem>
                 </DropdownMenu>
               ) : (
@@ -208,21 +203,43 @@ export const Navbar = (props: any) => {
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {siteConfig.navMenuItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`}>
-                <Link
-                  color={
-                    index === 2
-                      ? "primary"
-                      : index === siteConfig.navMenuItems.length - 1
-                        ? "danger"
-                        : "foreground"
-                  }
-                  href="#"
-                  size="lg"
-                >
+                <Link href={item.href} size="lg">
                   {item.label}
                 </Link>
               </NavbarMenuItem>
             ))}
+            <NavbarItem className="hidden sm:flex gap-2">
+              <ThemeSwitch />
+            </NavbarItem>
+
+            <NavbarItem>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Link
+                    className={buttonStyles({
+                      color: "primary",
+                      radius: "full",
+                      variant: "ghost",
+                    })}
+                    onClick={
+                      authenticated
+                        ? () => {}
+                        : () => signIn("keycloak", { callbackUrl: "/" })
+                    }
+                  >
+                    {nameButton}
+                  </Link>
+                </DropdownTrigger>
+
+                {authenticated ? (
+                  <DropdownMenu aria-label="Static Actions">
+                    <DropdownItem key="loginLink">{loginLink}</DropdownItem>
+                  </DropdownMenu>
+                ) : (
+                  <></>
+                )}
+              </Dropdown>
+            </NavbarItem>
           </div>
         </NavbarMenu>
       </NextUINavbar>

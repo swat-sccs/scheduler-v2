@@ -1,7 +1,7 @@
 // api/test.ts
 import { NextResponse, NextRequest } from "next/server";
+
 import prisma from "../../../lib/prisma";
-import { getServerSession } from "next-auth/next";
 import { auth } from "../../../lib/auth";
 
 export async function POST(request: NextRequest) {
@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
       courses: true,
     },
   });
+
   //console.log(plans);
   return NextResponse.json(courses, { status: 200 });
 }

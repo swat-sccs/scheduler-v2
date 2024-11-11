@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+
 import prisma from "../../../lib/prisma";
 import { auth } from "../../../lib/auth";
 
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
     },
   });
   let courses: any;
+
   if (user) {
     courses = await prisma.coursePlan.findMany({
       where: {
@@ -26,6 +28,7 @@ export async function GET(request: NextRequest) {
   } else {
     courses = null;
   }
+
   //console.log(plans);
   return NextResponse.json(courses, { status: 200 });
 }

@@ -1,22 +1,19 @@
-import { title } from "../../components/primitives";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
+// a plugin!
+
 import CreatePlan from "../../components/CreatePlan";
-import moment from "moment";
 import Calendar from "../../components/Calendar";
 import prisma from "../../lib/prisma";
-import { auth } from "../../lib/auth";
 import { getPlanCookie } from "../actions";
-import { BorderColor } from "@mui/icons-material";
 import { generateColorFromName } from "../../components/primitives";
 export default async function CalendarPage() {
   async function getEvents() {
-    let output: any = [];
-    let planCookie: any = await getPlanCookie();
+    const output: any = [];
+    const planCookie: any = await getPlanCookie();
 
     let courses;
+
     if (planCookie) {
-      let plan = await prisma.coursePlan.findUnique({
+      const plan = await prisma.coursePlan.findUnique({
         where: {
           id: parseInt(planCookie),
         },
@@ -30,10 +27,10 @@ export default async function CalendarPage() {
 
     if (courses) {
       for (let i = 0; i < courses.length; i++) {
-        let color = generateColorFromName(courses[i].subject);
+        const color = generateColorFromName(courses[i].subject);
 
-        let num: string = courses[i].courseReferenceNumber;
-        let meetingTimes = await prisma.meetingTime.findFirst({
+        const num: string = courses[i].courseReferenceNumber;
+        const meetingTimes = await prisma.meetingTime.findFirst({
           where: {
             courseReferenceNumber: num,
           },
@@ -99,10 +96,12 @@ export default async function CalendarPage() {
         maxstart?.endTime.slice(0, 2) + ":" + maxstart?.beginTime.slice(2),
     };*/
     console.log(maxstart);
+
     return maxstart;
   }
 
-  let events = await getEvents();
+  const events = await getEvents();
+
   //let times = await getUniqueStartEndTimes();
   return (
     <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-20">
