@@ -30,7 +30,6 @@ async function updatePlan(course: any) {
 }
 
 export default function CourseCard(props: any) {
-  console.log(props.course);
   const color = generateColorFromName(props.course.subject);
 
   const color_mappings: { [key: string]: string } = {
@@ -181,12 +180,18 @@ export default function CourseCard(props: any) {
                 </div>
               )}
             </div>
-            {props.course.seatsAvailable >= 0 && (
+            {props.course.seatsAvailable == 0 ? (
               <div className="flex flex-row items-end pt-4 gap-2">
                 <div className="font-medium text-slate">
                   No available seats left for this section
                 </div>
                 <Error color="error" />
+              </div>
+            ) : (
+              <div className="flex flex-row ml-auto pt-4 gap-2">
+                <div className="font-medium text-slate">
+                  Seats Available: {props.course.seatsAvailable}
+                </div>
               </div>
             )}
           </div>

@@ -55,7 +55,6 @@ async function getUniquCodes() {
       daCodes.push(codes[i].code);
     }
   }
-  console.log(daCodes);
 
   return daCodes;
 }
