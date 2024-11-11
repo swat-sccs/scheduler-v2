@@ -41,8 +41,8 @@ export const Navbar = (props: any) => {
   const { data: session, status } = useSession();
 
   let authenticated;
-  let loginLink;
-  let adminDashLink;
+  let loginLink: any;
+  let adminDashLink: any;
   let nameButton;
 
   if (props.hasOwnProperty("login")) {
@@ -68,16 +68,14 @@ export const Navbar = (props: any) => {
         </div>
       );
       // @ts-ignore
-      /*
+
       if (session.user?.role === "admin") {
         adminDashLink = (
-          <NavbarContent key="admin">
-            <Link href="/admin">
-              <div>Admin</div>
-            </Link>
-          </NavbarContent>
+          <DropdownItem key="admin" href="/admin">
+            <div>Admin</div>
+          </DropdownItem>
         );
-      }*/
+      }
       nameButton = session.user?.name;
     } else {
       authenticated = false;
@@ -184,6 +182,7 @@ export const Navbar = (props: any) => {
 
               {authenticated ? (
                 <DropdownMenu aria-label="Static Actions">
+                  {adminDashLink}
                   <DropdownItem key="loginLink">{loginLink}</DropdownItem>
                 </DropdownMenu>
               ) : (
