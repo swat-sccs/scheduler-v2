@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextIndex", "fullTextSearch", "relationJoins", "strictUndefinedChecks"]
+  previewFeatures = ["fieldReference", "fullTextIndex", "fullTextSearch", "relationJoins", "strictUndefinedChecks"]
 }
 
 datasource db {
@@ -54,15 +54,14 @@ model Course {
 }
 
 model Faculty {
-  id                    Int      @id @default(autoincrement())
-  bannerId              String
-  courseReferenceNumber String   @unique
-  displayName           String
-  emailAddress          String
-  year                  String
-  avgRating             Float?
-  courses               Course[]
-  Rating                Rating[]
+  id           Int      @id @default(autoincrement())
+  bannerId     String @unique
+  displayName  String
+  emailAddress String
+  year         String
+  avgRating    Float?
+  courses      Course[]
+  Rating       Rating[]
 }
 
 model MeetingsFaculty {
@@ -115,7 +114,6 @@ model Rating {
   courseID      Int
   facultyID     Int
   overallRating Int?
-  quality       Int?
   difficulty    Int?
   takeAgain     Boolean?
   review        String?
@@ -123,8 +121,8 @@ model Rating {
   forCredit     Boolean?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  userId        Int
   course        Course   @relation(fields: [courseID], references: [id])
   faculty       Faculty  @relation(fields: [facultyID], references: [id])
-  User          User?    @relation(fields: [userId], references: [id])
-  userId        Int?
+  User          User?   @relation(fields: [userId], references: [id])
 }

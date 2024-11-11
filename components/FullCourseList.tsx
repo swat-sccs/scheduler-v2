@@ -1,19 +1,20 @@
 import { Course, Prisma } from "@prisma/client";
+
 import prisma from "../lib/prisma";
+
 import CourseCard from "./CourseCard";
-import { getPlanCookie } from "../app/actions";
 
 async function getCourses(
   query: string,
   term: string,
-  dotw: Array<String>,
+  dotw: Array<string>,
   stime: Array<string>
 ) {
   //let DOTW: Array<String> = dotw.split(",");
 
   //query = query.trim().replace(/^[a-zA-Z0-9:]+$/g, "");
 
-  let startTime = stime.toString().split(",").filter(Number);
+  const startTime = stime.toString().split(",").filter(Number);
 
   return await prisma.course.findMany({
     relationLoadStrategy: "join", // or 'query'
@@ -75,6 +76,14 @@ async function getCourses(
                   mode: "insensitive",
                 },
               },
+              {
+                instructor: {
+                  displayName: {
+                    search: query.trim().split(" ").join(" | "),
+                    mode: "insensitive",
+                  },
+                },
+              },
             ],
 
             ...(startTime.length > 0
@@ -126,7 +135,7 @@ export async function FullCourseList({
 }: {
   query: string;
   term: string;
-  dotw: Array<String>;
+  dotw: Array<string>;
   stime: Array<string>;
 }) {
   const courseList: Course[] = await getCourses(query, term, dotw, stime);

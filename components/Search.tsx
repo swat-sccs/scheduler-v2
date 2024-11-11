@@ -6,10 +6,10 @@ import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { Autocomplete, TextField, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 
 export default function Search(props: any) {
-  let router = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
@@ -29,16 +29,17 @@ export default function Search(props: any) {
     //replaceText(term);
     //setSearch(term);
     //const term_regex = new RegExp(\w, "g");
-    let filtered_term = term.replace(/[^a-zA-Z0-9 ]+/gi, "");
-    let include_colons = term.replace(/[^a-zA-Z0-9: ]+/gi, "");
-    let term_list = include_colons.split(" ");
+    const filtered_term = term.replace(/[^a-zA-Z0-9 ]+/gi, "");
+    const include_colons = term.replace(/[^a-zA-Z0-9: ]+/gi, "");
+    const term_list = include_colons.split(" ");
 
-    for (var i = 0; i < term_list.length; i++) {
+    for (let i = 0; i < term_list.length; i++) {
       if (/\w+:/.test(term_list[i])) {
         console.log(term_list[i]);
       }
     }
     const params = new URLSearchParams(searchParams);
+
     if (term) {
       decodeURIComponent;
       params.set("query", filtered_term);
@@ -90,6 +91,7 @@ export default function Search(props: any) {
   const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);
     const params = new URLSearchParams(searchParams);
+
     if (e.size > 0) {
       params.set("dotw", Array.from(e).join(","));
     } else {
@@ -101,6 +103,7 @@ export default function Search(props: any) {
   const handleSTimeChange = (e: any) => {
     setSelectedStartTime(...[e]);
     const params = new URLSearchParams(searchParams);
+
     if (e.size > 0) {
       params.set("stime", Array.from(e).join(","));
     } else {
@@ -110,11 +113,12 @@ export default function Search(props: any) {
   };
 
   const RenderSelectOptions = () => {
-    let output = [];
+    const output = [];
 
     for (let i = 0; i < props.terms?.length; i++) {
-      let sem = props.terms[i].substring(0, 1);
-      let year = props.terms[i].substring(1);
+      const sem = props.terms[i].substring(0, 1);
+      const year = props.terms[i].substring(1);
+
       if (sem.toLowerCase() == "s") {
         output.push({ key: props.terms[i], title: "Spring " + year });
       } else if (sem.toLowerCase() == "f") {
@@ -137,30 +141,30 @@ export default function Search(props: any) {
         defaultValue={searchParams.get("query")?.toString()}
         label="Search"
         labelPlacement="inside"
-        variant="bordered"
         value={search}
-        onClear={() => {
-          handleSearch("");
-        }}
+        variant="bordered"
         onChange={(e) => {
           handleSearch(e.target.value);
+        }}
+        onClear={() => {
+          handleSearch("");
         }}
       />
 
       <Select
-        label="Select Term"
-        disallowEmptySelection={true}
         className="max-w-xs col-span-1"
-        selectedKeys={selectedTerm}
         defaultSelectedKeys={searchParams.get("term")?.toString()}
+        disallowEmptySelection={true}
+        label="Select Term"
+        selectedKeys={selectedTerm}
         selectionMode={"single"}
         onChange={handleSelectionChange}
       >
         {RenderSelectOptions()}
       </Select>
       <Select
-        label="Day of the Week"
         className="max-w-xs"
+        label="Day of the Week"
         selectedKeys={selectedDOTW}
         selectionMode={"multiple"}
         //defaultSelectedKeys={searchParams.get("dotw")?.toString()}
@@ -190,15 +194,15 @@ export default function Search(props: any) {
       </Select>
 
       <Select
-        label="Start Time"
         className="max-w-xs"
+        label="Start Time"
         selectedKeys={selectedStartTime}
         selectionMode={"multiple"}
         onSelectionChange={handleSTimeChange}
       >
         {props.times.startTimes.map((startTime: any) => {
-          var time = startTime.slice(0, 2) + ":" + startTime.slice(2);
-          var daTime = moment(time, "HH:mm").format("hh:mm A");
+          const time = startTime.slice(0, 2) + ":" + startTime.slice(2);
+          const daTime = moment(time, "HH:mm").format("hh:mm A");
 
           return (
             <SelectItem key={startTime} value={startTime}>

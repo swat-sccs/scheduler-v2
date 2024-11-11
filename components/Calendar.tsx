@@ -4,7 +4,6 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import { Card } from "@nextui-org/react";
 import moment from "moment";
-import { generateColorFromName } from "./primitives";
 
 export default function Calendar(props: any) {
   function dayHeaderContent(args: any) {
@@ -13,6 +12,7 @@ export default function Calendar(props: any) {
 
   function renderEventContent(eventInfo: any) {
     console.log(eventInfo);
+
     return (
       <Card
         className="fc-event-main-frame w-[100%] rounded-md hover:h-[20vh] ease-in-out z-0 hover:z-10 hover:transition-all duration-700 "
@@ -39,20 +39,20 @@ export default function Calendar(props: any) {
 
   return (
     <FullCalendar
-      height="100%"
-      plugins={[timeGridPlugin]}
-      initialView="timeGridWeek"
-      allDaySlot={false}
       expandRows
-      slotDuration="01:00:00"
-      slotMinTime="08:00:00"
-      slotMaxTime="23:00:00"
-      weekends={false}
+      allDaySlot={false}
       dayHeaderFormat={dayHeaderContent}
+      editable={false}
+      eventContent={renderEventContent}
       events={props.events}
       headerToolbar={false}
-      eventContent={renderEventContent}
-      editable={false}
+      height="100%"
+      initialView="timeGridWeek"
+      plugins={[timeGridPlugin]}
+      slotDuration="01:00:00"
+      slotMaxTime="23:00:00"
+      slotMinTime="08:00:00"
+      weekends={false}
     />
   );
 }

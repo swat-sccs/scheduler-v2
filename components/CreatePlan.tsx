@@ -10,21 +10,18 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import { tv } from "tailwind-variants";
 import axios from "axios";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-
-import { InstructorCard } from "./InstructorCard";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { setPlanCookie } from "../app/actions";
 import { useCookies } from "next-client-cookies";
+
+import { setPlanCookie } from "../app/actions";
 import { generateColorFromName } from "../components/primitives";
-import { FullCourseList } from "./FullCourseList";
-import { PlanCardList } from "./PlanCardList";
+
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();
@@ -107,19 +104,22 @@ export default function CreatePlan(props: any) {
   useEffect(() => {
     // Update the document title using the browser API
     setSelectedCoursePlan([cookies.get("plan")]);
-    var objDiv: any = document.getElementById("scrollMe");
+    const objDiv: any = document.getElementById("scrollMe");
+
     objDiv.scrollTop = objDiv.scrollHeight;
   }, [data]);
 
   const CoursesList = () => {
-    let output: any = [];
+    const output: any = [];
+
     if (isLoading) {
-      return <Skeleton></Skeleton>;
+      return <Skeleton />;
     }
     if (data && !isLoading) {
-      let filtered_data = data.filter(
+      const filtered_data = data.filter(
         (course: any) => course.id == selectedCoursePlan[0]
       );
+
       for (let i = 0; i < filtered_data.length; i++) {
         filtered_data[i].courses.map((course: any) =>
           output.push(
@@ -144,9 +144,9 @@ export default function CreatePlan(props: any) {
                   {course.courseTitle.replace(/&amp;/g, "&")}
                 </div>
                 <Button
-                  size={"sm"}
-                  className=""
                   isIconOnly
+                  className=""
+                  size={"sm"}
                   onClick={() =>
                     removeCourseFromPlan(selectedCoursePlan[0], course)
                   }
@@ -172,9 +172,9 @@ export default function CreatePlan(props: any) {
         <div className="grid grid-rows-subgrid grid-cols-3 gap-2 ">
           <Input
             isRequired
+            className="col-span-2 "
             label="Give your plan a name..."
             size="lg"
-            className="col-span-2 "
             value={coursePlanName}
             onChange={(event: any) => {
               setCoursePlanName(event.target.value);
@@ -182,7 +182,7 @@ export default function CreatePlan(props: any) {
           />
           <Button
             size="lg"
-            startContent={<AddIcon></AddIcon>}
+            startContent={<AddIcon />}
             onClick={() => createPlan()}
           >
             <div>Create</div>
@@ -202,12 +202,12 @@ export default function CreatePlan(props: any) {
         <div className="font-bold gap-0">Select a Plan</div>
         <div className="grid grid-cols-5 gap-2">
           <Select
-            selectionMode="single"
-            label="Select Plan"
-            size="sm"
             className="col-span-3"
-            onChange={handleSelectionChange}
+            label="Select Plan"
             selectedKeys={selectedCoursePlan}
+            selectionMode="single"
+            size="sm"
+            onChange={handleSelectionChange}
           >
             {coursePlans != null
               ? coursePlans.map((plan: any) => (
@@ -218,16 +218,12 @@ export default function CreatePlan(props: any) {
 
           <Button
             isIconOnly
-            size="md"
             className=""
-            onClick={deletePlan}
-            startContent={<DeleteIcon></DeleteIcon>}
-          ></Button>
-          <Button
-            isIconOnly
             size="md"
-            startContent={<IosShareIcon></IosShareIcon>}
-          ></Button>
+            startContent={<DeleteIcon />}
+            onClick={deletePlan}
+          />
+          <Button isIconOnly size="md" startContent={<IosShareIcon />} />
         </div>
 
         <div

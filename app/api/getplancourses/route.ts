@@ -1,15 +1,15 @@
 // api/test.ts
 import { NextResponse, NextRequest } from "next/server";
+
 import prisma from "../../../lib/prisma";
-import { getServerSession } from "next-auth/next";
 import { auth } from "../../../lib/auth";
 import { getPlanCookie } from "../../../app/actions";
 
 export async function GET(request: NextRequest) {
-  let planCookie: any = await getPlanCookie();
+  const planCookie: any = await getPlanCookie();
   const session = await auth();
 
-  let courses = await prisma.coursePlan.findMany({
+  const courses = await prisma.coursePlan.findMany({
     where: {
       AND: {
         User: {
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
       courses: true,
     },
   });
+
   return NextResponse.json(courses, { status: 200 });
 }
 
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
   const plan = data.plan;
   const session = await auth();
 
-  let courses = await prisma.coursePlan.update({
+  const courses = await prisma.coursePlan.update({
     where: {
       id: parseInt(plan),
     },

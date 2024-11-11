@@ -1,5 +1,6 @@
 "use client";
 import { Card, Button, CardHeader } from "@nextui-org/react";
+
 import { generateColorFromName } from "../components/primitives";
 
 export default function PlanCard(props: any) {
@@ -23,8 +24,8 @@ export default function PlanCard(props: any) {
           {props.course.courseTitle.replace(/&amp;/g, "&")}
         </div>
         <Button
-          size={"sm"}
           className=""
+          size={"sm"}
           isIconOnly
           /*
             onClick={() =>
