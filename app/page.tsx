@@ -78,7 +78,11 @@ export default async function Page(props: {
   homePageProps["fullCourseList"] = (
     <Suspense
       fallback={
-        <Skeleton className="rounded-lg w-8/12 h-full align-top justify-start" />
+        <div className="grid gap-4 ">
+          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
+          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
+          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
+        </div>
       }
     >
       <FullCourseList dotw={dotw} query={query} stime={stime} term={term} />
