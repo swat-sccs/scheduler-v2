@@ -134,10 +134,10 @@ export default function Search(props: any) {
   };
 
   return (
-    <div className="grid grid-cols-5 gap-5">
+    <div className="grid grid-cols-6 gap-5">
       <Input
         isClearable
-        className="max-w-xs col-span-2"
+        className="md:max-w-xs col-span-6 md:col-span-3"
         defaultValue={searchParams.get("query")?.toString()}
         label="Search"
         labelPlacement="inside"
@@ -152,7 +152,7 @@ export default function Search(props: any) {
       />
 
       <Select
-        className="max-w-xs col-span-1"
+        className="max-w-xs col-span-2 md:col-span-1"
         defaultSelectedKeys={searchParams.get("term")?.toString()}
         disallowEmptySelection={true}
         label="Select Term"
@@ -163,7 +163,7 @@ export default function Search(props: any) {
         {RenderSelectOptions()}
       </Select>
       <Select
-        className="max-w-xs"
+        className="max-w-xs col-span-2 md:col-span-1"
         label="Day of the Week"
         selectedKeys={selectedDOTW}
         selectionMode={"multiple"}
@@ -194,7 +194,7 @@ export default function Search(props: any) {
       </Select>
 
       <Select
-        className="max-w-xs"
+        className="max-w-xs col-span-2 md:col-span-1"
         label="Start Time"
         selectedKeys={selectedStartTime}
         selectionMode={"multiple"}

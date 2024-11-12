@@ -23,18 +23,11 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { button as buttonStyles } from "@nextui-org/theme";
 import InputIcon from "@mui/icons-material/Input";
-import HomeIcon from "@mui/icons-material/Home";
-import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "../components/theme-switch";
 import { title } from "../components/primitives";
-
-const pages = {
-  Home: { link: "/", image: <HomeIcon /> },
-  Submit: { link: "/submit", image: <SendIcon /> },
-};
 
 export const Navbar = (props: any) => {
   const pathname = usePathname();
@@ -87,37 +80,14 @@ export const Navbar = (props: any) => {
     }
   }
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
-    <div className="bg-background_navbar">
+    <div className="bg-background_navbar h-auto">
       <NextUINavbar
-        className="mt-2 bg-inherit"
+        className="bg-inherit md:py-2"
         maxWidth="full"
         position="sticky"
       >
-        <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarContent className="basis-1/5 md:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
               className="flex justify-start items-center gap-1"
@@ -133,9 +103,9 @@ export const Navbar = (props: any) => {
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent justify="start">
+        <NavbarContent justify="start" className="hidden md:flex">
           <Spacer x={24} />
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
+          <ul className="gap-4 flex-row justify-start ml-2">
             {siteConfig.navItems.map((item) => (
               <Link
                 key={item.href}
@@ -153,10 +123,10 @@ export const Navbar = (props: any) => {
         </NavbarContent>
 
         <NavbarContent
-          className="hidden sm:flex basis-1/5 sm:basis-full"
+          className="hidden md:flex basis-1/5 sm:basis-full"
           justify="end"
         >
-          <NavbarItem className="hidden sm:flex gap-2">
+          <NavbarItem className="hidden md:flex gap-2">
             <ThemeSwitch />
           </NavbarItem>
 
@@ -191,7 +161,7 @@ export const Navbar = (props: any) => {
           </NavbarItem>
         </NavbarContent>
 
-        <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <NavbarContent className="flex md:hidden" justify="end">
           <ThemeSwitch />
           <NavbarMenuToggle />
         </NavbarContent>
@@ -199,16 +169,13 @@ export const Navbar = (props: any) => {
         {/* Mobile?*/}
         <NavbarMenu>
           <div className="mx-4 mt-2 flex flex-col gap-2">
-            {siteConfig.navMenuItems.map((item, index) => (
+            {siteConfig.navItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`}>
                 <Link href={item.href} size="lg">
                   {item.label}
                 </Link>
               </NavbarMenuItem>
             ))}
-            <NavbarItem className="hidden sm:flex gap-2">
-              <ThemeSwitch />
-            </NavbarItem>
 
             <NavbarItem>
               <Dropdown>
