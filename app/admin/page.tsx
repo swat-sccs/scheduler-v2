@@ -101,7 +101,7 @@ export default function AdminPage() {
         <div className="w-[90vw]">
           <Table
             isHeaderSticky
-            className="overflow-scroll"
+            className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
             fullWidth
             aria-label="Rating table with dynamic content(ratings)"
           >

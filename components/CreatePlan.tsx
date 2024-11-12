@@ -10,12 +10,13 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IosShareIcon from "@mui/icons-material/IosShare";
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import axios from "axios";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { useCookies } from "next-client-cookies";
 
@@ -25,6 +26,7 @@ import { generateColorFromName } from "../components/primitives";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const { data: session, status } = useSession();
@@ -163,12 +165,22 @@ export default function CreatePlan(props: any) {
     return output;
   };
 
+  const scrollToPlan = () => {
+    if (scrollRef.current)
+        scrollRef.current.scrollIntoView({behavior: 'smooth', inline: "start"});
+  }
+
   return (
     <>
-      <Divider className="h-[60vh] absolute mt-20" orientation="vertical" />
+      <Divider className="hidden md:absolute h-[60vh] mt-32" orientation="vertical" />
 
-      <div className="grid grid-cols-1 grid-rows-10 ml-10 gap-5 h-[66vh] mt-10 overflow-clip">
-        <div className="font-bold text-primary h1">Create a Plan</div>
+      <div className="grid grid-cols-1 grid-rows-10 md:ml-10 gap-5 h-[66vh] mt-10 overflow-clip">
+        <div className="flex flex-row" ref={scrollRef}>
+            <div className="font-bold text-primary h1">Create a Plan</div>
+            <button className="flex md:hidden" onClick={scrollToPlan}>
+                <ExpandLessIcon/>
+            </button>
+        </div>
         <div className="grid grid-rows-subgrid grid-cols-3 gap-2 ">
           <Input
             isRequired
@@ -189,7 +201,7 @@ export default function CreatePlan(props: any) {
           </Button>
         </div>
 
-        <div className="  ">
+        <div>
           <div className="grid grid-rows-subgrid  grid-cols-3 ">
             <Divider className="mt-2" />
             <div className="text-center">or</div>
@@ -227,7 +239,7 @@ export default function CreatePlan(props: any) {
         </div>
 
         <div
-          className="grid overflow-y-scroll gap-1 h-[30vh] mt-5"
+          className="grid overflow-y-scroll gap-1 h-[30vh] mt-5 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
           id="scrollMe"
         >
           <CoursesList />

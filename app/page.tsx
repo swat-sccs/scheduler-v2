@@ -104,18 +104,18 @@ async function Home(props: any) {
 
   return (
     <>
-      <div className="grid grid-cols-3 p-4 -mt-10 ">
-        <div className="col-span-2 col-start-1">
-          <div className="grid grid-rows-subgrid grid-cols-1 gap-5 ">
-            <div className="row-start-1">
+      <div className="grid grid-cols-3 p-4 h-full">
+        <div className="col-span-3 md:col-span-2 col-start-1">
+          <div className="grid grid-rows-subgrid grid-cols-1 gap-5 h-full">
+            <div className="row-start-1 mt-auto mb-auto">
               <Search codes={codes} terms={terms} times={uniqueTimes} />
             </div>
-            <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip">
+            <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
               {props.fullCourseList}
             </div>
           </div>
         </div>
-        <div className="col-start-3">
+        <div className="col-span-3 md:col-start-3">
           <CreatePlan />
         </div>
       </div>

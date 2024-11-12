@@ -13,6 +13,11 @@ module.exports = {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-sans)"],
       },
+      colors: {
+        accent: {
+          500: "#f46523" /* this is our accent */,
+        },
+      },
     },
   },
   darkMode: "class",
@@ -35,5 +40,6 @@ module.exports = {
         },
       },
     }),
+    require("tailwind-scrollbar"),
   ],
 };
