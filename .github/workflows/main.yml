@@ -1,0 +1,27 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Mirror
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: action-pack/gitlab-sync@v3
+      with:
+        # GitLab repo URL
+        url: https://gitlab.sccs.swarthmore.edu/sccs/scheduler.git
+        # GitLab username
+        username: mirrorbot
+        # GitLab token
+        token: ${{ secrets.GITLAB_TOKEN }}
