@@ -129,7 +129,7 @@ export default function CourseCard(props: any) {
                   {props.course.facultyMeet.meetingTimes ? (
                     <div className="mt-1">
                       <div className="font-normal">
-                        {" "}
+                        {}
                         {props.course.facultyMeet.meetingTimes.beginTime.slice(
                           0,
                           2

@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 
 import prisma from "../../../lib/prisma";
 import { auth } from "../../../lib/auth";
-import { getPlanCookie } from "../../../app/actions";
+import { getPlanCookie } from "../../actions/actions";
 
 export async function GET(request: NextRequest) {
   const planCookie: any = await getPlanCookie();

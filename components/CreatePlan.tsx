@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { useCookies } from "next-client-cookies";
 
-import { setPlanCookie } from "../app/actions";
+import { setPlanCookie } from "../app/actions/actions";
 import { generateColorFromName } from "../components/primitives";
 
 export default function CreatePlan(props: any) {
