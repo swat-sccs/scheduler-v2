@@ -4,7 +4,6 @@ import type {
   NextApiResponse,
 } from "next";
 import type { NextAuthOptions } from "next-auth";
-import { getToken } from "next-auth/jwt";
 
 import KeycloakProvider, {
   KeycloakProfileToken,
@@ -25,7 +24,7 @@ export const config = {
   //Set custom redirect pages
   pages: {
     signIn: "/login",
-    //signOut: "/auth/signout",
+    signOut: "/logout",
     error: "/error", // Error code passed in query string as ?error=
     //verifyRequest: "/auth/verify-request", // (used for check email message)
     //newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
@@ -34,8 +33,7 @@ export const config = {
     KeycloakProvider({
       profile(profile, tokens) {
         const tokenData: KeycloakProfileToken = parseJwt(
-          //@ts-ignore
-          tokens.access_token
+          tokens.access_token || ""
         );
 
         let theRole;
@@ -72,19 +70,14 @@ export const config = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    jwt({ token, user }) {
-      // @ts-ignore
+    async jwt({ token, user }) {
       if (user) token.role = user.role;
 
       return token;
     },
-    session({ session, token }) {
-      if (session && session.user) {
-        // @ts-ignore
-        session.user.role = token.role;
-        // @ts-ignore
-        session.user.id = token.sub;
-      }
+    async session({ session, token }) {
+      session.role = token.role;
+      session.user.id = token.sub || "";
       return session;
     },
   },

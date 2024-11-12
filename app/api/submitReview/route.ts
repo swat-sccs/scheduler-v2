@@ -10,10 +10,8 @@ export async function POST(request: NextRequest) {
 
   const session = await auth();
 
-  //@ts-ignore
   const user = await prisma.user.findUnique({
     where: {
-      //@ts-ignore
       uuid: session?.user?.id,
     },
   });
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
   if (profs) {
     if (profs?.Rating?.length > 0) {
       for (const rating of profs.Rating) {
-        //@ts-ignore
         if (rating.overallRating == 1) {
           count.one += 1;
         }

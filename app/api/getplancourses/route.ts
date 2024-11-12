@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
     where: {
       AND: {
         User: {
-          //@ts-ignore
           uuid: session?.user.id,
         },
         //id: parseInt(planCookie),

@@ -2,8 +2,6 @@
 import { NextResponse, NextRequest } from "next/server";
 
 import prisma from "../../../lib/prisma";
-import { auth } from "../../../lib/auth";
-import { getPlanCookie } from "../../../app/actions";
 
 export async function POST(request: NextRequest) {
   const data = await request.json();

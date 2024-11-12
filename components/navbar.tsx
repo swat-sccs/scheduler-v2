@@ -67,7 +67,6 @@ export const Navbar = (props: any) => {
           Log out
         </div>
       );
-      // @ts-ignore
 
       if (session.user?.role === "admin") {
         adminDashLink = (
