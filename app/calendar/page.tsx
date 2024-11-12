@@ -3,7 +3,7 @@
 import CreatePlan from "../../components/CreatePlan";
 import Calendar from "../../components/Calendar";
 import prisma from "../../lib/prisma";
-import { getPlanCookie } from "../actions";
+import { getPlanCookie } from "../actions/actions";
 import { generateColorFromName } from "../../components/primitives";
 export default async function CalendarPage() {
   async function getEvents() {

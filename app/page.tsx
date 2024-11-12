@@ -6,6 +6,7 @@ import Search from "../components/Search";
 import { FullCourseList } from "../components/FullCourseList";
 import CreatePlan from "../components/CreatePlan";
 import prisma from "../lib/prisma";
+import { getInitialCourses } from "../app/actions/getCourses";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();
@@ -74,6 +75,7 @@ export default async function Page(props: {
   const dotw = searchParams?.dotw || [];
   const stime = searchParams?.stime || [];
   const homePageProps: any = {};
+  const initalCourses = await getInitialCourses();
 
   homePageProps["fullCourseList"] = (
     <Suspense
@@ -85,7 +87,13 @@ export default async function Page(props: {
         </div>
       }
     >
-      <FullCourseList dotw={dotw} query={query} stime={stime} term={term} />
+      <FullCourseList
+        init={initalCourses}
+        dotw={dotw}
+        query={query}
+        stime={stime}
+        term={term}
+      />
     </Suspense>
   );
 
