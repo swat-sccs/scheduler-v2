@@ -104,7 +104,7 @@ export default async function CalendarPage() {
 
   //let times = await getUniqueStartEndTimes();
   return (
-    <div className="grid grid-cols-3 p-4 -mt-20 w-screen absolute start-0 px-32 gap-20">
+    <div className="grid grid-cols-3 p-4 w-screen absolute start-0 px-32 gap-20">
       <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
         <Calendar events={events} />
       </div>
