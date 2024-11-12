@@ -96,7 +96,6 @@ export default function AdminPage() {
   }, []);
 
   if (status === "authenticated") {
-    // @ts-ignore
     if (session.user?.role === "admin") {
       return (
         <div className="w-[90vw]">

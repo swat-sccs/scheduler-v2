@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
   const session = await auth();
   const user = await prisma.user.findUnique({
     where: {
-      //@ts-ignore
       uuid: session?.user?.id,
     },
   });
@@ -17,7 +16,6 @@ export async function GET(request: NextRequest) {
     courses = await prisma.coursePlan.findMany({
       where: {
         User: {
-          //@ts-ignore
           id: user.id,
         },
       },

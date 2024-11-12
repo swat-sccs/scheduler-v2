@@ -8,17 +8,14 @@ export async function POST(request: NextRequest) {
   const data = await request.json();
   const session = await auth();
 
-  //@ts-ignore
   const user = await prisma.user.findUnique({
     where: {
-      //@ts-ignore
       uuid: session?.user?.id,
     },
   });
 
   const plan = await prisma.coursePlan.create({
     data: {
-      //@ts-ignore
       name: data.planName,
       year: "F2024",
       User: {
@@ -36,15 +33,13 @@ export async function GET(request: NextRequest) {
   const session = await auth();
   const user = await prisma.user.findUnique({
     where: {
-      //@ts-ignore
       uuid: session?.user?.id,
     },
   });
   const courses = await prisma.coursePlan.findMany({
     where: {
       User: {
-        //@ts-ignore
-        id: user.id,
+        id: user?.id,
       },
     },
     include: {
@@ -59,10 +54,8 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const data = await request.json();
 
-  //@ts-ignore
   const plan = await prisma.coursePlan.delete({
     where: {
-      //@ts-ignore
       id: parseInt(data.planId),
     },
   });
@@ -73,7 +66,7 @@ export async function DELETE(request: NextRequest) {
 // To handle a POST request to /api
 /*
 export async function POST(request: NextRequest) {
- 
+
   return NextResponse.json(output, { status: 200 });
 }
 */
