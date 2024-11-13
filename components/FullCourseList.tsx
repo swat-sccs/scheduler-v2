@@ -8,6 +8,7 @@ import CourseCard from "./CourseCard";
 import React from "react";
 import { getCourses, getInitialCourses } from "../app/actions/getCourses";
 import { useInView } from "react-intersection-observer";
+import { Skeleton } from "@nextui-org/react";
 
 const NUMBER_OF_USERS_TO_FETCH = 10;
 
@@ -26,10 +27,10 @@ export function FullCourseList({
 }) {
   const [cursor, setCursor] = useState(1);
   const [take, setTake] = useState(20);
+  const [isDone, setIsDone] = useState(false);
 
   const [courses, setCourses] = useState<Course[]>(init);
   const { ref, inView } = useInView();
-  const { ref: myref, inView: myinView } = useInView();
 
   const loadMoreUsers = async () => {
     if (inView) {
@@ -38,6 +39,13 @@ export function FullCourseList({
     }
 
     const apiCourses = await getCourses(take, cursor, query, term, dotw, stime);
+    console.log("apiCourses");
+    console.log(apiCourses);
+    if (apiCourses.length == 0 || apiCourses.length == courses.length) {
+      setIsDone(true);
+    } else {
+      setIsDone(false);
+    }
     setCourses(apiCourses);
   };
   useEffect(() => {
@@ -46,28 +54,25 @@ export function FullCourseList({
     }
   }, [inView]);
   useEffect(() => {
+    setIsDone(false);
     loadMoreUsers();
-  }, [query]);
-  useEffect(() => {
-    loadMoreUsers();
-  }, [term]);
-  useEffect(() => {
-    loadMoreUsers();
-  }, [dotw]);
-  useEffect(() => {
-    loadMoreUsers();
-  }, [stime]);
+  }, [query, term, dotw, stime]);
   //const courseList: Course[] = await getCourses(query, term, dotw, stime);
   return (
     <>
-      <div ref={myref}></div>
       <div className="grid gap-3">
         {courses?.map((course: any) => (
           <div key={course.id}>
             <CourseCard course={course} />
           </div>
         ))}
-        <div ref={ref}>.</div>
+        <div ref={ref}>
+          {isDone ? (
+            <></>
+          ) : (
+            <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start" />
+          )}
+        </div>
       </div>
     </>
   );
