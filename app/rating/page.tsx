@@ -182,9 +182,9 @@ export default function RatingPage() {
         <></>
       )}
 
-      <Card className="my-10 mx-1 lg:mx-4 justify-center items-center place-items-center">
+      <Card className="my-10 mx-10 justify-center items-center place-items-center sm:w-3/6  flex  ml-auto mr-auto w-5/6">
         <CardHeader className="">
-          <h1 className=" text-center ml-auto mr-auto col-span-3 row-start-1 row-span-1  text-2xl mb-2 mt-2">
+          <h1 className=" text-center ml-auto mr-auto col-span-3 row-start-1 row-span-1 text-2xl mb-2 mt-2">
             Leave a Rating
           </h1>
         </CardHeader>

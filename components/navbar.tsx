@@ -1,6 +1,6 @@
 "use client";
 //Just for pathname highlighting though, could always go back if it becomes too slow
-import React from "react";
+import React, { useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Navbar as NextUINavbar,
@@ -32,7 +32,13 @@ import { Button } from "@nextui-org/button";
 
 export const Navbar = (props: any) => {
   const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    setIsMenuOpen(false); // Close the navigation panel
+  }, [pathname]);
 
   if (status === "authenticated") {
     axios
@@ -53,6 +59,8 @@ export const Navbar = (props: any) => {
         className="bg-inherit lg:py-2"
         maxWidth="full"
         position="sticky"
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
       >
         <NavbarContent className="basis-1/5 lg:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -127,59 +135,53 @@ export const Navbar = (props: any) => {
           </NavbarItem>
         </NavbarContent>
 
-        <NavbarContent className="flex lg:hidden" justify="end">
+        <NavbarContent className="flex sm:hidden" justify="end">
           <ThemeSwitch />
-          <NavbarMenuToggle />
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
         </NavbarContent>
 
         {/* Mobile?*/}
-        {/* <NavbarMenu>
-					<div className="mx-4 mt-2 flex flex-col gap-2">
-						{siteConfig.navItems.map((item, index) => (
-							<NavbarMenuItem key={`${item}-${index}`}>
-								<Link href={item.href} size="lg">
-									{item.label}
-								</Link>
-							</NavbarMenuItem>
-						))}
-
-						<NavbarItem>
-							<Dropdown>
-								<DropdownTrigger>
-									<Link
-										className={buttonStyles({
-											color: "primary",
-											radius: "full",
-											variant: "ghost",
-										})}
-										onClick={
-											authenticated
-												? () => {}
-												: () => signIn("keycloak", { callbackUrl: "/" })
-										}
-									>
-										{nameButton}
-									</Link>
-								</DropdownTrigger>
-
-								{authenticated ? (
-									<DropdownMenu
-										aria-label="Static Actions"
-										onAction={(key) => {
-											authenticated
-												? signOut()
-												: signIn("keycloak", { callbackUrl: "/" });
-										}}
-									>
-										<DropdownItem key="loginLink">Sign Out</DropdownItem>
-									</DropdownMenu>
-								) : (
-									<></>
-								)}
-							</Dropdown>
-						</NavbarItem>
-					</div>
-				</NavbarMenu> */}
+        <NavbarMenu className=" sm:flex">
+          <div className="mx-4 mt-2 flex flex-col gap-2">
+            {siteConfig.navItems.map((item, index) => (
+              <NavbarMenuItem key={`${item}-${index}`}>
+                <Link href={item.href} size="lg">
+                  {item.label}
+                </Link>
+              </NavbarMenuItem>
+            ))}
+          </div>
+          <NavbarItem>
+            {status === "authenticated" ? (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="bordered">
+                    <AccountCircleIcon />
+                    {session.user?.name || "Account"}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Static Actions">
+                  {/* Causes an awful error if rendered conditionally */}
+                  {/* <DropdownItem key="admin" href="/admin">
+                    Admin
+                  </DropdownItem> */}
+                  <DropdownItem key="signOut" onClick={() => signOut()}>
+                    Sign Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              <Button
+                variant="bordered"
+                onClick={() => signIn("keycloak", { callbackUrl: "/" })}
+              >
+                <InputIcon /> Log In
+              </Button>
+            )}
+          </NavbarItem>
+        </NavbarMenu>
       </NextUINavbar>
     </div>
   );

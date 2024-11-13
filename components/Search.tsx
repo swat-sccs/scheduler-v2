@@ -11,7 +11,7 @@ import { Chip } from "@mui/material";
 export default function Search(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedTerm, setSelectedTerm]: any = useState(["S2025"]);
+  const [selectedTerm, setSelectedTerm]: any = useState([]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
   const [selectedCodes, setSelectedCodes]: any = useState([]);
 
@@ -19,6 +19,7 @@ export default function Search(props: any) {
   const [search, setSearch]: any = useState();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const params = new URLSearchParams(searchParams);
 
   const replaceText = (text: any) => {
     setSearch(text?.replace(/\w+:/, <Chip>{text}</Chip>));
@@ -38,7 +39,6 @@ export default function Search(props: any) {
         console.log(term_list[i]);
       }
     }
-    const params = new URLSearchParams(searchParams);
 
     if (term) {
       decodeURIComponent;
@@ -51,7 +51,6 @@ export default function Search(props: any) {
 
   const handleSelectionChange = (e: any) => {
     setSelectedTerm([e.target.value]);
-    const params = new URLSearchParams(searchParams);
 
     if (e.target.value) {
       params.set("term", e.target.value);
@@ -67,7 +66,6 @@ export default function Search(props: any) {
 
   const handleCodeChange = (e: any) => {
     setSelectedCodes([e.target.value]);
-    const params = new URLSearchParams(searchParams);
 
     if (e.target.value) {
       params.set("codes", e.target.value);
@@ -85,12 +83,18 @@ export default function Search(props: any) {
     //handleSelectionChange({ target: { value: selectedTerm } });
   }, [
     searchParams.get("term")?.toString(),
+    searchParams.get("dotw")?.toString(),
     searchParams.get("stime")?.toString(),
   ]);
+  useEffect(() => {
+    // Update the document title using the browser API
+    params.set("term", "S2025");
+    replace(`${pathname}?${params.toString()}`);
+    setSelectedTerm(searchParams.get("term")?.toString().split(","));
+  }, []);
 
   const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);
-    const params = new URLSearchParams(searchParams);
 
     if (e.size > 0) {
       params.set("dotw", Array.from(e).join(","));
@@ -102,7 +106,6 @@ export default function Search(props: any) {
 
   const handleSTimeChange = (e: any) => {
     setSelectedStartTime(...[e]);
-    const params = new URLSearchParams(searchParams);
 
     if (e.size > 0) {
       params.set("stime", Array.from(e).join(","));
@@ -134,7 +137,9 @@ export default function Search(props: any) {
   };
 
   return (
-    <div className="grid grid-cols-9 gap-2">
+    <div className="grid grid-cols-9 gap-2 ">
+      <meta name="viewport" content="width=device-width, user-scalable=no" />
+
       <Input
         isClearable
         className="col-span-9 lg:col-span-3"

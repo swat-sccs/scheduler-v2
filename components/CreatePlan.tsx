@@ -130,7 +130,7 @@ export default function CreatePlan(props: any) {
             <Card
               key={course.id}
               className={
-                "bg-light_foreground min-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors"
+                "bg-light_foreground min-h-14 max-h-20 rounded-sm scroll-none drop-shadow-lg transition-colors"
               }
               shadow="sm"
 
@@ -238,7 +238,7 @@ export default function CreatePlan(props: any) {
         </div>
 
         <div
-          className="grid grid-cols-1 h-[55vh] overflow-y-scroll gap-2 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+          className="grid grid-cols-1 lg:h-[47vh] h-[55vh] overflow-y-scroll gap-2 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
           id="scrollMe"
         >
           <CoursesList />
