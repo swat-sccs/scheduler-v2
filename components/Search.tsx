@@ -137,9 +137,8 @@ export default function Search(props: any) {
   };
 
   return (
-    <div className="grid grid-cols-9 gap-2 ">
+    <div className="grid grid-cols-9 gap-2 w-[97%]">
       <meta name="viewport" content="width=device-width, user-scalable=no" />
-
       <Input
         isClearable
         className="col-span-9 lg:col-span-3"

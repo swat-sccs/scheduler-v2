@@ -120,12 +120,12 @@ async function Home(props: any) {
         <div className="col-span-10 lg:col-span-7">
           <div className="flex flex-col gap-5 h-full">
             <Search codes={codes} terms={terms} times={uniqueTimes} />
-            <div className="row-start-2 h-[70vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
+            <div className="h-[70vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
               {props.fullCourseList}
             </div>
           </div>
         </div>
-        <div className="col-span-10 lg:col-span-3">
+        <div className="col-span-10 lg:col-span-3 lg:ml-[5vw]">
           <CreatePlan />
         </div>
       </div>
