@@ -18,66 +18,33 @@ import {
   DropdownItem,
 } from "@nextui-org/dropdown";
 import { Link } from "@nextui-org/link";
-import { Spacer } from "@nextui-org/spacer";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { button as buttonStyles } from "@nextui-org/theme";
 import InputIcon from "@mui/icons-material/Input";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import axios from "axios";
 
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "../components/theme-switch";
 import { title } from "../components/primitives";
+import { Button } from "@nextui-org/button";
 
 export const Navbar = (props: any) => {
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
-  let authenticated;
-  let loginLink: any;
-  let adminDashLink: any;
-  let nameButton;
-
-  if (props.hasOwnProperty("login")) {
-    loginLink = null;
-    nameButton = null;
-  } else {
-    if (status === "authenticated") {
-      authenticated = true;
-      axios
-        .post("/api/user", {
-          session: session,
-        })
-        .then(function (response) {
-          //console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
-      loginLink = (
-        <div role="button" onClick={() => signOut()}>
-          Log out
-        </div>
-      );
-
-      if (session.user?.role === "admin") {
-        adminDashLink = (
-          <DropdownItem key="admin" href="/admin">
-            <div>Admin</div>
-          </DropdownItem>
-        );
-      }
-      nameButton = session.user?.name;
-    } else {
-      authenticated = false;
-      loginLink = <></>;
-      nameButton = (
-        <div>
-          Log In <InputIcon />
-        </div>
-      );
-    }
+  if (status === "authenticated") {
+    axios
+      .post("/api/user", {
+        session: session,
+      })
+      .then((response) => {
+        //console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -103,23 +70,23 @@ export const Navbar = (props: any) => {
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent justify="start" className="hidden md:flex">
-          <Spacer x={24} />
-          <ul className="gap-4 flex-row justify-start ml-2">
-            {siteConfig.navItems.map((item) => (
-              <Link
-                key={item.href}
-                className={buttonStyles({
-                  color: "primary",
-                  radius: "full",
-                  variant: pathname == item.href ? "shadow" : "ghost",
-                })}
-                href={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </ul>
+        <NavbarContent
+          justify="center"
+          className="hidden md:flex gap-3 flex-row"
+        >
+          {siteConfig.navItems.map((item) => (
+            <Link
+              key={item.href}
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: pathname === item.href ? "shadow" : "ghost",
+              })}
+              href={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
         </NavbarContent>
 
         <NavbarContent
@@ -131,33 +98,32 @@ export const Navbar = (props: any) => {
           </NavbarItem>
 
           <NavbarItem>
-            <Dropdown>
-              <DropdownTrigger>
-                <Link
-                  className={buttonStyles({
-                    color: "primary",
-                    radius: "full",
-                    variant: "ghost",
-                  })}
-                  onClick={
-                    authenticated
-                      ? () => {}
-                      : () => signIn("keycloak", { callbackUrl: "/" })
-                  }
-                >
-                  {nameButton}
-                </Link>
-              </DropdownTrigger>
-
-              {authenticated ? (
+            {status === "authenticated" ? (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="bordered">
+                    <AccountCircleIcon />
+                    {session.user?.name || "Account"}
+                  </Button>
+                </DropdownTrigger>
                 <DropdownMenu aria-label="Static Actions">
-                  {adminDashLink}
-                  <DropdownItem key="loginLink">{loginLink}</DropdownItem>
+                  {/* Causes an awful error if rendered conditionally */}
+                  {/* <DropdownItem key="admin" href="/admin">
+                    Admin
+                  </DropdownItem> */}
+                  <DropdownItem key="signOut" onClick={() => signOut()}>
+                    Sign Out
+                  </DropdownItem>
                 </DropdownMenu>
-              ) : (
-                <></>
-              )}
-            </Dropdown>
+              </Dropdown>
+            ) : (
+              <Button
+                variant="bordered"
+                onClick={() => signIn("keycloak", { callbackUrl: "/" })}
+              >
+                <InputIcon /> Log In
+              </Button>
+            )}
           </NavbarItem>
         </NavbarContent>
 
@@ -167,46 +133,53 @@ export const Navbar = (props: any) => {
         </NavbarContent>
 
         {/* Mobile?*/}
-        <NavbarMenu>
-          <div className="mx-4 mt-2 flex flex-col gap-2">
-            {siteConfig.navItems.map((item, index) => (
-              <NavbarMenuItem key={`${item}-${index}`}>
-                <Link href={item.href} size="lg">
-                  {item.label}
-                </Link>
-              </NavbarMenuItem>
-            ))}
+        {/* <NavbarMenu>
+					<div className="mx-4 mt-2 flex flex-col gap-2">
+						{siteConfig.navItems.map((item, index) => (
+							<NavbarMenuItem key={`${item}-${index}`}>
+								<Link href={item.href} size="lg">
+									{item.label}
+								</Link>
+							</NavbarMenuItem>
+						))}
 
-            <NavbarItem>
-              <Dropdown>
-                <DropdownTrigger>
-                  <Link
-                    className={buttonStyles({
-                      color: "primary",
-                      radius: "full",
-                      variant: "ghost",
-                    })}
-                    onClick={
-                      authenticated
-                        ? () => {}
-                        : () => signIn("keycloak", { callbackUrl: "/" })
-                    }
-                  >
-                    {nameButton}
-                  </Link>
-                </DropdownTrigger>
+						<NavbarItem>
+							<Dropdown>
+								<DropdownTrigger>
+									<Link
+										className={buttonStyles({
+											color: "primary",
+											radius: "full",
+											variant: "ghost",
+										})}
+										onClick={
+											authenticated
+												? () => {}
+												: () => signIn("keycloak", { callbackUrl: "/" })
+										}
+									>
+										{nameButton}
+									</Link>
+								</DropdownTrigger>
 
-                {authenticated ? (
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="loginLink">{loginLink}</DropdownItem>
-                  </DropdownMenu>
-                ) : (
-                  <></>
-                )}
-              </Dropdown>
-            </NavbarItem>
-          </div>
-        </NavbarMenu>
+								{authenticated ? (
+									<DropdownMenu
+										aria-label="Static Actions"
+										onAction={(key) => {
+											authenticated
+												? signOut()
+												: signIn("keycloak", { callbackUrl: "/" });
+										}}
+									>
+										<DropdownItem key="loginLink">Sign Out</DropdownItem>
+									</DropdownMenu>
+								) : (
+									<></>
+								)}
+							</Dropdown>
+						</NavbarItem>
+					</div>
+				</NavbarMenu> */}
       </NextUINavbar>
     </div>
   );
