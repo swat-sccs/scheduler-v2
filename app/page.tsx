@@ -81,9 +81,9 @@ export default async function Page(props: {
     <Suspense
       fallback={
         <div className="grid gap-3">
-          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
-          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
-          <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
+          <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start" />
+          <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start" />
+          <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start" />
         </div>
       }
     >

@@ -8,7 +8,7 @@ import { generateColorFromName } from "../components/primitives";
 import { Error } from "@mui/icons-material";
 export const card = tv({
   slots: {
-    base: "bg-light_foreground min-h-32 max-h-62 w-[98%] rounded-sm scroll-none drop-shadow-lg transition-colors",
+    base: "bg-light_foreground min-h-32 max-h-62 w-[98%] rounded-md scroll-none drop-shadow-lg transition-colors",
     role: "font-bold  text-primary ",
   },
 });
@@ -81,7 +81,7 @@ export default function CourseCard(props: any) {
   return (
     <Card key={props.course.id} isHoverable className={base()} shadow="sm">
       <div
-        className="absolute top-0 left-0 h-full w-2 rounded-full"
+        className="absolute top-0 left-0 h-full w-2"
         style={{ backgroundColor: color }}
       />
       <CardHeader className="pl-6" onClick={() => updatePlan(props.course)}>
