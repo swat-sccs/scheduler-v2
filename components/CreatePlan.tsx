@@ -130,7 +130,7 @@ export default function CreatePlan(props: any) {
             <Card
               key={course.id}
               className={
-                "bg-light_foreground min-h-14 max-h-20 rounded-sm scroll-none drop-shadow-lg transition-colors"
+                "bg-light_foreground min-h-14 max-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors"
               }
               shadow="sm"
 
@@ -143,7 +143,7 @@ export default function CreatePlan(props: any) {
                 }}
               />
 
-              <CardHeader className="justify-between ">
+              <CardHeader className="justify-between">
                 <div className="ml-2 lg:text-base truncate">
                   {course.courseTitle.replace(/&amp;/g, "&")}
                 </div>
@@ -171,79 +171,77 @@ export default function CreatePlan(props: any) {
   };
 
   return (
-    <>
-      <div className="flex flex-col mt-5 lg:mt-0 lg:ml-10 gap-5">
-        {/* <div className="flex flex-row" ref={scrollRef}>
+    <div className="flex flex-col mt-5 lg:mt-0 gap-5">
+      {/* <div className="flex flex-row" ref={scrollRef}>
           <div className="font-bold text-primary h1">Create a Plan</div>
           <button className="flex lg:hidden" onClick={scrollToPlan}>
             <ExpandLessIcon />
           </button>
         </div> */}
-        <div className="flex flex-col gap-3">
-          <div>
-            <div className="font-bold text-lg">Create a Plan</div>
-            <div className="flex mt-2 items-center gap-2">
-              <Input
-                isRequired
-                label="Plan Name"
-                placeholder="Name your plan..."
-                size="lg"
-                value={coursePlanName}
-                onChange={(event: any) => {
-                  setCoursePlanName(event.target.value);
-                }}
-              />
-              <Button
-                startContent={<AddIcon />}
-                size="md"
-                onClick={() => createPlan()}
-              ></Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 items-center">
-            <Divider />
-            {/* --------------------------------- or --------------------------- */}
-            <div className="text-center mt-1">or</div>
-            <Divider />
-          </div>
-
-          <div>
-            <div className="font-bold text-lg">Select a Plan</div>
-            <div className="flex mt-2 items-center justify gap-2">
-              <Select
-                className="col-span-3"
-                label="Selected Plan"
-                selectedKeys={selectedCoursePlan}
-                selectionMode="single"
-                size="lg"
-                onChange={handleSelectionChange}
-              >
-                {coursePlans != null
-                  ? coursePlans.map((plan: any) => (
-                      <SelectItem key={plan.id}>{plan.name}</SelectItem>
-                    ))
-                  : null}
-              </Select>
-
-              <Button
-                isIconOnly
-                size="md"
-                startContent={<DeleteIcon />}
-                onClick={deletePlan}
-              />
-              <Button isIconOnly size="md" startContent={<IosShareIcon />} />
-            </div>
+      <div className="flex flex-col gap-3">
+        <div>
+          <div className="font-bold text-lg">Create a Plan</div>
+          <div className="flex mt-2 items-center gap-2">
+            <Input
+              isRequired
+              label="Plan Name"
+              placeholder="Name your plan..."
+              size="lg"
+              value={coursePlanName}
+              onChange={(event: any) => {
+                setCoursePlanName(event.target.value);
+              }}
+            />
+            <Button
+              startContent={<AddIcon />}
+              size="md"
+              onClick={() => createPlan()}
+            ></Button>
           </div>
         </div>
 
-        <div
-          className="grid grid-cols-1 lg:h-[47vh] h-[55vh] overflow-y-scroll gap-2 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
-          id="scrollMe"
-        >
-          <CoursesList />
+        <div className="grid grid-cols-3 items-center">
+          <Divider />
+          {/* --------------------------------- or --------------------------- */}
+          <div className="text-center mt-1">or</div>
+          <Divider />
+        </div>
+
+        <div>
+          <div className="font-bold text-lg">Select a Plan</div>
+          <div className="flex mt-2 items-center justify gap-2">
+            <Select
+              className="col-span-3"
+              label="Current Plan"
+              selectedKeys={selectedCoursePlan}
+              selectionMode="single"
+              size="lg"
+              onChange={handleSelectionChange}
+            >
+              {coursePlans != null
+                ? coursePlans.map((plan: any) => (
+                    <SelectItem key={plan.id}>{plan.name}</SelectItem>
+                  ))
+                : null}
+            </Select>
+
+            <Button
+              isIconOnly
+              size="md"
+              startContent={<DeleteIcon />}
+              onClick={deletePlan}
+            />
+            <Button isIconOnly size="md" startContent={<IosShareIcon />} />
+          </div>
         </div>
       </div>
-    </>
+
+      <div
+        className="flex flex-col h-[55vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+        id="scrollMe"
+      >
+        <CoursesList />
+      </div>
+    </div>
   );
 }
