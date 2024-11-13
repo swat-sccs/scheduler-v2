@@ -182,13 +182,13 @@ export default function RatingPage() {
         <></>
       )}
 
-      <Card className="my-10 mx-1 md:mx-4 justify-center items-center place-items-center">
+      <Card className="my-10 mx-1 lg:mx-4 justify-center items-center place-items-center">
         <CardHeader className="">
           <h1 className=" text-center ml-auto mr-auto col-span-3 row-start-1 row-span-1  text-2xl mb-2 mt-2">
             Leave a Rating
           </h1>
         </CardHeader>
-        <CardBody className="flex gap-5 px-4 md:px-20 w-full">
+        <CardBody className="flex gap-5 px-4 lg:px-20 w-full">
           <Autocomplete
             isRequired
             aria-label="Select Professor"

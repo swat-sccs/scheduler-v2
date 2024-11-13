@@ -61,7 +61,7 @@ export function FullCourseList({
   return (
     <>
       <div ref={myref}></div>
-      <div className="grid gap-4 ">
+      <div className="grid gap-3">
         {courses?.map((course: any) => (
           <div key={course.id}>
             <CourseCard course={course} />

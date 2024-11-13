@@ -10,7 +10,9 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
 import axios from "axios";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -128,7 +130,7 @@ export default function CreatePlan(props: any) {
             <Card
               key={course.id}
               className={
-                "bg-light_foreground min-h-14 max-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors mb-3"
+                "bg-light_foreground min-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors"
               }
               shadow="sm"
 
@@ -142,19 +144,17 @@ export default function CreatePlan(props: any) {
               />
 
               <CardHeader className="justify-between ">
-                <div className="ml-4">
+                <div className="ml-2 lg:text-base truncate">
                   {course.courseTitle.replace(/&amp;/g, "&")}
                 </div>
                 <Button
                   isIconOnly
-                  className=""
+                  startContent={<HighlightOffIcon />}
                   size={"sm"}
                   onClick={() =>
                     removeCourseFromPlan(selectedCoursePlan[0], course)
                   }
-                >
-                  X
-                </Button>
+                />
               </CardHeader>
             </Card>
           )
@@ -167,79 +167,78 @@ export default function CreatePlan(props: any) {
 
   const scrollToPlan = () => {
     if (scrollRef.current)
-        scrollRef.current.scrollIntoView({behavior: 'smooth', inline: "start"});
-  }
+      scrollRef.current.scrollIntoView({ behavior: "smooth", inline: "start" });
+  };
 
   return (
     <>
-      <Divider className="hidden md:absolute h-[60vh] mt-32" orientation="vertical" />
+      <div className="flex flex-col mt-5 lg:mt-0 lg:ml-10 gap-5">
+        {/* <div className="flex flex-row" ref={scrollRef}>
+          <div className="font-bold text-primary h1">Create a Plan</div>
+          <button className="flex lg:hidden" onClick={scrollToPlan}>
+            <ExpandLessIcon />
+          </button>
+        </div> */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <div className="font-bold text-lg">Create a Plan</div>
+            <div className="flex mt-2 items-center gap-2">
+              <Input
+                isRequired
+                label="Plan Name"
+                placeholder="Name your plan..."
+                size="lg"
+                value={coursePlanName}
+                onChange={(event: any) => {
+                  setCoursePlanName(event.target.value);
+                }}
+              />
+              <Button
+                startContent={<AddIcon />}
+                size="md"
+                onClick={() => createPlan()}
+              ></Button>
+            </div>
+          </div>
 
-      <div className="grid grid-cols-1 grid-rows-10 md:ml-10 gap-5 h-[66vh] mt-10 overflow-clip">
-        <div className="flex flex-row" ref={scrollRef}>
-            <div className="font-bold text-primary h1">Create a Plan</div>
-            <button className="flex md:hidden" onClick={scrollToPlan}>
-                <ExpandLessIcon/>
-            </button>
-        </div>
-        <div className="grid grid-rows-subgrid grid-cols-3 gap-2 ">
-          <Input
-            isRequired
-            className="col-span-2 "
-            label="Give your plan a name..."
-            size="lg"
-            value={coursePlanName}
-            onChange={(event: any) => {
-              setCoursePlanName(event.target.value);
-            }}
-          />
-          <Button
-            size="lg"
-            startContent={<AddIcon />}
-            onClick={() => createPlan()}
-          >
-            <div>Create</div>
-          </Button>
-        </div>
+          <div className="grid grid-cols-3 items-center">
+            <Divider />
+            {/* --------------------------------- or --------------------------- */}
+            <div className="text-center mt-1">or</div>
+            <Divider />
+          </div>
 
-        <div>
-          <div className="grid grid-rows-subgrid  grid-cols-3 ">
-            <Divider className="mt-2" />
-            <div className="text-center">or</div>
-            <Divider className="mt-2" />
+          <div>
+            <div className="font-bold text-lg">Select a Plan</div>
+            <div className="flex mt-2 items-center justify gap-2">
+              <Select
+                className="col-span-3"
+                label="Selected Plan"
+                selectedKeys={selectedCoursePlan}
+                selectionMode="single"
+                size="lg"
+                onChange={handleSelectionChange}
+              >
+                {coursePlans != null
+                  ? coursePlans.map((plan: any) => (
+                      <SelectItem key={plan.id}>{plan.name}</SelectItem>
+                    ))
+                  : null}
+              </Select>
+
+              <Button
+                isIconOnly
+                size="md"
+                startContent={<DeleteIcon />}
+                onClick={deletePlan}
+              />
+              <Button isIconOnly size="md" startContent={<IosShareIcon />} />
+            </div>
           </div>
         </div>
 
-        {/* --------------------------------- or --------------------------- */}
-
-        <div className="font-bold gap-0">Select a Plan</div>
-        <div className="grid grid-cols-5 gap-2">
-          <Select
-            className="col-span-3"
-            label="Select Plan"
-            selectedKeys={selectedCoursePlan}
-            selectionMode="single"
-            size="sm"
-            onChange={handleSelectionChange}
-          >
-            {coursePlans != null
-              ? coursePlans.map((plan: any) => (
-                  <SelectItem key={plan.id}>{plan.name}</SelectItem>
-                ))
-              : null}
-          </Select>
-
-          <Button
-            isIconOnly
-            className=""
-            size="md"
-            startContent={<DeleteIcon />}
-            onClick={deletePlan}
-          />
-          <Button isIconOnly size="md" startContent={<IosShareIcon />} />
-        </div>
-
         <div
-          className="grid overflow-y-scroll gap-1 h-[30vh] mt-5 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+          className="grid grid-cols-1 h-[55vh] overflow-y-scroll gap-2 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
           id="scrollMe"
         >
           <CoursesList />

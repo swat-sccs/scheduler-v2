@@ -54,7 +54,7 @@ export default function RootLayout({
             >
               <div className="flex flex-col h-screen ">
                 <Navbar />
-                <main className="container mx-auto max-w-7xl px-1 md:px-6 flex-grow">
+                <main className="container mx-auto flex-grow px-1 lg:px-7 lg:pt-10">
                   {children}
                 </main>
                 <footer className="w-full flex items-center justify-center py-3">
@@ -67,7 +67,7 @@ export default function RootLayout({
                     </span>
                     <br />
 
-                    <div className=" space-x-5">
+                    <div className="space-x-5">
                       <Link
                         isExternal
                         href="https://www.sccs.swarthmore.edu/docs/policy"
