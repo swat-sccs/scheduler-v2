@@ -80,7 +80,7 @@ export default async function Page(props: {
   homePageProps["fullCourseList"] = (
     <Suspense
       fallback={
-        <div className="grid gap-4 ">
+        <div className="grid gap-3">
           <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
           <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
           <Skeleton className="rounded-lg w-full h-48 align-top justify-start" />
@@ -116,18 +116,16 @@ async function Home(props: any) {
 
   return (
     <>
-      <div className="grid grid-cols-3 p-4 h-full">
-        <div className="col-span-3 md:col-span-2 col-start-1">
-          <div className="grid grid-rows-subgrid grid-cols-1 gap-5 h-full">
-            <div className="row-start-1 mt-auto mb-auto">
-              <Search codes={codes} terms={terms} times={uniqueTimes} />
-            </div>
-            <div className="row-start-2 h-[62vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
+      <div className="grid grid-cols-10 p-4 h-full">
+        <div className="col-span-10 lg:col-span-7">
+          <div className="flex flex-col gap-5 h-full">
+            <Search codes={codes} terms={terms} times={uniqueTimes} />
+            <div className="row-start-2 h-[70vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
               {props.fullCourseList}
             </div>
           </div>
         </div>
-        <div className="col-span-3 md:col-start-3">
+        <div className="col-span-10 lg:col-span-3">
           <CreatePlan />
         </div>
       </div>

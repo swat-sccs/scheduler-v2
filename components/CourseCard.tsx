@@ -53,10 +53,10 @@ export default function CourseCard(props: any) {
       return (
         <div
           key={index}
-          className="flex w-6 h-6 md:w-8 md:h-8 rounded-md justify-center items-center"
+          className="flex w-6 h-6 lg:w-8 lg:h-8 rounded-md justify-center items-center"
           style={{ backgroundColor: color_mappings[index] }}
         >
-          <p className="font-bold text-sm md:text-base text-white">{item[0]}</p>
+          <p className="font-bold text-sm lg:text-base text-white">{item[0]}</p>
         </div>
       );
     }
@@ -87,19 +87,21 @@ export default function CourseCard(props: any) {
       <CardHeader className="pl-6" onClick={() => updatePlan(props.course)}>
         <div className="flex items-center flex-row justify-between w-full">
           <div className="flex flex-col">
-            <h1 className="font-bold text-md md:text-2xl text-left">
+            <h1 className="font-bold text-md lg:text-2xl text-left">
               {props.course.courseTitle.replace("&amp;", "&")}
             </h1>
-            <h2 className="flex text-sm md:text-lg text-left">
+            <h2 className="flex text-sm lg:text-lg text-left">
               {props.course.subject} {props.course.courseNumber} |{" "}
               {props.course.creditHours} credit(s)
               {props.course.sectionAttributes.length > 0 && (
-                <div className="hidden md:flex max-w-48 md:max-w-64 items-center">&nbsp;|&nbsp;{attributeCodes}</div>
+                <div className="hidden lg:flex max-w-48 lg:max-w-64 items-center">
+                  &nbsp;|&nbsp;{attributeCodes}
+                </div>
               )}
             </h2>
           </div>
           <div className="flex items-center pt-2">
-            <div className="absolute top-4 right-4 h-20 w-20 md:h-24 md:w-24 overflow-clip rounded-md">
+            <div className="absolute top-4 right-4 h-20 w-20 lg:h-24 lg:w-24 overflow-clip rounded-md">
               <Image
                 // src={"https://www.swarthmore.edu/sites/default/files/styles/headshot/public/assets/images/user_photos/cmurphy4.jpg.webp"}
                 alt={props.course.instructor.displayName.replace("&#39;", "'")}
@@ -120,12 +122,12 @@ export default function CourseCard(props: any) {
         <div className="flex justify-between flex-row">
           <div className="gap-4">
             {props.course.facultyMeet.meetingTimes.room ? (
-              <div className="bg-[#2C2C33] py-1 px-2 md:py-2 md:px-3 w-auto max-w-64 rounded-md">
-                <div className="font-semibold text-sm md:text-lg text-white">
+              <div className="bg-[#2C2C33] py-1 px-2 lg:py-2 lg:px-3 w-auto max-w-64 rounded-md">
+                <div className="font-semibold text-sm lg:text-lg text-white">
                   {props.course.facultyMeet.meetingTimes.buildingDescription}{" "}
                   {props.course.facultyMeet.meetingTimes.room}
                 </div>
-                <div className="text-sm md:text-base">
+                <div className="text-sm lg:text-base">
                   {props.course.facultyMeet.meetingTimes ? (
                     <div className="mt-1">
                       <div className="font-normal">
@@ -166,8 +168,8 @@ export default function CourseCard(props: any) {
           <div className="flex flex-col pr-3 pt-10">
             <div className="flex flex-row gap-5 justify-end">
               <div>
-                <div className="text-right text-sm md:text-md">Instructor</div>
-                <div className="text-right text-md md:text-xl font-bold">
+                <div className="text-right text-sm lg:text-md">Instructor</div>
+                <div className="text-right text-md lg:text-xl font-bold">
                   {props.course.instructor.displayName.replace("&#39;", "'")}
                 </div>
               </div>
@@ -188,8 +190,8 @@ export default function CourseCard(props: any) {
                 <Error color="error" />
               </div>
             ) : (
-              <div className="flex flex-row ml-auto pt-1 md:pt-2 gap-2">
-                <div className="text-sm md:text-md text-slate">
+              <div className="flex flex-row ml-auto pt-1 lg:pt-2 gap-2">
+                <div className="text-sm lg:text-md text-slate">
                   Seats Available: {props.course.seatsAvailable}
                 </div>
               </div>

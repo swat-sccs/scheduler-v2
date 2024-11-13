@@ -50,11 +50,11 @@ export const Navbar = (props: any) => {
   return (
     <div className="bg-background_navbar h-auto">
       <NextUINavbar
-        className="bg-inherit md:py-2"
+        className="bg-inherit lg:py-2"
         maxWidth="full"
         position="sticky"
       >
-        <NavbarContent className="basis-1/5 md:basis-full" justify="start">
+        <NavbarContent className="basis-1/5 lg:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
               className="flex justify-start items-center gap-1"
@@ -72,7 +72,7 @@ export const Navbar = (props: any) => {
 
         <NavbarContent
           justify="center"
-          className="hidden md:flex gap-3 flex-row"
+          className="hidden lg:flex gap-3 flex-row"
         >
           {siteConfig.navItems.map((item) => (
             <Link
@@ -90,10 +90,10 @@ export const Navbar = (props: any) => {
         </NavbarContent>
 
         <NavbarContent
-          className="hidden md:flex basis-1/5 sm:basis-full"
+          className="hidden lg:flex basis-1/5 sm:basis-full"
           justify="end"
         >
-          <NavbarItem className="hidden md:flex gap-2">
+          <NavbarItem className="hidden lg:flex gap-2">
             <ThemeSwitch />
           </NavbarItem>
 
@@ -127,7 +127,7 @@ export const Navbar = (props: any) => {
           </NavbarItem>
         </NavbarContent>
 
-        <NavbarContent className="flex md:hidden" justify="end">
+        <NavbarContent className="flex lg:hidden" justify="end">
           <ThemeSwitch />
           <NavbarMenuToggle />
         </NavbarContent>
