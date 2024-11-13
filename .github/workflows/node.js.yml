@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main", "dcrepublic-dev", "v6ctor-dev"]
+    branches: ["main", "dcrepublic-dev", "v6ctor-dev"]
 
 jobs:
   build:

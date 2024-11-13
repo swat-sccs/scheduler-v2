@@ -45,7 +45,7 @@ go mod tidy
 ```
 
 ```bash
-go run main.go -semester=[spring|fall] -year=[202x] #defautl is fall 2024
+go run main.go -semester=spring -year=2025 # Change to semester of choice
 
 ```
 
