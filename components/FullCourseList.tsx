@@ -1,12 +1,11 @@
 "use client";
 import { Course, Prisma } from "@prisma/client";
 
-import prisma from "../lib/prisma";
 import { useEffect, useState } from "react";
 
 import CourseCard from "./CourseCard";
 import React from "react";
-import { getCourses, getInitialCourses } from "../app/actions/getCourses";
+import { getCourses } from "../app/actions/getCourses";
 import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@nextui-org/react";
 
@@ -33,15 +32,18 @@ export function FullCourseList({
   const { ref, inView } = useInView();
 
   const loadMoreUsers = async () => {
-    if (inView) {
-      setCursor((cursor) => cursor + NUMBER_OF_USERS_TO_FETCH);
-      setTake((take) => take + NUMBER_OF_USERS_TO_FETCH);
-    }
+    // NOTE: if this isn't done every time we get a double take and a
+    // race condition desync, breaking isDone. Maybe we'll have better
+    // logic in the future.
+    setCursor((cursor) => cursor + NUMBER_OF_USERS_TO_FETCH);
+    setTake((take) => take + NUMBER_OF_USERS_TO_FETCH);
 
     const apiCourses = await getCourses(take, cursor, query, term, dotw, stime);
-    console.log("apiCourses");
-    console.log(apiCourses);
-    if (apiCourses.length == 0 || apiCourses.length == courses.length) {
+    if (
+      inView &&
+      (apiCourses.length == 0 || apiCourses.length == courses.length)
+    ) {
+      console.log("setting isDone true");
       setIsDone(true);
     } else {
       setIsDone(false);
