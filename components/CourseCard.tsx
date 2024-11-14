@@ -100,8 +100,8 @@ export default function CourseCard(props: any) {
               )}
             </h2>
           </div>
-          <div className="flex items-center pt-2">
-            <div className="absolute top-4 right-4 h-20 w-20 lg:h-24 lg:w-24 overflow-clip rounded-md">
+          <div className="flex items-center">
+            <div className="relative h-14 w-14 lg:h-20 lg:w-20 pr-2 lg:pr-3 overflow-clip rounded-md">
               <Image
                 // src={"https://www.swarthmore.edu/sites/default/files/styles/headshot/public/assets/images/user_photos/cmurphy4.jpg.webp"}
                 alt={props.course.instructor.displayName.replace("&#39;", "'")}
@@ -119,8 +119,8 @@ export default function CourseCard(props: any) {
       </CardHeader>
 
       <CardBody className="pt-0 pl-6" onClick={() => updatePlan(props.course)}>
-        <div className="flex justify-between flex-row">
-          <div className="gap-4">
+        <div className="flex justify-between flex-row gap-3">
+          <div className="gap-4 basis-1/2">
             {props.course.facultyMeet.meetingTimes.room ? (
               <div className="bg-[#2C2C33] py-1 px-2 lg:py-2 lg:px-3 w-auto max-w-64 rounded-md">
                 <div className="font-semibold text-sm lg:text-lg text-white">
@@ -156,7 +156,7 @@ export default function CourseCard(props: any) {
               </div>
             ) : (
               <div className="bg-[#2C2C33] py-2 px-3 w-auto max-w-64 rounded-md">
-                <p className="font-semibold">
+                <p className="text-sm lg:text-base">
                   Contact your Professor for additional details.
                 </p>
               </div>
@@ -165,7 +165,7 @@ export default function CourseCard(props: any) {
               <div className="flex flex-row gap-2 mt-4">{coloredDays}</div>
             </div>
           </div>
-          <div className="flex flex-col pr-3 pt-10">
+          <div className="flex flex-col">
             <div className="flex flex-row gap-5 justify-end">
               <div>
                 <div className="text-right text-sm lg:text-md">Instructor</div>
@@ -183,15 +183,19 @@ export default function CourseCard(props: any) {
               )}
             </div>
             {props.course.seatsAvailable == 0 ? (
-              <div className="flex flex-row pt-2 gap-2 items-center">
-                <div className="font-medium text-slate text-right">
+              <div className="flex flex-row pt-2 gap-2 items-center justify-end">
+                <div className="hidden lg:flex text-medium text-slate text-right">
                   No available seats left for this section
+                </div>
+                {/* Use shorter msg for mobile */}
+                <div className="flex lg:hidden text-sm text-slate text-right">
+                  No seats
                 </div>
                 <Error color="error" />
               </div>
             ) : (
               <div className="flex flex-row ml-auto pt-1 lg:pt-2 gap-2">
-                <div className="text-sm lg:text-md text-slate">
+                <div className="text-sm lg:text-md text-slate text-right">
                   Seats Available: {props.course.seatsAvailable}
                 </div>
               </div>

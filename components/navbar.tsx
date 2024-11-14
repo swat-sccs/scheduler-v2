@@ -98,7 +98,7 @@ export const Navbar = (props: any) => {
         </NavbarContent>
 
         <NavbarContent
-          className="hidden lg:flex basis-1/5 sm:basis-full"
+          className="hidden lg:flex basis-1/5 lg:basis-full"
           justify="end"
         >
           <NavbarItem className="hidden lg:flex gap-2">
@@ -135,7 +135,7 @@ export const Navbar = (props: any) => {
           </NavbarItem>
         </NavbarContent>
 
-        <NavbarContent className="flex sm:hidden" justify="end">
+        <NavbarContent className="flex lg:hidden" justify="end">
           <ThemeSwitch />
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -143,7 +143,7 @@ export const Navbar = (props: any) => {
         </NavbarContent>
 
         {/* Mobile?*/}
-        <NavbarMenu className=" sm:flex">
+        <NavbarMenu className=" lg:flex">
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {siteConfig.navItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`}>

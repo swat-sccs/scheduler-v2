@@ -62,7 +62,7 @@ export function FullCourseList({
   //const courseList: Course[] = await getCourses(query, term, dotw, stime);
   return (
     <>
-      <div className="grid gap-3 ">
+      <div className="flex flex-col gap-3">
         {courses?.map((course: any) => (
           <div key={course.id}>
             <CourseCard course={course} />
