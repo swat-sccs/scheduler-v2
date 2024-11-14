@@ -35,6 +35,7 @@ module.exports = {
               DEFAULT: "#9FADBC",
               foreground: "#1D2125",
             },
+            secondary: "#F46523",
             focus: "#BEF264",
           },
         },

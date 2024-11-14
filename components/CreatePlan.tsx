@@ -34,6 +34,7 @@ export default function CreatePlan(props: any) {
   const { data: session, status } = useSession();
   const [coursePlanName, setCoursePlanName]: any = useState("");
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
   const { data, isLoading, error } = useSWR("/api/getplancourses", fetcher, {
@@ -166,82 +167,103 @@ export default function CreatePlan(props: any) {
   };
 
   const scrollToPlan = () => {
-    if (scrollRef.current)
+    console.log("A");
+    if (scrollRef.current) {
+      console.log("B");
       scrollRef.current.scrollIntoView({ behavior: "smooth", inline: "start" });
+      setIsScrolled(true);
+    }
+  };
+
+  const scrollToTop = () => {
+    console.log("C");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    setIsScrolled(false);
   };
 
   return (
-    <div className="flex flex-col mt-5 lg:mt-0 gap-5">
-      {/* <div className="flex flex-row" ref={scrollRef}>
-          <div className="font-bold text-primary h1">Create a Plan</div>
-          <button className="flex lg:hidden" onClick={scrollToPlan}>
-            <ExpandLessIcon />
-          </button>
-        </div> */}
-      <div className="flex flex-col gap-3">
-        <div>
-          <div className="font-bold text-lg">Create a Plan</div>
-          <div className="flex mt-2 items-center gap-2">
-            <Input
-              isRequired
-              label="Plan Name"
-              placeholder="Name your plan..."
-              size="lg"
-              value={coursePlanName}
-              onChange={(event: any) => {
-                setCoursePlanName(event.target.value);
-              }}
-            />
-            <Button
-              startContent={<AddIcon />}
-              size="md"
-              onClick={() => createPlan()}
-            ></Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 items-center">
-          <Divider />
-          {/* --------------------------------- or --------------------------- */}
-          <div className="text-center mt-1">or</div>
-          <Divider />
-        </div>
-
-        <div>
-          <div className="font-bold text-lg">Select a Plan</div>
-          <div className="flex mt-2 items-center justify gap-2">
-            <Select
-              className="col-span-3"
-              label="Current Plan"
-              selectedKeys={selectedCoursePlan}
-              selectionMode="single"
-              size="lg"
-              onChange={handleSelectionChange}
-            >
-              {coursePlans != null
-                ? coursePlans.map((plan: any) => (
-                    <SelectItem key={plan.id}>{plan.name}</SelectItem>
-                  ))
-                : null}
-            </Select>
-
-            <Button
-              isIconOnly
-              size="md"
-              startContent={<DeleteIcon />}
-              onClick={deletePlan}
-            />
-            <Button isIconOnly size="md" startContent={<IosShareIcon />} />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="flex flex-col h-[55vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
-        id="scrollMe"
+    <>
+      <Button
+        className="rounded-full fixed md:hidden bottom-5 right-5 z-50 w-12 h-12 shadow-md"
+        color="secondary"
+        isIconOnly
+        onClick={() => {
+          isScrolled ? scrollToTop() : scrollToPlan();
+        }}
       >
-        <CoursesList />
+        <ExpandLessIcon
+          className={"transition" + (isScrolled ? " rotate-0" : " rotate-180")}
+        />
+      </Button>
+      <div className="flex flex-col mt-5 lg:mt-0 gap-5">
+        <div className="flex flex-col gap-3">
+          <div ref={scrollRef}>
+            <div className="font-bold text-lg">Create a Plan</div>
+            <div className="flex mt-2 items-center gap-2">
+              <Input
+                isRequired
+                label="Plan Name"
+                placeholder="Name your plan..."
+                size="lg"
+                value={coursePlanName}
+                onChange={(event: any) => {
+                  setCoursePlanName(event.target.value);
+                }}
+              />
+              <Button
+                startContent={<AddIcon />}
+                size="md"
+                onClick={() => createPlan()}
+              ></Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 items-center">
+            <Divider />
+            {/* --------------------------------- or --------------------------- */}
+            <div className="text-center mt-1">or</div>
+            <Divider />
+          </div>
+
+          <div>
+            <div className="font-bold text-lg">Select a Plan</div>
+            <div className="flex mt-2 items-center justify gap-2">
+              <Select
+                className="col-span-3"
+                label="Current Plan"
+                selectedKeys={selectedCoursePlan}
+                selectionMode="single"
+                size="lg"
+                onChange={handleSelectionChange}
+              >
+                {coursePlans != null
+                  ? coursePlans.map((plan: any) => (
+                      <SelectItem key={plan.id}>{plan.name}</SelectItem>
+                    ))
+                  : null}
+              </Select>
+
+              <Button
+                isIconOnly
+                size="md"
+                startContent={<DeleteIcon />}
+                onClick={deletePlan}
+              />
+              <Button isIconOnly size="md" startContent={<IosShareIcon />} />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="flex flex-col h-[55vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+          id="scrollMe"
+        >
+          <CoursesList />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
