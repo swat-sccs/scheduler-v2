@@ -116,9 +116,9 @@ async function Home(props: any) {
 
   return (
     <>
-      <div className="grid grid-cols-10 p-4 h-full">
+      <div className="grid grid-cols-10 p-3 lg:p-4 h-full">
         <div className="col-span-10 lg:col-span-7">
-          <div className="flex flex-col gap-5 h-full">
+          <div className="flex flex-col gap-3 h-full">
             <Search codes={codes} terms={terms} times={uniqueTimes} />
             <div className="h-[70vh] overflow-y-scroll overflow-x-clip scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
               {props.fullCourseList}
