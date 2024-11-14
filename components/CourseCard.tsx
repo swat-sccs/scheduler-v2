@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardBody, CardHeader, Chip } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Chip, Divider } from "@nextui-org/react";
 import Image from "next/image";
 import { tv } from "tailwind-variants";
 import axios from "axios";
@@ -69,7 +69,7 @@ export default function CourseCard(props: any) {
       if (item) {
         return (
           <Chip key={index} size="sm" variant={"bordered"}>
-            <p> {item.code}</p>
+            {" " + item.code + " "}
           </Chip>
         );
       }
@@ -94,9 +94,11 @@ export default function CourseCard(props: any) {
               {props.course.subject} {props.course.courseNumber} |{" "}
               {props.course.creditHours} credit(s)
               {props.course.sectionAttributes.length > 0 && (
-                <div className="hidden lg:flex max-w-48 lg:max-w-64 items-center">
-                  &nbsp;|&nbsp;{attributeCodes}
-                </div>
+                <>
+                  <div className="hidden sm:flex flex-row max-w-48 md:max-w-full overflow-x-auto scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent grid-cols-6 gap-1">
+                    &nbsp;|&nbsp;{attributeCodes}
+                  </div>
+                </>
               )}
             </h2>
           </div>
@@ -165,11 +167,11 @@ export default function CourseCard(props: any) {
               <div className="flex flex-row gap-2 mt-4">{coloredDays}</div>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-center">
             <div className="flex flex-row gap-5 justify-end">
               <div>
-                <div className="text-right text-sm lg:text-md">Instructor</div>
-                <div className="text-right text-md lg:text-xl font-bold">
+                <div className="text-right text-sm lg:text-lg">Instructor</div>
+                <div className="text-right text-md lg:text-2xl font-bold">
                   {props.course.instructor.displayName.replace("&#39;", "'")}
                 </div>
               </div>
@@ -184,7 +186,7 @@ export default function CourseCard(props: any) {
             </div>
             {props.course.seatsAvailable == 0 ? (
               <div className="flex flex-row pt-2 gap-2 items-center justify-end">
-                <div className="hidden lg:flex text-medium text-slate text-right">
+                <div className="hidden lg:flex text-md text-slate text-right">
                   No available seats left for this section
                 </div>
                 {/* Use shorter msg for mobile */}
@@ -195,7 +197,7 @@ export default function CourseCard(props: any) {
               </div>
             ) : (
               <div className="flex flex-row ml-auto pt-1 lg:pt-2 gap-2">
-                <div className="text-sm lg:text-md text-slate text-right">
+                <div className="text-sm lg:text-md lg:text-md text-slate text-right">
                   Seats Available: {props.course.seatsAvailable}
                 </div>
               </div>
