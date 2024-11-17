@@ -25,6 +25,7 @@ export default function FooterInfo(props: any) {
   return (
     <>
       <div
+        role="presentation"
         className="flex flex-wrap gap-3 fixed bottom-10 left-10 opacity-50 hover:opacity-80 invisible sm:visible"
         onClick={() => handleOpen()}
       >
