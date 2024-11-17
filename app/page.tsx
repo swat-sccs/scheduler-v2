@@ -100,7 +100,7 @@ export default async function Page(props: {
   homePageProps["createPlan"] = (
     <Suspense
       fallback={
-        <Skeleton className="rounded-lg w-8/12 h-full align-top justify-start" />
+        <Skeleton className="rounded-lg w-8/12 h-fit align-top justify-start" />
       }
     >
       <CreatePlan />
@@ -125,7 +125,7 @@ async function Home(props: any) {
             </div>
           </div>
         </div>
-        <div className="col-span-10 lg:col-span-3 lg:ml-[5vw]">
+        <div className="col-span-10 lg:col-span-3 lg:ml-[5vw] ">
           <CreatePlan />
         </div>
       </div>

@@ -94,14 +94,15 @@ export default function AdminPage() {
         return cellValue;
     }
   }, []);
-
+  console.log(status);
+  console.log(session?.user);
   if (status === "authenticated") {
     if (session.user?.role === "admin") {
       return (
-        <div className="w-[90vw]">
+        <div>
           <Table
             isHeaderSticky
-            className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+            className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent h-[80vh] p-4"
             fullWidth
             aria-label="Rating table with dynamic content(ratings)"
           >

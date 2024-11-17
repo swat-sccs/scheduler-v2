@@ -32,8 +32,15 @@ export default function Calendar(props: any) {
         */}
 
         <b className="font-sans text-[9px] ml-1 mt-1">{eventInfo.timeText}</b>
-        <div className="font-sans text-[10px] ml-1 ">
+        <div className="font-sans text-[10px] ml-1 font-bold">
+          {eventInfo.event.extendedProps.subject} {""}
+          {eventInfo.event.extendedProps.courseNumber}
+        </div>
+        <div className="font-sans text-[10px] ml-1 mt-5 ">
           {eventInfo.event.title}
+        </div>
+        <div className="font-sans text-[10px] ml-1 mt-5 ">
+          {eventInfo.event.extendedProps.instructor.replace("&#39;", "'")}
         </div>
       </Card>
     );

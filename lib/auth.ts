@@ -76,7 +76,7 @@ export const config = {
       return token;
     },
     async session({ session, token }) {
-      session.role = token.role;
+      session.user.role = token.role;
       session.user.id = token.sub || "";
       return session;
     },
