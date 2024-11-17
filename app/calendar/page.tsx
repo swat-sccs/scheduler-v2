@@ -18,7 +18,11 @@ export default async function CalendarPage() {
           id: parseInt(planCookie),
         },
         include: {
-          courses: true,
+          courses: {
+            include: {
+              instructor: true,
+            },
+          },
         },
       });
 
@@ -42,6 +46,8 @@ export default async function CalendarPage() {
           title: courses[i]?.courseTitle,
           daColor: color,
           subject: courses[i]?.subject,
+          courseNumber: courses[i]?.courseNumber,
+          instructor: courses[i]?.instructor.displayName,
           color: "rgba(0,0,0,0)",
 
           borderWidth: "0px",
@@ -104,11 +110,11 @@ export default async function CalendarPage() {
 
   //let times = await getUniqueStartEndTimes();
   return (
-    <div className="grid grid-cols-3 p-4 w-screen absolute start-0 px-32 gap-20">
-      <div className=" col-start-1 h-[70vh] w-[57vw] col-span-2 font-sans font-normal">
+    <div className="grid grid-cols-3 sm:gap-20 grid-rows-2 sm:grid-rows-1 p-4 ">
+      <div className="sm:h-[75vh] sm:w-[57vw] col-span-3 md:col-span-2 font-sans font-normal ">
         <Calendar events={events} />
       </div>
-      <div className="col-start-3 h-[62vh] ">
+      <div className="sm:h-[62vh] col-span-3 sm:col-span-1 ">
         <CreatePlan />
       </div>
     </div>

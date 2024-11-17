@@ -8,6 +8,7 @@ import { NextAuthProvider } from "../components/providers/NextAuthProvider";
 import { siteConfig } from "../config/site";
 import { fontSans } from "../config/fonts";
 import { Navbar } from "../components/navbar";
+import FooterInfo from "../components/FooterInfo";
 
 import { Providers } from "./providers";
 
@@ -54,35 +55,10 @@ export default function RootLayout({
             >
               <div className="flex flex-col h-screen ">
                 <Navbar />
-                <main className="container mx-auto px-1 lg:px-7 lg:pt-10 justify-center items-center  flex-grow">
+                <main className="container mx-auto px-1 lg:px-7 lg:pt-10 justify-center items-center  flex-grow ">
                   {children}
                 </main>
-                <footer className="w-full flex items-center justify-center py-3">
-                  <div className="columns-1 container max-w-4xl text-center">
-                    <span className="text-xs">
-                      The Course Planner is a student-run service, and displays
-                      classes from the Tri-College course database. We recommend
-                      confirming your schedule with the official course listings
-                      just in case. If there are any issues, email us.
-                    </span>
-                    <br />
-
-                    <div className="space-x-5">
-                      <Link
-                        isExternal
-                        href="https://www.sccs.swarthmore.edu/docs/policy"
-                        title="SCCS Usage & Data Policy"
-                      >
-                        <span className=" text-xs underline  ">
-                          Usage & Data Policy
-                        </span>
-                      </Link>
-                      <span className="text-xs ">
-                        © 2024 Swarthmore College Computer Society | v2.0.0
-                      </span>
-                    </div>
-                  </div>
-                </footer>
+                <FooterInfo />
               </div>
             </Providers>
           </body>
