@@ -15,7 +15,7 @@ export default function Calendar(props: any) {
 
     return (
       <Card
-        className="fc-event-main-frame w-[100%] rounded-md hover:h-[20vh] ease-in-out z-0 hover:z-10 hover:transition-all duration-700 "
+        className="fc-event-main-frame w-[100%] rounded-md hover:h-28 ease-in-out z-0 hover:z-10 hover:transition-all duration-700 "
         style={{ backgroundColor: eventInfo.event.extendedProps.daColor }}
       >
         {/*
@@ -31,14 +31,15 @@ export default function Calendar(props: any) {
         />
         */}
 
-        <b className="font-sans text-[9px] ml-1 mt-1">{eventInfo.timeText}</b>
-        <div className="font-sans text-[10px] ml-1 font-bold">
-          {eventInfo.event.extendedProps.subject} {""}
-          {eventInfo.event.extendedProps.courseNumber}
+        <b className="font-sans text-[9px] ml-1 font-normal">
+          {eventInfo.timeText} {"|"} {eventInfo.event.extendedProps.room}
+        </b>
+        <div className="font-sans text-[10px] ml-1 font-bold inline">
+          {eventInfo.event.extendedProps.subject}
+          {eventInfo.event.extendedProps.courseNumber} :
+          <p className="font-normal inline"> {eventInfo.event.title}</p>
         </div>
-        <div className="font-sans text-[10px] ml-1 mt-5 ">
-          {eventInfo.event.title}
-        </div>
+
         <div className="font-sans text-[10px] ml-1 mt-5 ">
           {eventInfo.event.extendedProps.instructor.replace("&#39;", "'")}
         </div>
