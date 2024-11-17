@@ -125,7 +125,7 @@ async function Home(props: any) {
             </div>
           </div>
         </div>
-        <div className="col-span-10 lg:col-span-3 lg:ml-[5vw] ">
+        <div className="col-span-10 lg:col-span-3 lg:ml-[5vw]">
           <CreatePlan />
         </div>
       </div>

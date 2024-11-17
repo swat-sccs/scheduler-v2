@@ -42,6 +42,7 @@ export default function Calendar(props: any) {
         <div className="font-sans text-[10px] ml-1 mt-5 ">
           {eventInfo.event.extendedProps.instructor.replace("&#39;", "'")}
         </div>
+
       </Card>
     );
   }

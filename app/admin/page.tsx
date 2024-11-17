@@ -94,8 +94,7 @@ export default function AdminPage() {
         return cellValue;
     }
   }, []);
-  console.log(status);
-  console.log(session?.user);
+
   if (status === "authenticated") {
     if (session.user?.role === "admin") {
       return (

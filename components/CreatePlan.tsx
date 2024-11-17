@@ -145,11 +145,13 @@ export default function CreatePlan(props: any) {
               />
 
               <CardHeader className="justify-between">
+
                 <div className="ml-2 lg:text-base truncate text-bold">
                   {course.subject} {""} {course.courseNumber}
                   <div className="text-tiny ">
                     {course.courseTitle.replace(/&amp;/g, "&")}
                   </div>
+
                 </div>
 
                 <Button
@@ -262,7 +264,9 @@ export default function CreatePlan(props: any) {
         </div>
 
         <div
+
           className="flex flex-col h-[45vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
+
           id="scrollMe"
         >
           <CoursesList />
