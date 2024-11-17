@@ -21,6 +21,11 @@ export default async function CalendarPage() {
           courses: {
             include: {
               instructor: true,
+              facultyMeet: {
+                include: {
+                  meetingTimes: true,
+                },
+              },
             },
           },
         },
@@ -48,6 +53,10 @@ export default async function CalendarPage() {
           subject: courses[i]?.subject,
           courseNumber: courses[i]?.courseNumber,
           instructor: courses[i]?.instructor.displayName,
+          room:
+            courses[i]?.facultyMeet.meetingTimes.building +
+            " " +
+            courses[i]?.facultyMeet.meetingTimes.room,
           color: "rgba(0,0,0,0)",
 
           borderWidth: "0px",
@@ -110,11 +119,11 @@ export default async function CalendarPage() {
 
   //let times = await getUniqueStartEndTimes();
   return (
-    <div className="grid grid-cols-3 sm:gap-20 grid-rows-2 sm:grid-rows-1 p-4 ">
-      <div className="sm:h-[75vh] sm:w-[57vw] col-span-3 md:col-span-2 font-sans font-normal ">
+    <div className="grid grid-cols-10 grid-rows-2 sm:grid-rows-1 p-3 lg:p-4">
+      <div className="sm:h-[75vh] col-span-10 md:col-span-7 font-sans font-normal flex-col">
         <Calendar events={events} />
       </div>
-      <div className="sm:h-[62vh] col-span-3 sm:col-span-1 ">
+      <div className="sm:h-[62vh] col-span-10 sm:col-span-3 sm:ml-[5vw]">
         <CreatePlan />
       </div>
     </div>
