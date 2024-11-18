@@ -1,11 +1,8 @@
 "use client";
 
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import InfoIcon from "@mui/icons-material/Info";
 import {
   Button,
-  Card,
   Link,
   Modal,
   ModalBody,
@@ -14,9 +11,9 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import moment from "moment";
+import packageInfo from "../package.json";
 
-export default function FooterInfo(props: any) {
+export default function FooterInfo() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOpen = () => {
@@ -52,7 +49,7 @@ export default function FooterInfo(props: any) {
                       isExternal
                       className="text-[#f46523]"
                       href="mailto:staff@sccs.swarthmore.edu"
-                      title="Sccs Staff Email"
+                      title="SCCS Staff Email"
                     >
                       email us.
                     </Link>
@@ -70,8 +67,9 @@ export default function FooterInfo(props: any) {
                     </Link>
                   </div>
                   <br />
-                  <span className="text-xs mt-3 ">
-                    © 2024 Swarthmore College Computer Society | v2.0.0
+                  <span className="text-sm mt-3 ">
+                    © 2024 Swarthmore College Computer Society | v
+                    {packageInfo.version}
                   </span>
                 </div>
               </ModalBody>
