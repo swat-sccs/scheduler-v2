@@ -20,6 +20,7 @@ import {
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+import { useCookies } from "next-client-cookies";
 import { button as buttonStyles } from "@nextui-org/theme";
 import InputIcon from "@mui/icons-material/Input";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -31,6 +32,7 @@ import { title } from "../components/primitives";
 import { Button } from "@nextui-org/button";
 
 export const Navbar = (props: any) => {
+  const cookies = useCookies();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
@@ -90,6 +92,9 @@ export const Navbar = (props: any) => {
                 radius: "full",
                 variant: pathname === item.href ? "shadow" : "ghost",
               })}
+              onClick={() => {
+                cookies.set("pagePref", item.label.toLowerCase());
+              }}
               href={item.href}
             >
               {item.label}
@@ -147,7 +152,13 @@ export const Navbar = (props: any) => {
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {siteConfig.navItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`}>
-                <Link href={item.href} size="lg">
+                <Link
+                  href={item.href}
+                  size="lg"
+                  onClick={() => {
+                    cookies.set("pagePref", item.label.toLowerCase());
+                  }}
+                >
                   {item.label}
                 </Link>
               </NavbarMenuItem>
