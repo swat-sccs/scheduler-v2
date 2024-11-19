@@ -138,10 +138,7 @@ export default function CreatePlan(props: any) {
               // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
             >
               <div
-                className={`absolute top-0 left-0 h-full w-2 rounded-full`}
-                style={{
-                  backgroundColor: generateColorFromName(course.subject),
-                }}
+                className={`absolute top-0 left-0 h-full w-2 rounded-full ${generateColorFromName(course.subject)}`}
               />
 
               <CardHeader className="justify-between">

@@ -142,6 +142,9 @@ export default function Search(props: any) {
       <Input
         isClearable
         className="col-span-9 lg:col-span-3"
+        classNames={{
+          inputWrapper: ["border-primary", "border-[0.5px]"],
+        }}
         defaultValue={searchParams.get("query")?.toString()}
         label="Search"
         labelPlacement="inside"

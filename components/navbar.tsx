@@ -58,6 +58,9 @@ export const Navbar = (props: any) => {
   return (
     <div className="bg-background_navbar h-auto">
       <NextUINavbar
+        classNames={{
+          toggleIcon: ["text-white"],
+        }}
         className="bg-inherit lg:py-2"
         maxWidth="full"
         position="sticky"
@@ -73,7 +76,7 @@ export const Navbar = (props: any) => {
               <span className={title({ size: "sm", color: "logo" })}>
                 SCCS&nbsp;
               </span>
-              <span className={title({ size: "xs" })}>
+              <span className={title({ size: "xs" }) + " text-white"}>
                 Course Planner&nbsp;
               </span>
             </NextLink>
@@ -114,8 +117,11 @@ export const Navbar = (props: any) => {
             {status === "authenticated" ? (
               <Dropdown>
                 <DropdownTrigger>
-                  <Button variant="bordered">
-                    <AccountCircleIcon />
+                  <Button
+                    variant="bordered"
+                    className="text-primary border-primary"
+                  >
+                    <AccountCircleIcon className="fill-primary" />
                     {session.user?.name || "Account"}
                   </Button>
                 </DropdownTrigger>
@@ -133,8 +139,9 @@ export const Navbar = (props: any) => {
               <Button
                 variant="bordered"
                 onClick={() => signIn("keycloak", { callbackUrl: "/" })}
+                className="border-primary"
               >
-                <InputIcon /> Log In
+                <InputIcon className="fill-white text-primary" /> Log In
               </Button>
             )}
           </NavbarItem>
@@ -169,7 +176,7 @@ export const Navbar = (props: any) => {
               <Dropdown>
                 <DropdownTrigger>
                   <Button variant="bordered">
-                    <AccountCircleIcon />
+                    <AccountCircleIcon className="fill-white" />
                     {session.user?.name || "Account"}
                   </Button>
                 </DropdownTrigger>
@@ -188,7 +195,7 @@ export const Navbar = (props: any) => {
                 variant="bordered"
                 onClick={() => signIn("keycloak", { callbackUrl: "/" })}
               >
-                <InputIcon /> Log In
+                <InputIcon className="fill-white text-primary" /> Log In
               </Button>
             )}
           </NavbarItem>

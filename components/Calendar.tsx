@@ -26,8 +26,7 @@ export default function Calendar({
   function renderEventContent(eventInfo: EventContentArg) {
     return (
       <Card
-        className="fc-event-main-frame w-[100%] rounded-md group min-h-0 hover:min-h-28 ease-in-out px-1 z-0 hover:z-10 hover:transition-all duration-700 "
-        style={{ backgroundColor: eventInfo.event.extendedProps.daColor }}
+        className={`fc-event-main-frame w-[100%] rounded-md group min-h-0 hover:min-h-28 ease-in-out px-1 z-0 hover:z-10 hover:transition-all duration-700 text-white ${eventInfo.event.extendedProps.daColor}`}
       >
         <b className="font-sans text-[10px] font-normal">
           {eventInfo.timeText} {"|"} {eventInfo.event.extendedProps.room}
@@ -46,21 +45,23 @@ export default function Calendar({
   }
 
   return (
-    <FullCalendar
-      expandRows
-      allDaySlot={false}
-      dayHeaderContent={dayHeaderContent}
-      editable={false}
-      eventContent={renderEventContent}
-      events={events}
-      headerToolbar={false}
-      height="100%"
-      initialView="timeGridWeek"
-      plugins={[timeGridPlugin]}
-      slotDuration="01:00:00"
-      slotMaxTime={endTime}
-      slotMinTime={startTime}
-      weekends={false}
-    />
+    <div className="bg-primary dark:bg-transparent w-full h-full rounded-lg">
+      <FullCalendar
+        expandRows
+        allDaySlot={false}
+        dayHeaderContent={dayHeaderContent}
+        editable={false}
+        eventContent={renderEventContent}
+        events={events}
+        headerToolbar={false}
+        height="100%"
+        initialView="timeGridWeek"
+        plugins={[timeGridPlugin]}
+        slotDuration="01:00:00"
+        slotMaxTime={endTime}
+        slotMinTime={startTime}
+        weekends={false}
+      />
+    </div>
   );
 }

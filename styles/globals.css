@@ -40,6 +40,11 @@
 .fc-col-header {
   background-color: #151d2b;
   font-family: var(--font-sans);
+  border-radius: 0.5rem 0.5rem 0px 0px;
+}
+
+.fc {
+  border-radius: 0.5rem;
 }
 
 .fc-event-main-frame {
@@ -50,8 +55,15 @@
   text-overflow: ellipsis;
 }
 
-h2 {
-  font-size: 1.1em;
+.fc-theme-standard .fc-scrollgrid {
+  border-radius: 0.5rem;
+}
+
+.fc-theme-standard td {
+  border-radius: 0rem 0rem 0.5rem 0.5rem;
+}
+.fc-theme-standard th {
+  border-radius: 0.5rem 0.5rem 0rem 0rem;
 }
 
 .smallFont {

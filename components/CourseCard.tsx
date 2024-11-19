@@ -56,7 +56,9 @@ export default function CourseCard(props: any) {
           className="flex w-6 h-6 lg:w-8 lg:h-8 rounded-md justify-center items-center"
           style={{ backgroundColor: color_mappings[index] }}
         >
-          <p className="font-bold text-sm lg:text-base text-white">{item[0]}</p>
+          <p className="font-bold text-sm lg:text-base text-black dark:text-white">
+            {item[0]}
+          </p>
         </div>
       );
     }
@@ -80,10 +82,7 @@ export default function CourseCard(props: any) {
 
   return (
     <Card key={props.course.id} isHoverable className={base()} shadow="sm">
-      <div
-        className="absolute top-0 left-0 h-full w-2"
-        style={{ backgroundColor: color }}
-      />
+      <div className={`absolute top-0 left-0 h-full w-2 ${color}`} />
       <CardHeader className="pl-6" onClick={() => updatePlan(props.course)}>
         <div className="flex items-center flex-row justify-between w-full">
           <div className="flex flex-col">
@@ -124,12 +123,12 @@ export default function CourseCard(props: any) {
         <div className="flex justify-between flex-row gap-3">
           <div className="gap-4 basis-1/2">
             {props.course.facultyMeet.meetingTimes.room ? (
-              <div className="bg-[#2C2C33] py-1 px-2 lg:py-2 lg:px-3 w-auto max-w-64 rounded-md">
+              <div className="bg-background_layer shadow-md py-1 px-2 lg:py-2 lg:px-3 w-auto max-w-64 rounded-md">
                 <div className="font-semibold text-sm lg:text-lg text-white">
                   {props.course.facultyMeet.meetingTimes.buildingDescription}{" "}
                   {props.course.facultyMeet.meetingTimes.room}
                 </div>
-                <div className="text-sm lg:text-base">
+                <div className="text-sm lg:text-base text-white">
                   {props.course.facultyMeet.meetingTimes ? (
                     <div className="mt-1">
                       <div className="font-normal">
@@ -157,8 +156,8 @@ export default function CourseCard(props: any) {
                 </div>
               </div>
             ) : (
-              <div className="bg-[#2C2C33] py-2 px-3 w-auto max-w-64 rounded-md">
-                <p className="text-sm lg:text-base">
+              <div className="bg-background_layer shadow-md py-2 px-3 w-auto max-w-64 rounded-md">
+                <p className="text-sm lg:text-base text-white">
                   Contact your Professor for additional details.
                 </p>
               </div>

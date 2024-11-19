@@ -56,22 +56,22 @@ export const subtitle = tv({
 });
 
 export const courseColors = [
-  "hsl(0deg 60% 35%)",
-  "hsl(21.17deg 60% 35%)",
-  "hsl(42.34deg 60% 35%)",
-  "hsl(63.51deg 60% 35%)",
-  "hsl(84.68deg 60% 35%)",
-  "hsl(105.85deg 60% 35%)",
-  "hsl(127.02deg 60% 35%)",
-  "hsl(148.19deg 60% 35%)",
-  "hsl(169.36deg 60% 35%)",
-  "hsl(190.53deg 60% 35%)",
-  "hsl(211.70deg 60% 35%)",
-  "hsl(232.87deg 60% 35%)",
-  "hsl(254.04deg 60% 35%)",
-  "hsl(275.21deg 60% 35%)",
-  "hsl(296.38deg 60% 35%)",
-  "hsl(317.55deg 60% 35%)",
+  "bg-[color:hsl(0deg_60%_50%)] dark:bg-[color:hsl(0deg_60%_35%)]",
+  "bg-[color:hsl(21.17deg_60%_50%)] dark:bg-[color:hsl(21.17deg_60%_35%)]",
+  "bg-[color:hsl(42.34deg_60%_50%)] dark:bg-[color:hsl(42.34deg_60%_35%)]",
+  "bg-[color:hsl(63.51deg_60%_50%)] dark:bg-[color:hsl(63.51deg_60%_35%)]",
+  "bg-[color:hsl(84.68deg_60%_50%)] dark:bg-[color:hsl(84.68deg_60%_35%)]",
+  "bg-[color:hsl(105.85deg_60%_50%)] dark:bg-[color:hsl(105.85deg_60%_35%)]",
+  "bg-[color:hsl(127.02deg_60%_50%)] dark:bg-[color:hsl(127.02deg_60%_35%)]",
+  "bg-[color:hsl(148.19deg_60%_50%)] dark:bg-[color:hsl(148.19deg_60%_35%)]",
+  "bg-[color:hsl(169.36deg_60%_50%)] dark:bg-[color:hsl(169.36deg_60%_35%)]",
+  "bg-[color:hsl(190.53deg_60%_50%)] dark:bg-[color:hsl(190.53deg_60%_35%)]",
+  "bg-[color:hsl(211.70deg_60%_50%)] dark:bg-[color:hsl(211.70deg_60%_35%)]",
+  "bg-[color:hsl(232.87deg_60%_50%)] dark:bg-[color:hsl(232.87deg_60%_35%)]",
+  "bg-[color:hsl(254.04deg_60%_50%)] dark:bg-[color:hsl(254.04deg_60%_35%)]",
+  "bg-[color:hsl(275.21deg_60%_50%)] dark:bg-[color:hsl(275.21deg_60%_35%)]",
+  "bg-[color:hsl(296.38deg_60%_50%)] dark:bg-[color:hsl(296.38deg_60%_35%)]",
+  "bg-[color:hsl(317.55deg_60%_50%)] dark:bg-[color:hsl(317.55deg_60%_35%)]",
 ];
 
 export function generateColorFromName(name: string) {
@@ -80,6 +80,9 @@ export function generateColorFromName(name: string) {
   for (let i = 0; i < name.length; i++) {
     hash += name.charCodeAt(i) * i;
   }
+
+  console.log("generated:");
+  console.log(courseColors[hash % courseColors.length]);
 
   return courseColors[hash % courseColors.length];
 }
