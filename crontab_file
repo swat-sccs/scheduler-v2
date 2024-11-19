@@ -1,1 +1,1 @@
-0 * * * * /app/swatscraper -semester=spring -year=2025
+0 * * * * cronuser /app/swatscraper -semester=spring -year=2025
