@@ -73,10 +73,8 @@ export default async function Page(props: {
 }) {
   const cookieStore = await cookies();
   const pagePref = cookieStore.get("pagePref");
-  if (pagePref && pagePref.value != "plan") {
-    console.log("wtf");
-    console.log(pagePref.value);
-    redirect("/" + pagePref.value);
+  if (pagePref && pagePref.value != "/") {
+    redirect(pagePref.value);
   }
 
   const searchParams = await props.searchParams;

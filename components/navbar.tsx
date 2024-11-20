@@ -96,7 +96,7 @@ export const Navbar = (props: any) => {
                 variant: pathname === item.href ? "shadow" : "ghost",
               })}
               onClick={() => {
-                cookies.set("pagePref", item.label.toLowerCase());
+                cookies.set("pagePref", item.href);
               }}
               href={item.href}
             >
@@ -163,7 +163,7 @@ export const Navbar = (props: any) => {
                   href={item.href}
                   size="lg"
                   onClick={() => {
-                    cookies.set("pagePref", item.label.toLowerCase());
+                    cookies.set("pagePref", item.href);
                   }}
                 >
                   {item.label}
