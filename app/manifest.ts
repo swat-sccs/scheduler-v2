@@ -12,7 +12,13 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "standalone",
     orientation: "any",
-    display_override: ["fullscreen", "minimal-ui"],
+    display_override: [
+      "window-controls-overlay",
+      /* @ts-ignore tabbed is new https://developer.mozilla.org/en-US/docs/Web/Manifest/display_override */
+      "tabbed",
+      "standalone",
+      "minimal-ui",
+    ],
     background_color: "#141C2A",
     theme_color: "#141C2A",
     icons: [
