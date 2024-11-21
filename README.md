@@ -1,6 +1,6 @@
-<div style="align:center; text-align:center;">
+<div align="center">
 
-<img style="display:block; margin-left:auto; margin-right:auto;" src="./public/logo/logo.png" width="300" height="300"/>
+<img style="display:block; margin-left:auto; margin-right:auto; align:center;" src="./public/logo/logo.png" width="300" height="300"/>
 
 <h1 style="text-align:center"> SCCS Course Planner</h1>
 
@@ -28,7 +28,7 @@
 
 </ul>
 
-### Clone the Repo(recursivly!)
+### Clone the Repo
 
 ```bash
   git clone --recursive https://github.com/swat-sccs/scheduler-v2.git
@@ -40,9 +40,17 @@
 
 Paste the following into a .env in the root of the project.
 
-```env
-DATABASE_URL="postgresql://postgres:example@localhost:5432/scheduler_db"
+```bash
+echo 'DATABASE_URL="postgresql://postgres:example@localhost:5432/scheduler_db"' > .env
+```
 
+Pase the following into a .env in the /swatscraper dir
+```bash
+  echo 'HOST=localhost                                        
+        SQL_USER=postgres
+        PASS=example
+        DBNAME=scheduler_db
+        OPMODE="DEV"' > ./swatscraper/.env
 ```
 
 ### Run the development server
@@ -60,7 +68,7 @@ go mod tidy
 go run main.go -semester=spring -year=2025 # Change to semester of choice
 ```
 
-### View the dev site
+## View the dev site
 
 Head on over to http://localhost:3000
 
@@ -72,7 +80,7 @@ npx prisma studio
 
 Head on over to http://localhost:5555. Use this to confirm your database is populated.
 
-### 📡 Technologies in Use
+## 📡 Technologies in Use
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
