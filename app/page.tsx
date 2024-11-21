@@ -2,11 +2,13 @@ import * as React from "react";
 import { Suspense } from "react";
 import { Skeleton } from "@nextui-org/skeleton";
 
+import { cookies } from "next/headers";
 import Search from "../components/Search";
 import { FullCourseList } from "../components/FullCourseList";
 import CreatePlan from "../components/CreatePlan";
 import prisma from "../lib/prisma";
 import { getInitialCourses } from "../app/actions/getCourses";
+import { redirect } from "next/navigation";
 
 async function getCourses() {
   const courses = await prisma.course.findMany();
@@ -69,13 +71,21 @@ export default async function Page(props: {
     stime?: Array<string>;
   }>;
 }) {
+  const cookieStore = await cookies();
+  const pagePref = cookieStore.get("pagePref");
+  if (pagePref && pagePref.value != "plan") {
+    console.log("wtf");
+    console.log(pagePref.value);
+    redirect("/" + pagePref.value);
+  }
+
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const term = searchParams?.term || "";
   const dotw = searchParams?.dotw || [];
   const stime = searchParams?.stime || [];
   const homePageProps: any = {};
-  const initalCourses = await getInitialCourses();
+  const initalCourses = await getInitialCourses(query, term, dotw, stime);
 
   homePageProps["fullCourseList"] = (
     <Suspense

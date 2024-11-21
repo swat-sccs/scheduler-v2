@@ -43,7 +43,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         className: clsx(
           "px-px transition-opacity hover:opacity-80 cursor-pointer",
           className,
-          classNames?.base,
+          classNames?.base
         ),
       })}
     >
@@ -65,11 +65,15 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
               "px-0",
               "mx-0",
             ],
-            classNames?.wrapper,
+            classNames?.wrapper
           ),
         })}
       >
-        {!isSelected || isSSR ? <Brightness4Icon /> : <BedtimeIcon />}
+        {!isSelected || isSSR ? (
+          <Brightness4Icon className="fill-primary" />
+        ) : (
+          <BedtimeIcon className="fill-primary" />
+        )}
       </div>
     </Component>
   );

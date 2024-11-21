@@ -56,22 +56,22 @@ export const subtitle = tv({
 });
 
 export const courseColors = [
-  "#093145",
-  "#107896",
-  "#829356",
-  "#5A5A66",
-  "#4A6D7C",
-  "#C2571A",
-  "#9A2617",
-  "#201335",
-  "#636363",
-  "#087E8B",
-  "#590925",
-  "#034748",
-  "#19381F",
-  "#631D76",
-  "#4B4E6D",
-  "#590004",
+  "bg-[color:hsl(0deg_60%_50%)] dark:bg-[color:hsl(0deg_60%_35%)]",
+  "bg-[color:hsl(21.17deg_60%_50%)] dark:bg-[color:hsl(21.17deg_60%_35%)]",
+  "bg-[color:hsl(42.34deg_60%_50%)] dark:bg-[color:hsl(42.34deg_60%_35%)]",
+  "bg-[color:hsl(63.51deg_60%_50%)] dark:bg-[color:hsl(63.51deg_60%_35%)]",
+  "bg-[color:hsl(84.68deg_60%_50%)] dark:bg-[color:hsl(84.68deg_60%_35%)]",
+  "bg-[color:hsl(105.85deg_60%_50%)] dark:bg-[color:hsl(105.85deg_60%_35%)]",
+  "bg-[color:hsl(127.02deg_60%_50%)] dark:bg-[color:hsl(127.02deg_60%_35%)]",
+  "bg-[color:hsl(148.19deg_60%_50%)] dark:bg-[color:hsl(148.19deg_60%_35%)]",
+  "bg-[color:hsl(169.36deg_60%_50%)] dark:bg-[color:hsl(169.36deg_60%_35%)]",
+  "bg-[color:hsl(190.53deg_60%_50%)] dark:bg-[color:hsl(190.53deg_60%_35%)]",
+  "bg-[color:hsl(211.70deg_60%_50%)] dark:bg-[color:hsl(211.70deg_60%_35%)]",
+  "bg-[color:hsl(232.87deg_60%_50%)] dark:bg-[color:hsl(232.87deg_60%_35%)]",
+  "bg-[color:hsl(254.04deg_60%_50%)] dark:bg-[color:hsl(254.04deg_60%_35%)]",
+  "bg-[color:hsl(275.21deg_60%_50%)] dark:bg-[color:hsl(275.21deg_60%_35%)]",
+  "bg-[color:hsl(296.38deg_60%_50%)] dark:bg-[color:hsl(296.38deg_60%_35%)]",
+  "bg-[color:hsl(317.55deg_60%_50%)] dark:bg-[color:hsl(317.55deg_60%_35%)]",
 ];
 
 export function generateColorFromName(name: string) {
@@ -80,6 +80,9 @@ export function generateColorFromName(name: string) {
   for (let i = 0; i < name.length; i++) {
     hash += name.charCodeAt(i) * i;
   }
+
+  console.log("generated:");
+  console.log(courseColors[hash % courseColors.length]);
 
   return courseColors[hash % courseColors.length];
 }

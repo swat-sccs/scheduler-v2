@@ -2,25 +2,27 @@ FROM golang:1.23-bookworm
 
 RUN useradd cronuser
 RUN mkdir -p /app
+RUN touch /var/log/cron.log
 RUN chown -R cronuser /app
+
 WORKDIR /app
 
 RUN apt update
 RUN apt install -y cron rsyslog
 
-COPY --chown=cronuser:cronuser ./crontab_file /etc/cron.d/cron-scraper
-RUN crontab -u cronuser /etc/cron.d/cron-scraper
-RUN chmod u+s /usr/sbin/cron
-COPY --chown=cronuser:cronuser ./cron-startup.sh ./cron-startup.sh
+COPY ./crontab_file /etc/cron.d/cron-scraper
+RUN chmod 0644 /etc/cron.d/cron-scraper
+COPY ./cron-startup.sh ./cron-startup.sh
 
 USER cronuser
 
 COPY ./swatscraper/go.mod ./swatscraper/go.sum ./
 RUN go mod download
 
-COPY --chown=cronuser:cronuser ./scraper.env ./env
+COPY --chown=cronuser:cronuser ./scraper.env ./.env
 COPY --chown=cronuser:cronuser ./swatscraper/*.go ./
 
 RUN GOCACHE=/app/.cache CGO_ENABLED=0 GOOS=linux go build -o /app/swatscraper
 
+USER root
 ENTRYPOINT ["./cron-startup.sh"]

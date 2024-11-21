@@ -8,10 +8,99 @@ export async function setPlanCookie(plan: string) {
   (await cookies()).set("plan", plan);
 }
 
-export async function getInitialCourses() {
+export async function getInitialCourses(
+  query: any,
+  term: any,
+  dotw: any,
+  stime: any
+) {
+  const startTime = stime.toString().split(",").filter(Number);
+
   return await prisma.course.findMany({
     relationLoadStrategy: "join", // or 'query'
-    take: 10,
+    take: 20,
+
+    where: {
+      ...(term
+        ? {
+            year: term,
+          }
+        : {}),
+      //year: term,
+
+      ...(query
+        ? {
+            OR: [
+              {
+                courseTitle: {
+                  search: query.trim().split(" ").join(" | "),
+                  mode: "insensitive",
+                },
+              },
+              {
+                sectionAttributes: {
+                  some: {
+                    code: {
+                      search: query.trim().split(" ").join(" | "),
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+              {
+                subject: {
+                  search: query.trim().split(" ").join(" | "),
+                  mode: "insensitive",
+                },
+              },
+              {
+                courseNumber: {
+                  search: query.trim().split(" ").join(" | "),
+                  mode: "insensitive",
+                },
+              },
+              {
+                instructor: {
+                  displayName: {
+                    search: query.trim().split(" ").join(" | "),
+                    mode: "insensitive",
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+
+      ...(startTime.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                beginTime: {
+                  in: startTime,
+                },
+              },
+            },
+          }
+        : {}),
+
+      ...(dotw.length > 0
+        ? {
+            facultyMeet: {
+              meetingTimes: {
+                is: {
+                  monday: dotw.includes("monday") ? true : Prisma.skip,
+                  tuesday: dotw.includes("tuesday") ? true : Prisma.skip,
+                  wednesday: dotw.includes("wednesday") ? true : Prisma.skip,
+                  thursday: dotw.includes("thursday") ? true : Prisma.skip,
+                  friday: dotw.includes("friday") ? true : Prisma.skip,
+                  saturday: dotw.includes("saturday") ? true : Prisma.skip,
+                  sunday: dotw.includes("sunday") ? true : Prisma.skip,
+                },
+              },
+            },
+          }
+        : {}),
+    },
 
     include: {
       sectionAttributes: true,
@@ -37,6 +126,9 @@ export async function getCourses(
   return await prisma.course.findMany({
     relationLoadStrategy: "join", // or 'query'
     take: take,
+    cursor: {
+      id: 1,
+    },
 
     include: {
       sectionAttributes: true,

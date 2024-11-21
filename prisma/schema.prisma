@@ -43,6 +43,7 @@ model Course {
     facultyId               Int
     facultyMeetId           Int
     year                    String
+    linkedSections          String?
     avgRating               Float?
     instructor              Faculty            @relation(fields: [facultyId], references: [id])
     facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])

@@ -24,11 +24,26 @@ module.exports = {
   plugins: [
     nextui({
       themes: {
-        light: {},
+        light: {
+          colors: {
+            background: "#E5E7EB",
+            background_navbar: "#31425E",
+            background_layer: "#31425E",
+            foreground: "#000000",
+            light_foreground: "#F1F1F1",
+            primary: {
+              DEFAULT: "#9FADBC",
+              foreground: "#314f25E",
+            },
+            secondary: "#F46523",
+            focus: "#F46523",
+          },
+        },
         dark: {
           colors: {
             background: "#0C1019",
             background_navbar: "#151D2B",
+            background_layer: "#2C2C33",
             foreground: "#D9D9D9",
             light_foreground: "#181C25",
             primary: {
@@ -36,7 +51,7 @@ module.exports = {
               foreground: "#1D2125",
             },
             secondary: "#F46523",
-            focus: "#BEF264",
+            focus: "#F46523",
           },
         },
       },

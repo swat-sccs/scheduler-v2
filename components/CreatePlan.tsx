@@ -131,27 +131,22 @@ export default function CreatePlan(props: any) {
             <Card
               key={course.id}
               className={
-                "bg-light_foreground min-h-14 max-h-14 rounded-sm scroll-none drop-shadow-lg transition-colors"
+                "bg-light_foreground min-h-16 max-h-16 rounded-sm scroll-none drop-shadow-lg transition-colors"
               }
               shadow="sm"
 
               // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
             >
               <div
-                className={`absolute top-0 left-0 h-full w-2 rounded-full`}
-                style={{
-                  backgroundColor: generateColorFromName(course.subject),
-                }}
+                className={`absolute top-0 left-0 h-full w-2 rounded-full ${generateColorFromName(course.subject)}`}
               />
 
               <CardHeader className="justify-between">
-
                 <div className="ml-2 lg:text-base truncate text-bold">
                   {course.subject} {""} {course.courseNumber}
                   <div className="text-tiny ">
                     {course.courseTitle.replace(/&amp;/g, "&")}
                   </div>
-
                 </div>
 
                 <Button
@@ -264,9 +259,7 @@ export default function CreatePlan(props: any) {
         </div>
 
         <div
-
           className="flex flex-col h-[45vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
-
           id="scrollMe"
         >
           <CoursesList />
