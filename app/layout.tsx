@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { CookiesProvider } from "next-client-cookies/server";
 
 import { NextAuthProvider } from "../components/providers/NextAuthProvider";
-import { siteConfig } from "../config/site";
+import { sccsLD, siteConfig } from "../config/site";
 import { fontSans } from "../config/fonts";
 import { Navbar } from "../components/navbar";
 import FooterInfo from "../components/FooterInfo";
@@ -18,15 +18,12 @@ export const metadata: Metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#31425D" },
+    { media: "(prefers-color-scheme: dark)", color: "#141C2A" },
   ],
 };
 
@@ -39,7 +36,12 @@ export default function RootLayout({
     <CookiesProvider>
       <NextAuthProvider>
         <html suppressHydrationWarning lang="en">
-          <head />
+          <head>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(sccsLD) }}
+            />
+          </head>
           <body
             className={clsx(
               "min-h-screen bg-background font-sans antialiased",
