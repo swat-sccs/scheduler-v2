@@ -39,6 +39,19 @@ export const Navbar = (props: any) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      registerServiceWorker();
+    }
+  }, []);
+
+  async function registerServiceWorker() {
+    await navigator.serviceWorker.register("/sw.js", {
+      scope: "/",
+      updateViaCache: "all",
+    });
+  }
+
+  useEffect(() => {
     setIsMenuOpen(false); // Close the navigation panel
   }, [pathname]);
 
