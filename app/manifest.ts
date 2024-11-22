@@ -6,10 +6,11 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Planner",
     id: "sccs_plan",
     categories: ["education", "productivity", "utilities"],
-    description: "Plan and track your classes with the SCCS Class Planner",
+    description: "Plan and track your classes with the SCCS Course Planner",
     dir: "auto",
     lang: "en-US",
     start_url: "/",
+    scope: "/",
     display: "standalone",
     orientation: "any",
     display_override: [
@@ -21,6 +22,22 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     background_color: "#141C2A",
     theme_color: "#141C2A",
+    prefer_related_applications: false,
+    edge_side_panel: {
+      preferred_width: 425,
+    },
+    shortcuts: [
+      {
+        name: "Calendar",
+        url: "/calendar",
+        description: "Course Planner calendar view",
+      },
+      {
+        name: "Ratings",
+        url: "/rating",
+        description: "Course Planner ratings form",
+      },
+    ],
     icons: [
       {
         src: "favicon.ico",
