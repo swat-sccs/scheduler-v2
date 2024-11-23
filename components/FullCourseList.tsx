@@ -49,7 +49,9 @@ export function FullCourseList({
       setIsDone(false);
     }
     setCourses(apiCourses);
-  }, [courses, cursor, take, query, term, dotw, stime, inView]);
+    // Prevent an infinite loop. TODO: better solution.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, term, dotw, stime, inView]);
 
   useEffect(() => {
     if (inView) {
