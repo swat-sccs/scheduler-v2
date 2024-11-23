@@ -16,7 +16,22 @@ const withSerwist = withSerwistInit({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["www.swarthmore.edu", "cdn.vectorstock.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.swarthmore.edu",
+        port: "",
+        pathname: "/**",
+        search: "",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.vectorstock.com",
+        port: "",
+        pathname: "/**",
+        search: "",
+      },
+    ],
   },
 };
 
