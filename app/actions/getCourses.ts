@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import prisma from "../../lib/prisma";
 import { Prisma } from "@prisma/client";
 export async function setPlanCookie(plan: string) {
-  //@ts-ignore
   (await cookies()).set("plan", plan);
 }
 
