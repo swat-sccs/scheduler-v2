@@ -51,7 +51,7 @@ export default function Search(props: any) {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  });
+  }, 100);
 
   const handleSelectionChange = (e: any) => {
     setSelectedTerm([e.target.value]);
@@ -85,6 +85,7 @@ export default function Search(props: any) {
     setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
     setSelectedStartTime(searchParams.get("stime")?.toString().split(","));
     //handleSelectionChange({ target: { value: selectedTerm } });
+
   }, [searchParams]);
 
   useEffect(() => {

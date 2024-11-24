@@ -1,5 +1,6 @@
 services:
-  schedulerv2:
+  planner-dev:
+    container_name: planner-dev
     build:
       context: .
       dockerfile: ./Dockerfile.dev
@@ -8,8 +9,7 @@ services:
     environment:
       NODE_ENV: development
       DOMAIN: http://127.0.0.1:3000/
-      DATABASE_URL: "postgresql://postgres:example@postgres:5432/scheduler_db"
-      POSTGRES_DB: scheduler_db
+      POSTGRES_DB: planner_db
     env_file:
       - .env
     ports:
@@ -19,13 +19,14 @@ services:
       - internal
     command: sh -c "npm install --silent && npx prisma migrate dev --name init && npx prisma generate && npm run dev "
 
-  postgres:
+  planner-db-dev:
+    container_name: planner-db-dev
     image: postgres:16.4-bullseye
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: scheduler_db
+      POSTGRES_DB: planner_db
     networks:
       - internal
     volumes:

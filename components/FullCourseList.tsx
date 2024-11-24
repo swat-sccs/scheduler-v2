@@ -38,7 +38,7 @@ export function FullCourseList({
     setCursor((cursor) => cursor + NUMBER_OF_USERS_TO_FETCH);
     setTake((take) => take + NUMBER_OF_USERS_TO_FETCH);
 
-    const apiCourses = await getCourses(take, cursor, query, term, dotw, stime);
+    const apiCourses = await getCourses(take, query, term, dotw, stime);
     if (
       inView &&
       (apiCourses.length == 0 || apiCourses.length == courses.length)
