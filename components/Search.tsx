@@ -47,7 +47,7 @@ export default function Search(props: any) {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  });
+  }, 100);
 
   const handleSelectionChange = (e: any) => {
     setSelectedTerm([e.target.value]);
@@ -86,6 +86,7 @@ export default function Search(props: any) {
     searchParams.get("dotw")?.toString(),
     searchParams.get("stime")?.toString(),
   ]);
+
   useEffect(() => {
     // Update the document title using the browser API
     params.set("term", "S2025");

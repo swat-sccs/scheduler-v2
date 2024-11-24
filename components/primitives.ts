@@ -81,8 +81,8 @@ export function generateColorFromName(name: string) {
     hash += name.charCodeAt(i) * i;
   }
 
-  console.log("generated:");
-  console.log(courseColors[hash % courseColors.length]);
+  //console.log("generated:");
+  //console.log(courseColors[hash % courseColors.length]);
 
   return courseColors[hash % courseColors.length];
 }

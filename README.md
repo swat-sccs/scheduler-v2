@@ -11,7 +11,7 @@
 ![repo_size]
 ![build_status]
 
-<p>Looking to plan your classes? <a href="https://schedulerv2.sccs.swarthmore.edu/">Visit the live site!</a></p>
+<p>Looking to plan your classes? <a href="https://planner.sccs.swarthmore.edu/">Visit the live site!</a></p>
 </div>
 
 ## 🏁 Getting Started
@@ -31,9 +31,9 @@
 ### Clone the Repo
 
 ```bash
-  git clone --recursive https://github.com/swat-sccs/scheduler-v2.git
+  git clone --recursive https://github.com/swat-sccs/planner.git
   git checkout dev
-  cd scheduler-v2
+  cd planner
 ```
 
 ### Configure your .env file
@@ -41,15 +41,16 @@
 Paste the following into a .env in the root of the project.
 
 ```bash
-echo 'DATABASE_URL="postgresql://postgres:example@localhost:5432/scheduler_db"' > .env
+echo 'DATABASE_URL="postgresql://postgres:example@localhost:5432/planner_db"' > .env
 ```
 
 Pase the following into a .env in the /swatscraper dir
+
 ```bash
-  echo 'HOST=localhost                                        
+  echo 'HOST=localhost
         SQL_USER=postgres
         PASS=example
-        DBNAME=scheduler_db
+        DBNAME=planner_db
         OPMODE="DEV"' > ./swatscraper/.env
 ```
 
@@ -93,12 +94,12 @@ Head on over to http://localhost:5555. Use this to confirm your database is popu
 
 ## License
 
-Licensed under the [MIT license](https://github.com/swat-sccs/scheduler-v2/blob/main/LICENSE).
+Licensed under the [MIT license](https://github.com/swat-sccs/planner/blob/main/LICENSE).
 
 <!---vars-->
 
 [repo_license_img]: https://img.shields.io/badge/license-Mit-red?style=for-the-badge&logo=none
-[repo_license_url]: https://github.com/swat-sccs/scheduler-v2?tab=MIT-1-ov-file#readme
-[repo_last_commit]: https://img.shields.io/github/last-commit/swat-sccs/scheduler-v2?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2Fswat-sccs%2Fscheduler-v2&color=%2343AA8B
-[build_status]: https://img.shields.io/github/check-runs/swat-sccs/scheduler-v2/main?style=for-the-badge&label=Build&color=%2343AA8B
-[repo_size]: https://img.shields.io/github/repo-size/swat-sccs/scheduler-v2?style=for-the-badge
+[repo_license_url]: https://github.com/swat-sccs/planner?tab=MIT-1-ov-file#readme
+[repo_last_commit]: https://img.shields.io/github/last-commit/swat-sccs/planner?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2Fswat-sccs%2Fplanner&color=%2343AA8B
+[build_status]: https://img.shields.io/github/check-runs/swat-sccs/planner/main?style=for-the-badge&label=Build&color=%2343AA8B
+[repo_size]: https://img.shields.io/github/repo-size/swat-sccs/planner?style=for-the-badge

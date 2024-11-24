@@ -6,61 +6,15 @@ import { cookies } from "next/headers";
 import Search from "../components/Search";
 import { FullCourseList } from "../components/FullCourseList";
 import CreatePlan from "../components/CreatePlan";
-import prisma from "../lib/prisma";
-import { getInitialCourses } from "../app/actions/getCourses";
+import {
+  getInitialCourses,
+  getPlanCourses1,
+  getTerms,
+  getUniqueStartEndTimes,
+  getUniqueCodes,
+} from "../app/actions/getCourses";
 import { redirect } from "next/navigation";
-
-async function getCourses() {
-  const courses = await prisma.course.findMany();
-  const output: any = [];
-
-  for (let i = 0; i < courses.length; i++) {
-    if (!output.includes(courses[i].year)) {
-      output.push(courses[i].year);
-    }
-  }
-
-  return output;
-}
-
-async function getUniqueStartEndTimes() {
-  const meetingTimes = await prisma.meetingTime.findMany({
-    where: {
-      beginTime: { not: "" },
-    },
-    orderBy: {
-      beginTime: "asc",
-    },
-  });
-  const startTimes: any = [];
-  const endTimes: any = [];
-
-  for (let i = 0; i < meetingTimes.length; i++) {
-    if (!startTimes.includes(meetingTimes[i].beginTime)) {
-      startTimes.push(meetingTimes[i].beginTime);
-    }
-    if (!endTimes.includes(meetingTimes[i].endTime)) {
-      endTimes.push(meetingTimes[i].endTime);
-    }
-  }
-
-  const times = { startTimes: startTimes, endTimes: endTimes };
-
-  return times;
-}
-
-async function getUniquCodes() {
-  const codes = await prisma.sectionAttribute.findMany();
-  const daCodes: any = [];
-
-  for (let i = 0; i < codes.length; i++) {
-    if (!daCodes.includes(codes[i].code)) {
-      daCodes.push(codes[i].code);
-    }
-  }
-
-  return daCodes;
-}
+import { CoursePlan } from "@prisma/client";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -72,10 +26,9 @@ export default async function Page(props: {
   }>;
 }) {
   const cookieStore = await cookies();
+  const planID = await cookieStore.get("plan");
   const pagePref = cookieStore.get("pagePref");
   if (pagePref && pagePref.value != "plan") {
-    console.log("wtf");
-    console.log(pagePref.value);
     redirect("/" + pagePref.value);
   }
 
@@ -86,6 +39,7 @@ export default async function Page(props: {
   const stime = searchParams?.stime || [];
   const homePageProps: any = {};
   const initalCourses = await getInitialCourses(query, term, dotw, stime);
+  const planCourses: CoursePlan[] = await getPlanCourses1();
 
   homePageProps["fullCourseList"] = (
     <Suspense
@@ -113,16 +67,16 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-fit align-top justify-start" />
       }
     >
-      <CreatePlan />
+      <CreatePlan initialPlan={planCourses} />
     </Suspense>
   );
 
   return <Home {...homePageProps} />; // return with no events
 }
 async function Home(props: any) {
-  const terms = await getCourses();
+  const terms = await getTerms();
   const uniqueTimes = await getUniqueStartEndTimes();
-  const codes = await getUniquCodes();
+  const codes = await getUniqueCodes();
 
   return (
     <>
@@ -136,7 +90,7 @@ async function Home(props: any) {
           </div>
         </div>
         <div className="col-span-10 lg:col-span-3 lg:ml-[5vw]">
-          <CreatePlan />
+          {props.createPlan}
         </div>
       </div>
     </>
