@@ -28,8 +28,10 @@ export default async function Page(props: {
   const cookieStore = await cookies();
   const planID = await cookieStore.get("plan");
   const pagePref = cookieStore.get("pagePref");
-  if (pagePref && pagePref.value != "plan") {
-    redirect("/" + pagePref.value);
+
+  if (pagePref && pagePref.value != "/") {
+    redirect(pagePref.value);
+
   }
 
   const searchParams = await props.searchParams;

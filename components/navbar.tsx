@@ -39,6 +39,19 @@ export const Navbar = (props: any) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      registerServiceWorker();
+    }
+  }, []);
+
+  async function registerServiceWorker() {
+    await navigator.serviceWorker.register("/sw.js", {
+      scope: "/",
+      updateViaCache: "all",
+    });
+  }
+
+  useEffect(() => {
     setIsMenuOpen(false); // Close the navigation panel
   }, [pathname]);
 
@@ -96,7 +109,7 @@ export const Navbar = (props: any) => {
                 variant: pathname === item.href ? "shadow" : "ghost",
               })}
               onClick={() => {
-                cookies.set("pagePref", item.label.toLowerCase());
+                cookies.set("pagePref", item.href);
               }}
               href={item.href}
             >
@@ -163,7 +176,7 @@ export const Navbar = (props: any) => {
                   href={item.href}
                   size="lg"
                   onClick={() => {
-                    cookies.set("pagePref", item.label.toLowerCase());
+                    cookies.set("pagePref", item.href);
                   }}
                 >
                   {item.label}

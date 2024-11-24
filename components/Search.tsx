@@ -4,7 +4,7 @@ import { Input } from "@nextui-org/input";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { Chip } from "@mui/material";
 
@@ -19,7 +19,11 @@ export default function Search(props: any) {
   const [search, setSearch]: any = useState();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const params = new URLSearchParams(searchParams);
+
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams]
+  );
 
   const replaceText = (text: any) => {
     setSearch(text?.replace(/\w+:/, <Chip>{text}</Chip>));
@@ -81,18 +85,15 @@ export default function Search(props: any) {
     setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
     setSelectedStartTime(searchParams.get("stime")?.toString().split(","));
     //handleSelectionChange({ target: { value: selectedTerm } });
-  }, [
-    searchParams.get("term")?.toString(),
-    searchParams.get("dotw")?.toString(),
-    searchParams.get("stime")?.toString(),
-  ]);
+
+  }, [searchParams]);
 
   useEffect(() => {
     // Update the document title using the browser API
     params.set("term", "S2025");
     replace(`${pathname}?${params.toString()}`);
     setSelectedTerm(searchParams.get("term")?.toString().split(","));
-  }, []);
+  }, [searchParams, params, pathname, replace]);
 
   const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);

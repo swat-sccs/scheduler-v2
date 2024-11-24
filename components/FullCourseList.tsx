@@ -1,7 +1,7 @@
 "use client";
 import { Course, Prisma } from "@prisma/client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import CourseCard from "./CourseCard";
 import React from "react";
@@ -31,7 +31,7 @@ export function FullCourseList({
   const [courses, setCourses] = useState<Course[]>(init);
   const { ref, inView } = useInView();
 
-  const loadMoreUsers = async () => {
+  const loadMoreUsers = useCallback(async () => {
     // NOTE: if this isn't done every time we get a double take and a
     // race condition desync, breaking isDone. Maybe we'll have better
     // logic in the future.
@@ -49,17 +49,21 @@ export function FullCourseList({
       setIsDone(false);
     }
     setCourses(apiCourses);
-  };
+    // Prevent an infinite loop. TODO: better solution.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, term, dotw, stime, inView]);
+
   useEffect(() => {
     if (inView) {
       loadMoreUsers();
     }
-  }, [inView]);
+  }, [inView, loadMoreUsers]);
+
   useEffect(() => {
     setIsDone(false);
     loadMoreUsers();
-  }, [query, term, dotw, stime]);
-  //const courseList: Course[] = await getCourses(query, term, dotw, stime);
+  }, [query, term, dotw, stime, loadMoreUsers]);
+
   return (
     <>
       <div className="flex flex-col gap-3">

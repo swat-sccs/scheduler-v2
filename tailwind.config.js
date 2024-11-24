@@ -33,7 +33,7 @@ module.exports = {
             light_foreground: "#F1F1F1",
             primary: {
               DEFAULT: "#9FADBC",
-              foreground: "#314f25E",
+              foreground: "#31425E",
             },
             secondary: "#F46523",
             focus: "#F46523",

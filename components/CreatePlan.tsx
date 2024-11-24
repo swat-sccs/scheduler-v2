@@ -112,7 +112,7 @@ export default function CreatePlan(props: any) {
     const objDiv: any = document.getElementById("scrollMe");
 
     objDiv.scrollTop = objDiv.scrollHeight;
-  }, [data]);
+  }, [data, cookies]);
 
   const CoursesList = () => {
     const output: any = [];

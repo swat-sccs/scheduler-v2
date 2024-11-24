@@ -59,7 +59,6 @@ export async function getTerms() {
 }
 
 export async function setPlanCookie(plan: string) {
-  //@ts-ignore
   (await cookies()).set("plan", plan);
 }
 

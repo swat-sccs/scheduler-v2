@@ -37,3 +37,7 @@ next-env.d.ts
 .env*
 
 /postgres
+
+# Serwist
+public/sw*
+public/swe-worker*

@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://schedulerv2.sccs.swarthmore.edu/sitemap.xml
