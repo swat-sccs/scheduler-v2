@@ -14,13 +14,13 @@ services:
       - scheduler-db
     deploy:
       labels:
-        - 'traefik.enable=true'
-        - 'traefik.docker.network=traefik'
-        - 'traefik.http.routers.scheduler.entrypoints=https'
-        - 'traefik.http.routers.scheduler.rule=Host(`schedulerv2.sccs.swarthmore.edu`)'
-        - 'traefik.http.routers.scheduler.tls=true'
-        - 'traefik.http.routers.scheduler.tls.certresolver=letsEncrypt'
-        - 'traefik.http.services.scheduler.loadbalancer.server.port=3000'
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.routers.scheduler.entrypoints=https"
+        - "traefik.http.routers.scheduler.rule=Host(`schedulerv2.sccs.swarthmore.edu`)"
+        - "traefik.http.routers.scheduler.tls=true"
+        - "traefik.http.routers.scheduler.tls.certresolver=letsEncrypt"
+        - "traefik.http.services.scheduler.loadbalancer.server.port=3000"
     command: sh -c "sleep 5 && npx prisma migrate deploy && npm start "
     networks:
       - traefik
@@ -38,8 +38,8 @@ services:
     networks:
       - internal
 
-  scheduler-cron:
-    image: registry.sccs.swarthmore.edu/sccs/scheduler/scheduler-cron:latest
+  planner-cron:
+    image: registry.sccs.swarthmore.edu/sccs/planner-cron/planner-cron:latest
     build:
       context: .
       dockerfile: ./Dockerfile.cron
