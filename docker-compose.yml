@@ -39,7 +39,7 @@ services:
       - internal
 
   planner-cron:
-    image: registry.sccs.swarthmore.edu/sccs/planner/planner-cron:latest
+    image: registry.sccs.swarthmore.edu/sccs/planner-cron/planner-cron:latest
     build:
       context: .
       dockerfile: ./Dockerfile.cron

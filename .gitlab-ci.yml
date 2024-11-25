@@ -20,8 +20,14 @@ default:
 build:
   stage: build
   script:
-    - docker compose -f docker-compose.yml build
+    - docker compose -f docker-compose.yml build planner
     - docker push $SCCS_REGISTRY/sccs/planner/planner:latest
+
+build-cron:
+  stage: build
+  script:
+    - docker compose -f docker-compose.yml build planner-cron
+    - docker push $SCCS_REGISTRY/sccs/planner-cron/planner-cron:latest
 
 deploy_docker_stage:
   stage: deploy
