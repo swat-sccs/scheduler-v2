@@ -1,129 +1,133 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["fullTextIndex", "fullTextSearch", "relationJoins", "strictUndefinedChecks"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch", "relationJoins", "strictUndefinedChecks"]
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id      Int          @id @default(autoincrement())
-    email   String       @unique
-    name    String?
-    uuid    String       @unique
-    plans   CoursePlan[]
-    ratings Rating[]
+  id      Int          @id @default(autoincrement())
+  email   String       @unique
+  name    String?
+  uuid    String       @unique
+  plans   CoursePlan[]
+  ratings Rating[]
 }
 
 model CoursePlan {
-    id      Int      @id @default(autoincrement())
-    name    String
-    userId  Int?
-    year    String
-    User    User?    @relation(fields: [userId], references: [id])
-    courses Course[] @relation("CourseToCoursePlan")
+  id      Int      @id @default(autoincrement())
+  name    String
+  userId  Int?
+  year    String
+  User    User?    @relation(fields: [userId], references: [id])
+  courses Course[] @relation("CourseToCoursePlan")
 }
 
 model Course {
-    id                      Int                @id @default(autoincrement())
-    courseId                Int
-    courseReferenceNumber   String             @unique
-    courseNumber            String
-    subject                 String
-    scheduleTypeDescription String
-    courseTitle             String
-    descriptionUrl          String
-    description             String
-    creditHours             Float
-    maximumEnrollment       Int
-    enrollment              Int
-    seatsAvailable          Int
-    facultyId               Int
-    facultyMeetId           Int
-    year                    String
-    linkedSections          String?
-    avgRating               Float?
-    instructor              Faculty            @relation(fields: [facultyId], references: [id])
-    facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
-    Rating                  Rating[]
-    sectionAttributes       sectionAttribute[]
-    CoursePlan              CoursePlan[]       @relation("CourseToCoursePlan")
+  id                      Int                @id @default(autoincrement())
+  courseId                Int
+  courseReferenceNumber   String             @unique
+  courseNumber            String
+  subject                 String
+  scheduleTypeDescription String
+  courseTitle             String
+  descriptionUrl          String
+  description             String
+  creditHours             Float
+  maximumEnrollment       Int
+  enrollment              Int
+  seatsAvailable          Int
+  facultyId               Int
+  facultyMeetId           Int
+  year                    String
+  linkedSections          String?
+  avgRating               Float?
+  instructor              Faculty            @relation(fields: [facultyId], references: [id])
+  facultyMeet             MeetingsFaculty    @relation(fields: [facultyMeetId], references: [id])
+  sectionAttributes       sectionAttribute[]
+  CoursePlan              CoursePlan[]       @relation("CourseToCoursePlan")
 
-    @@index([subject, courseNumber], map: "subj_course")
+  @@index([subject, courseNumber], map: "subj_course")
 }
 
 model Faculty {
-    id           Int      @id @default(autoincrement())
-    bannerId     String   @unique
-    displayName  String
-    emailAddress String
-    year         String
-    avgRating    Float?
-    courses      Course[]
-    Rating       Rating[]
+  id           Int      @id @default(autoincrement())
+  uid          String?
+  bannerId     String
+  displayName  String
+  emailAddress String
+  year         String
+  avgRating    Float?
+  courses      Course[]
 }
 
 model MeetingsFaculty {
-    id                    Int         @id @default(autoincrement())
-    category              String
-    courseReferenceNumber String      @unique
-    meetingTimeID         Int
-    year                  String
-    courses               Course[]
-    meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
+  id                    Int         @id @default(autoincrement())
+  category              String
+  courseReferenceNumber String      @unique
+  meetingTimeID         Int
+  year                  String
+  courses               Course[]
+  meetingTimes          MeetingTime @relation(fields: [meetingTimeID], references: [id])
 }
 
 model MeetingTime {
-    id                     Int               @id @default(autoincrement())
-    building               String
-    buildingDescription    String
-    room                   String
-    category               String
-    courseReferenceNumber  String            @unique
-    endDate                String
-    startDate              String
-    hoursWeek              Float
-    meetingType            String
-    meetingTypeDescription String
-    monday                 Boolean
-    tuesday                Boolean
-    wednesday              Boolean
-    thursday               Boolean
-    friday                 Boolean
-    saturday               Boolean
-    sunday                 Boolean
-    year                   String
-    beginTime              String
-    endTime                String
-    facultyMeet            MeetingsFaculty[]
+  id                     Int               @id @default(autoincrement())
+  building               String
+  buildingDescription    String
+  room                   String
+  category               String
+  courseReferenceNumber  String            @unique
+  endDate                String
+  startDate              String
+  hoursWeek              Float
+  meetingType            String
+  meetingTypeDescription String
+  monday                 Boolean
+  tuesday                Boolean
+  wednesday              Boolean
+  thursday               Boolean
+  friday                 Boolean
+  saturday               Boolean
+  sunday                 Boolean
+  year                   String
+  beginTime              String
+  endTime                String
+  facultyMeet            MeetingsFaculty[]
 }
 
 model sectionAttribute {
-    id                    Int    @id @default(autoincrement())
-    code                  String
-    description           String
-    courseReferenceNumber String @unique
-    year                  String
-    courseId              Int
-    Course                Course @relation(fields: [courseId], references: [id])
+  id                    Int    @id @default(autoincrement())
+  code                  String
+  description           String
+  courseReferenceNumber String @unique
+  year                  String
+  courseId              Int
+  Course                Course @relation(fields: [courseId], references: [id])
 }
 
 model Rating {
-    id            Int      @id @default(autoincrement())
-    courseID      Int
-    facultyID     Int
-    overallRating Int?
-    difficulty    Int?
-    takeAgain     Boolean?
-    review        String?
-    grade         String?
-    forCredit     Boolean?
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
-    userId        Int
-    course        Course   @relation(fields: [courseID], references: [id])
-    faculty       Faculty  @relation(fields: [facultyID], references: [id])
-    User          User?    @relation(fields: [userId], references: [id])
+  id              Int     @id @default(autoincrement())
+  courseSubject   String
+  courseNumber    String
+  courseName      String
+  profDisplayName String
+  profBannerId    String
+  yearTaken       Int
+  termTaken       String
+  profUid         String?
+
+  overallRating Int?
+  difficulty    Int?
+  takeAgain     Boolean?
+  review        String?
+  grade         String?
+  forCredit     Boolean?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        Int
+  User          User?    @relation(fields: [userId], references: [id])
 }
