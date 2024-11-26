@@ -18,11 +18,13 @@ import {
   ModalFooter,
   useDisclosure,
   Selection,
+  Skeleton,
   Link,
 } from "@nextui-org/react";
 import useSWR from "swr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
+import { Faculty, Course } from "@prisma/client";
 
 //import { Search, Person, Class, Star } from "@mui/icons-material";
 import Person from "@mui/icons-material/Person";
@@ -34,6 +36,7 @@ import Rating from "@mui/material/Rating";
 import axios from "axios";
 import { factory } from "typescript";
 import { Alert } from "@mui/material";
+import { getProfs, getYears } from "../../app/actions/getProfs";
 
 const labels: { [index: string]: string } = {
   1: "Awful",
@@ -81,6 +84,8 @@ function getLabelText(value: number) {
 export default function RatingPage() {
   const [selectedProf, setSelectedProf]: any = useState(1);
   const [selectedClass, setSelectedClass]: any = useState();
+  const [selectedFullClass, setSelectedFullClass] = useState<Course>();
+  const [selectedProfessor, setSelectedProfessor] = useState<Faculty>();
   const [rating, setRating] = React.useState<number | null>(0);
   const [hover, setHover] = React.useState(-1);
   const [diffValue, setDiffValue] = React.useState<number | null>(0);
@@ -92,18 +97,35 @@ export default function RatingPage() {
   const [submitError, setSubmitError] = React.useState(false);
 
   const [grade, setGrade] = React.useState<string>("");
+  const [term, setTerm] = React.useState<string>("");
+  const [year, setYear] = React.useState<string>("");
+  const [yearOptions, setYearOptions] = React.useState<Array<string>>([]);
 
   const [review, setReview] = React.useState("");
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const fetcher = (url: any) => fetch(url).then((r) => r.json());
+  const [profs, setProfs] = useState<Faculty[] | null>(null);
 
+  const fetcher = (url: any) => fetch(url).then((r) => r.json());
+  /*
   const {
     data: profs,
     isLoading,
     error,
   } = useSWR("/api/getProfs", fetcher, {});
+   */
+  async function loadProfs() {
+    const myProfs = await getProfs();
+    const myYears = await getYears();
+    setProfs(myProfs);
+    setYearOptions(myYears);
+  }
+  useEffect(() => {
+    // Log the error to an error reporting service
+    loadProfs();
+  }, []);
+
   const {
     data: classes,
     isLoading: classesLoading,
@@ -121,10 +143,24 @@ export default function RatingPage() {
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGrade(e.target.value);
   };
+  const handleTermChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTerm(e.target.value);
+  };
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setYear(e.target.value);
+  };
 
   async function submitReview() {
     //Reset all vals to defaults... Send to DB!
-    if (!selectedClass || !selectedProf || rating == 0 || diffValue == 0) {
+
+    if (
+      !year ||
+      !term ||
+      !selectedClass ||
+      !selectedProf ||
+      rating == 0 ||
+      diffValue == 0
+    ) {
       alert("Please fill out all required fields!");
     } else {
       await axios
@@ -137,6 +173,8 @@ export default function RatingPage() {
           forCredit: forCredit,
           grade: grade,
           review: review,
+          termTaken: term,
+          yearTaken: year,
         })
         .then(function (response) {
           // Handle response
@@ -148,8 +186,7 @@ export default function RatingPage() {
           setSelectedClass([]);
           setSelectedProf(1);
           setReview("");
-
-          setSubmitSuccess(true);
+          setYear(""), setTerm(""), setSubmitSuccess(true);
           setTimeout(() => {
             setSubmitSuccess(false);
           }, 5000);
@@ -202,18 +239,30 @@ export default function RatingPage() {
             selectedKey={selectedProf}
             onSelectionChange={onProfSelectionChange}
           >
-            {profs?.map((prof: any) => (
-              <AutocompleteItem key={prof.id} textValue={prof.displayName}>
-                <div className="flex gap-2 items-center">
-                  <div className="flex flex-col">
-                    <span className="text-small">{prof.displayName}</span>
-                    <span className="text-tiny text-default-400">
-                      {prof.year}
-                    </span>
+            {profs ? (
+              profs.map((prof: Faculty) => (
+                <AutocompleteItem
+                  onClick={() => setSelectedProfessor(prof)}
+                  key={prof.id}
+                  textValue={prof.displayName}
+                >
+                  <div className="flex gap-2 items-center">
+                    <div className="flex flex-col">
+                      <span className="text-small">{prof.displayName}</span>
+                      {prof.avgRating ? (
+                        <span className="text-tiny text-default-400">
+                          Rating: {prof.avgRating}
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
+                </AutocompleteItem>
+              ))
+            ) : (
+              <AutocompleteItem key={"id"}>
+                <Skeleton></Skeleton>
               </AutocompleteItem>
-            ))}
+            )}
           </Autocomplete>
 
           <Autocomplete
@@ -231,6 +280,7 @@ export default function RatingPage() {
           >
             {classes?.map((thing: any) => (
               <AutocompleteItem
+                aria-label={thing.Subject + " " + thing.courseNumber}
                 key={thing.id}
                 textValue={thing.subject + " " + thing.courseNumber}
               >
@@ -240,13 +290,42 @@ export default function RatingPage() {
                       {thing.subject} {thing.courseNumber}
                     </span>
                     <span className="text-tiny text-default-400">
-                      Ref: {thing.courseReferenceNumber.replace(thing.year, "")}
+                      {thing.courseTitle}
                     </span>
                   </div>
                 </div>
               </AutocompleteItem>
             ))}
           </Autocomplete>
+
+          <h2>Select Semester</h2>
+          <div className="grid-rows-subgrid columns-1 sm:columns-2">
+            <Select
+              selectionMode="single"
+              isRequired
+              selectedKeys={[term]}
+              placeholder="Select Term"
+              className="max-w-sm"
+              onChange={handleTermChange}
+            >
+              <SelectItem key={"Spring"}>Spring</SelectItem>
+              <SelectItem key={"Fall"}>Fall</SelectItem>
+            </Select>
+            <Select
+              selectionMode="single"
+              isRequired
+              selectedKeys={[year]}
+              placeholder="Select Year"
+              className="max-w-sm mt-5 sm:mt-0"
+              onChange={handleYearChange}
+            >
+              {yearOptions.map((year) => (
+                <SelectItem key={year.replace("F", "").replace("S", "")}>
+                  {year.replace("F", "").replace("S", "")}
+                </SelectItem>
+              ))}
+            </Select>
+          </div>
           <Divider className="mt-5" orientation="horizontal" />
 
           <div className="mt-5">Rate Your Professor</div>

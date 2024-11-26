@@ -10,13 +10,13 @@ services:
       NODE_ENV: development
       DOMAIN: http://127.0.0.1:3000/
       POSTGRES_DB: planner_db
+    network_mode: "host"
     env_file:
       - .env
     ports:
       - 3000:3000
       - 9229:9229
-    networks:
-      - internal
+
     command: sh -c "npm install --silent && npx prisma migrate dev --name init && npx prisma generate && npm run dev "
 
   planner-db-dev:
@@ -27,8 +27,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: planner_db
-    networks:
-      - internal
+    network_mode: "host"
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
