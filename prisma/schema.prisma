@@ -111,14 +111,14 @@ model sectionAttribute {
 
 model Rating {
   id              Int     @id @default(autoincrement())
-  courseSubject   String
-  courseNumber    String
-  courseName      String
-  profDisplayName String
-  profBannerId    String
-  yearTaken       Int
-  termTaken       String
-  profUid         String
+  courseSubject   String?
+  courseNumber    String?
+  courseName      String?
+  profDisplayName String?
+  profBannerId    String?
+  yearTaken       Int?
+  termTaken       String?
+  profUid         String?
   overallRating Int?
   difficulty    Int?
   takeAgain     Boolean?
