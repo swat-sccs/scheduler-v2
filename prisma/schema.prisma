@@ -118,8 +118,7 @@ model Rating {
   profBannerId    String
   yearTaken       Int
   termTaken       String
-  profUid         String?
-
+  profUid         String
   overallRating Int?
   difficulty    Int?
   takeAgain     Boolean?
