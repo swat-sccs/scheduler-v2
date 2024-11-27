@@ -85,7 +85,6 @@ export async function getPlanCourses(planID: any) {
   //let DOTW: Array<String> = dotw.split(",");
 
   return await prisma.course.findMany({
-    relationLoadStrategy: "join", // or 'query'
     where: {
       CoursePlan: {
         some: {
@@ -118,7 +117,6 @@ export async function getInitialCourses(
 ) {
   const startTime = stime.toString().split(",").filter(Number);
   return await prisma.course.findMany({
-    relationLoadStrategy: "join", // or 'query'
     take: 20,
     where: {
       ...(term
@@ -150,7 +148,6 @@ export async function getCourses(
   const startTime = stime.toString().split(",").filter(Number);
 
   return await prisma.course.findMany({
-    relationLoadStrategy: "join", // or 'query'
     take: take,
 
     include: {

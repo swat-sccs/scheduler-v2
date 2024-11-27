@@ -8,7 +8,6 @@ async function getPlanCourses(planID: any) {
   //let DOTW: Array<String> = dotw.split(",");
 
   return await prisma.course.findMany({
-    relationLoadStrategy: "join", // or 'query'
     where: {
       CoursePlan: {
         some: {

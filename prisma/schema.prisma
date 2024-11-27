@@ -55,7 +55,7 @@ model Course {
 
 model Faculty {
   id           Int      @id @default(autoincrement())
-  uid          String?
+  uid          String   @unique
   bannerId     String
   displayName  String
   emailAddress String
