@@ -31,7 +31,6 @@ export default async function Page(props: {
 
   if (pagePref && pagePref.value != "/") {
     redirect(pagePref.value);
-
   }
 
   const searchParams = await props.searchParams;
@@ -41,7 +40,7 @@ export default async function Page(props: {
   const stime = searchParams?.stime || [];
   const homePageProps: any = {};
   const initalCourses = await getInitialCourses(query, term, dotw, stime);
-  const planCourses: CoursePlan[] = await getPlanCourses1();
+  //const planCourses: CoursePlan[] = await getPlanCourses1();
 
   homePageProps["fullCourseList"] = (
     <Suspense
@@ -69,7 +68,7 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-fit align-top justify-start" />
       }
     >
-      <CreatePlan initialPlan={planCourses} />
+      <CreatePlan />
     </Suspense>
   );
 
