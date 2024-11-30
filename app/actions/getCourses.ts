@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import prisma from "../../lib/prisma";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
-import { getPlanCookie } from "./actions";
+import { getPlanCookie, setSelectedCookie } from "./actions";
 
 export async function getUniqueCodes() {
   const codes = await prisma.sectionAttribute.findMany();
@@ -66,34 +66,84 @@ export async function getPlanCourses1() {
   const planCookie: any = await getPlanCookie();
   const session = await auth();
 
-  return await prisma.coursePlan.findMany({
-    where: {
-      AND: {
+  if (planCookie) {
+    return await prisma.coursePlan.findUnique({
+      where: {
         User: {
           uuid: session?.user.id,
         },
-        //id: parseInt(planCookie),
+        id: parseInt(planCookie),
       },
-    },
-    include: {
-      courses: true,
-    },
-  });
+      include: {
+        courses: true,
+      },
+    });
+  }
+  return {};
 }
 
-export async function getPlanCourses(planID: any) {
+export async function removeCourseFromDBPlan(course: any) {
+  const id: any = await getPlanCookie();
   //let DOTW: Array<String> = dotw.split(",");
-
-  return await prisma.course.findMany({
+  const updatedCourse = await prisma.coursePlan.update({
     where: {
-      CoursePlan: {
-        some: {
-          id: parseInt(planID),
+      id: parseInt(id),
+    },
+    data: {
+      courses: {
+        disconnect: {
+          id: course.id,
         },
       },
     },
-    include: {
-      CoursePlan: true,
+  });
+  getCourseIds();
+}
+
+export async function getCourseIds() {
+  const id: any = await getPlanCookie();
+  //let DOTW: Array<String> = dotw.split(",");
+  const output = [];
+
+  if (id) {
+    const ids = await prisma.coursePlan.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+      select: {
+        courses: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (ids) {
+      for (let theid of ids.courses) {
+        output.push(theid.id);
+      }
+    }
+  }
+
+  //setSelectedCookie(output);
+
+  return output;
+}
+
+export async function updateDBPlan(course: any) {
+  const id: any = await getPlanCookie();
+  //let DOTW: Array<String> = dotw.split(",");
+  const updatedCourse = await prisma.coursePlan.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      courses: {
+        connect: {
+          id: course.id,
+        },
+      },
     },
   });
 }
@@ -136,6 +186,32 @@ export async function getInitialCourses(
       instructor: true,
     },
   });
+}
+
+export async function getCoursePlans() {
+  const session = await auth();
+  const user = await prisma.user.findUnique({
+    where: {
+      uuid: session?.user?.id,
+    },
+  });
+  let courses: any;
+
+  if (user) {
+    courses = await prisma.coursePlan.findMany({
+      where: {
+        User: {
+          id: user.id,
+        },
+      },
+      include: {
+        courses: true,
+      },
+    });
+  } else {
+    courses = null;
+  }
+  return courses;
 }
 
 export async function getCourses(

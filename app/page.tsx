@@ -12,6 +12,7 @@ import {
   getTerms,
   getUniqueStartEndTimes,
   getUniqueCodes,
+  getCoursePlans,
 } from "../app/actions/getCourses";
 import { redirect } from "next/navigation";
 import { CoursePlan } from "@prisma/client";
@@ -31,7 +32,6 @@ export default async function Page(props: {
 
   if (pagePref && pagePref.value != "/") {
     redirect(pagePref.value);
-
   }
 
   const searchParams = await props.searchParams;
@@ -41,7 +41,8 @@ export default async function Page(props: {
   const stime = searchParams?.stime || [];
   const homePageProps: any = {};
   const initalCourses = await getInitialCourses(query, term, dotw, stime);
-  const planCourses: CoursePlan[] = await getPlanCourses1();
+  const planCourses: any = await getPlanCourses1();
+  const coursePlans: any = await getCoursePlans();
 
   homePageProps["fullCourseList"] = (
     <Suspense
@@ -69,7 +70,7 @@ export default async function Page(props: {
         <Skeleton className="rounded-lg w-8/12 h-fit align-top justify-start" />
       }
     >
-      <CreatePlan initialPlan={planCourses} />
+      <CreatePlan initialPlan={planCourses} coursePlans={coursePlans} />
     </Suspense>
   );
 
