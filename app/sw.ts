@@ -1,6 +1,9 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { Serwist } from "serwist";
+import { disableDevLogs } from "serwist";
+
+disableDevLogs();
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {

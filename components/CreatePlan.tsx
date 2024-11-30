@@ -9,7 +9,8 @@ import {
 } from "@nextui-org/react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import IosShareIcon from "@mui/icons-material/IosShare";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -24,7 +25,14 @@ import { useCookies } from "next-client-cookies";
 
 import { setPlanCookie } from "../app/actions/actions";
 import { generateColorFromName } from "../components/primitives";
-
+import { useDebouncedCallback } from "use-debounce";
+import { setPlanName } from "../app/actions/setPlanName";
+import {
+  getCourseIds,
+  getPlanCourses1,
+  removeCourseFromDBPlan,
+} from "app/actions/getCourses";
+import { Course, CoursePlan } from "@prisma/client";
 export default function CreatePlan(props: any) {
   const cookies = useCookies();
   const router = useRouter();
@@ -33,21 +41,20 @@ export default function CreatePlan(props: any) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [coursePlanName, setCoursePlanName]: any = useState("");
+  const [editable, setEditable]: any = useState("");
+  const [edit, setEdit]: any = useState(false);
+  const [courses, setCourses] = useState<Course[]>();
+  const [coursePlans, setCoursePlans] = useState<CoursePlan[]>(
+    props.coursePlans
+  );
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
-  const { data, isLoading, error } = useSWR("/api/getplancourses", fetcher, {
-    refreshInterval: 800,
-  });
 
-  const {
-    data: coursePlans,
-    isLoading: coursePlansIsLoading,
-    error: coursePlansError,
-  } = useSWR("/api/getcourseplans", fetcher, {
-    refreshInterval: 2000,
-  });
+  const handleNameChange = useDebouncedCallback((newName: any, id: string) => {
+    setPlanName(newName, id);
+  }, 50);
 
   async function createPlan() {
     if (coursePlanName) {
@@ -67,19 +74,19 @@ export default function CreatePlan(props: any) {
         });
     }
   }
+  async function updateLocalPlan() {
+    console.log("updating local plan");
+    const planCourses: any = await getPlanCourses1();
+    setCourses(planCourses.courses);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+    //router.refresh();
+  }
   async function removeCourseFromPlan(plan: any, course: any) {
-    await axios
-      .post("/api/getplancourses", {
-        plan: plan,
-        course: course,
-      })
-      .then(function (response: any) {
-        //console.log(response);
-        router.refresh();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    await removeCourseFromDBPlan(course);
+    await updateLocalPlan();
+    router.refresh();
   }
   async function deletePlan() {
     if (cookies.get("plan")) {
@@ -99,6 +106,7 @@ export default function CreatePlan(props: any) {
         });
     }
   }
+
   const handleSelectionChange = (e: any) => {
     //console.log(e.target.value);
     setSelectedCoursePlan([e.target.value]);
@@ -107,64 +115,53 @@ export default function CreatePlan(props: any) {
   };
 
   useEffect(() => {
-    // Update the document title using the browser API
-    setSelectedCoursePlan([cookies.get("plan")]);
-    const objDiv: any = document.getElementById("scrollMe");
+    console.log("RUNNING THE SCROll");
+    updateLocalPlan();
+  }, [props.initialPlan, props.coursePlans, cookies.get("selectedCourses")]);
 
-    objDiv.scrollTop = objDiv.scrollHeight;
-  }, [data, cookies]);
+  useEffect(() => {
+    setSelectedCoursePlan([cookies.get("plan")]);
+    setCourses(props.initialPlan.courses);
+  }, [props.initialPlan, cookies.get("plan")]);
 
   const CoursesList = () => {
     const output: any = [];
 
-    if (isLoading) {
-      return <Skeleton />;
-    }
-    if (data && !isLoading) {
-      const filtered_data = data.filter(
-        (course: any) => course.id == selectedCoursePlan[0]
-      );
+    if (courses) {
+      return courses.map((course: any) => (
+        <Card
+          key={course.id}
+          className={
+            "bg-light_foreground min-h-16 max-h-16 rounded-sm scroll-none drop-shadow-lg transition-colors"
+          }
+          shadow="sm"
 
-      for (let i = 0; i < filtered_data.length; i++) {
-        filtered_data[i].courses.map((course: any) =>
-          output.push(
-            <Card
-              key={course.id}
-              className={
-                "bg-light_foreground min-h-16 max-h-16 rounded-sm scroll-none drop-shadow-lg transition-colors"
+          // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
+        >
+          <div
+            className={`absolute top-0 left-0 h-full w-2 rounded-full ${generateColorFromName(course.subject)}`}
+          />
+
+          <CardHeader className="justify-between">
+            <div className="ml-2 lg:text-base truncate text-bold">
+              {course.subject} {""} {course.courseNumber}
+              <div className="text-tiny ">
+                {course.courseTitle.replace(/&amp;/g, "&")}
+              </div>
+            </div>
+
+            <Button
+              isIconOnly
+              startContent={<HighlightOffIcon />}
+              size={"sm"}
+              onClick={() =>
+                removeCourseFromPlan(selectedCoursePlan[0], course)
               }
-              shadow="sm"
-
-              // onClick={() => removeCourseFromPlan(selectedCoursePlan, course)}
-            >
-              <div
-                className={`absolute top-0 left-0 h-full w-2 rounded-full ${generateColorFromName(course.subject)}`}
-              />
-
-              <CardHeader className="justify-between">
-                <div className="ml-2 lg:text-base truncate text-bold">
-                  {course.subject} {""} {course.courseNumber}
-                  <div className="text-tiny ">
-                    {course.courseTitle.replace(/&amp;/g, "&")}
-                  </div>
-                </div>
-
-                <Button
-                  isIconOnly
-                  startContent={<HighlightOffIcon />}
-                  size={"sm"}
-                  onClick={() =>
-                    removeCourseFromPlan(selectedCoursePlan[0], course)
-                  }
-                />
-              </CardHeader>
-            </Card>
-          )
-        );
-      }
+            />
+          </CardHeader>
+        </Card>
+      ));
     }
-
-    return output;
   };
 
   const scrollToPlan = () => {
@@ -230,22 +227,36 @@ export default function CreatePlan(props: any) {
           </div>
 
           <div>
-            <div className="font-bold text-lg">Select a Plan</div>
+            <div className="font-bold text-lg">
+              {!edit ? "Select a Plan" : "Edit your plan"}
+            </div>
             <div className="flex mt-2 items-center justify gap-2">
-              <Select
-                className="col-span-3"
-                label="Current Plan"
-                selectedKeys={selectedCoursePlan}
-                selectionMode="single"
-                size="lg"
-                onChange={handleSelectionChange}
-              >
-                {coursePlans != null
-                  ? coursePlans.map((plan: any) => (
-                      <SelectItem key={plan.id}>{plan.name}</SelectItem>
-                    ))
-                  : null}
-              </Select>
+              {!edit ? (
+                <Select
+                  className="col-span-3"
+                  label="Current Plan"
+                  selectedKeys={selectedCoursePlan}
+                  selectionMode="single"
+                  size="lg"
+                  onChange={handleSelectionChange}
+                >
+                  {coursePlans?.map((plan: any) => (
+                    <SelectItem key={plan.id}>{plan.name}</SelectItem>
+                  ))}
+                </Select>
+              ) : null}
+              {edit ? (
+                <Input
+                  isRequired
+                  label="Edit Plan Name"
+                  size="lg"
+                  value={editable}
+                  onChange={(event: any) => {
+                    setEditable(event.target.value),
+                      handleNameChange(event.target.value, selectedCoursePlan);
+                  }}
+                />
+              ) : null}
 
               <Button
                 isIconOnly
@@ -253,7 +264,29 @@ export default function CreatePlan(props: any) {
                 startContent={<DeleteIcon />}
                 onClick={deletePlan}
               />
-              <Button isIconOnly size="md" startContent={<IosShareIcon />} />
+              {edit ? (
+                <Button
+                  isIconOnly
+                  size="md"
+                  onClick={() => setEdit(false)}
+                  startContent={<SaveIcon />}
+                />
+              ) : (
+                <Button
+                  isIconOnly
+                  size="md"
+                  onClick={() => {
+                    setEdit(true),
+                      setEditable(
+                        props.coursePlans?.find(
+                          (plan: any) =>
+                            plan.id === parseInt(selectedCoursePlan)
+                        ).name
+                      );
+                  }}
+                  startContent={<EditIcon />}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -261,6 +294,7 @@ export default function CreatePlan(props: any) {
         <div
           className="flex flex-col h-[45vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
           id="scrollMe"
+          ref={scrollRef}
         >
           <CoursesList />
         </div>
