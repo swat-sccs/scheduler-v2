@@ -5,6 +5,7 @@ import Calendar from "../../components/Calendar";
 import prisma from "../../lib/prisma";
 import { getPlanCookie } from "../actions/actions";
 import { generateColorFromName } from "../../components/primitives";
+import { getCoursePlans, getPlanCourses1 } from "app/actions/getCourses";
 
 interface Event {
   classNames: string;
@@ -104,6 +105,9 @@ async function getEvents(): Promise<Event[]> {
 
 export default async function CalendarPage() {
   const events: Event[] = await getEvents();
+  const planCourses: any = await getPlanCourses1();
+  const coursePlans: any = await getCoursePlans();
+
   let endTime = "17:00";
   let startTime = "09:00";
 
@@ -121,7 +125,7 @@ export default async function CalendarPage() {
         <Calendar events={events} startTime={startTime} endTime={endTime} />
       </div>
       <div className="sm:h-[62vh] col-span-10 sm:col-span-3 sm:ml-[5vw]">
-        <CreatePlan />
+        <CreatePlan initialPlan={planCourses} coursePlans={coursePlans} />
       </div>
     </div>
   );

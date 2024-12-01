@@ -75,7 +75,6 @@ export default function CreatePlan(props: any) {
     }
   }
   async function updateLocalPlan() {
-    console.log("updating local plan");
     const planCourses: any = await getPlanCourses1();
     setCourses(planCourses.courses);
     if (scrollRef.current) {
@@ -115,13 +114,14 @@ export default function CreatePlan(props: any) {
   };
 
   useEffect(() => {
-    console.log("RUNNING THE SCROll");
     updateLocalPlan();
   }, [props.initialPlan, props.coursePlans, cookies.get("selectedCourses")]);
 
   useEffect(() => {
     setSelectedCoursePlan([cookies.get("plan")]);
-    setCourses(props.initialPlan.courses);
+    if (props.initialPlan.courses) {
+      setCourses(props.initialPlan.courses);
+    }
   }, [props.initialPlan, cookies.get("plan")]);
 
   const CoursesList = () => {
