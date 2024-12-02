@@ -76,7 +76,9 @@ export default function CreatePlan(props: any) {
   }
   async function updateLocalPlan() {
     const planCourses: any = await getPlanCourses1();
-    setCourses(planCourses.courses);
+    if (planCourses) {
+      setCourses(planCourses?.courses);
+    }
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
@@ -119,15 +121,17 @@ export default function CreatePlan(props: any) {
 
   useEffect(() => {
     setSelectedCoursePlan([cookies.get("plan")]);
-    if (props.initialPlan.courses) {
-      setCourses(props.initialPlan.courses);
+    if (props.initialPlan && props.initialPlan.length > 0) {
+      if (props.initialPlan.courses && props.initalPlan.courses.length > 0) {
+        setCourses(props.initialPlan.courses);
+      }
     }
   }, [props.initialPlan, cookies.get("plan")]);
 
   const CoursesList = () => {
     const output: any = [];
 
-    if (courses) {
+    if (courses && courses != undefined) {
       return courses.map((course: any) => (
         <Card
           key={course.id}
