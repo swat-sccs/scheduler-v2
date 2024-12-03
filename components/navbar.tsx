@@ -160,14 +160,18 @@ export const Navbar = (props: any) => {
           </NavbarItem>
         </NavbarContent>
 
-        <NavbarContent className="flex lg:hidden" justify="end">
-          <ThemeSwitch />
-          <NavbarMenuToggle
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          />
-        </NavbarContent>
-
         {/* Mobile?*/}
+
+        <NavbarContent className="flex lg:hidden" justify="end">
+          <li>
+            <ThemeSwitch />
+          </li>
+          <li>
+            <NavbarMenuToggle
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            />
+          </li>
+        </NavbarContent>
         <NavbarMenu className=" lg:flex">
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {siteConfig.navItems.map((item, index) => (
@@ -193,7 +197,7 @@ export const Navbar = (props: any) => {
                     {session.user?.name || "Account"}
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu aria-label="Static Actions">
+                <DropdownMenu aria-label="Signout dropdown">
                   {/* Causes an awful error if rendered conditionally */}
                   {/* <DropdownItem key="admin" href="/admin">
                     Admin
@@ -205,6 +209,7 @@ export const Navbar = (props: any) => {
               </Dropdown>
             ) : (
               <Button
+                type="button"
                 variant="bordered"
                 onClick={() => signIn("keycloak", { callbackUrl: "/" })}
               >

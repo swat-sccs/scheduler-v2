@@ -38,8 +38,8 @@ export const config = {
 
         let theRole;
 
-        if ("scheduler" in tokenData.resource_access) {
-          theRole = tokenData.resource_access.scheduler.roles.find(
+        if ("planner" in tokenData.resource_access) {
+          theRole = tokenData.resource_access.planner.roles.find(
             (role: string) => role === "admin" || "user"
           );
         } else {

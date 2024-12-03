@@ -85,7 +85,6 @@ export default function Search(props: any) {
     setSelectedDOTW(searchParams.get("dotw")?.toString().split(","));
     setSelectedStartTime(searchParams.get("stime")?.toString().split(","));
     //handleSelectionChange({ target: { value: selectedTerm } });
-
   }, [searchParams]);
 
   useEffect(() => {
@@ -140,7 +139,6 @@ export default function Search(props: any) {
 
   return (
     <div className="grid grid-cols-9 gap-3 w-[97%]">
-      <meta name="viewport" content="width=device-width, user-scalable=no" />
       <Input
         isClearable
         className="col-span-9 lg:col-span-3"
