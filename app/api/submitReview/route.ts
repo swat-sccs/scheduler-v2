@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     },
   });
   if (user?.id && theClass && profs) {
-    /*
     const newReview = await prisma.rating.create({
       data: {
         userId: user?.id,
@@ -51,7 +50,6 @@ export async function POST(request: NextRequest) {
         profBannerId: profs.bannerId,
         profUid: profs.uid,
       },
-      
     });
 
     if (newReview) {
@@ -107,9 +105,8 @@ export async function POST(request: NextRequest) {
         }
       }
     }
-      */
   }
 
   //console.log(plans);
-  return NextResponse.json("Submission Failed, no user", { status: 500 });
+  return NextResponse.json("Success", { status: 200 });
 }

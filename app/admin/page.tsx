@@ -35,6 +35,7 @@ export default function AdminPage() {
   let filtered_ratings: any = [];
 
   if (!isLoading) {
+    console.log(ratings);
     for (let rating of ratings) {
       const name = rating.User?.name;
       const email = rating.User?.email;

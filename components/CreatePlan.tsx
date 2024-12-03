@@ -29,6 +29,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { setPlanName } from "../app/actions/setPlanName";
 import {
   getCourseIds,
+  getCoursePlans,
   getPlanCourses1,
   removeCourseFromDBPlan,
 } from "app/actions/getCourses";
@@ -41,6 +42,8 @@ export default function CreatePlan(props: any) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [coursePlanName, setCoursePlanName]: any = useState("");
+  const [alert, setAlert]: any = useState(undefined);
+
   const [editable, setEditable]: any = useState("");
   const [edit, setEdit]: any = useState(false);
   const [courses, setCourses] = useState<Course[]>();
@@ -49,15 +52,21 @@ export default function CreatePlan(props: any) {
   );
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
-
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
+
+  async function fetchNewData() {
+    const coursePlans: CoursePlan[] = await getCoursePlans();
+    setCoursePlans(coursePlans);
+  }
 
   const handleNameChange = useDebouncedCallback((newName: any, id: string) => {
     setPlanName(newName, id);
+    fetchNewData();
   }, 50);
 
   async function createPlan() {
     if (coursePlanName) {
+      setAlert(undefined);
       await axios
         .post("/api/createplan", {
           planName: coursePlanName,
@@ -66,12 +75,14 @@ export default function CreatePlan(props: any) {
           setCoursePlanName("");
           setSelectedCoursePlan([response.data.id]);
           setPlanCookie(response.data.id);
-
+          fetchNewData();
           //console.log(response);
         })
         .catch(function (error) {
           console.log(error);
         });
+    } else {
+      setAlert("A name is required to create a course plan.");
     }
   }
   async function updateLocalPlan() {
@@ -134,6 +145,7 @@ export default function CreatePlan(props: any) {
     if (courses && courses != undefined) {
       return courses.map((course: any) => (
         <Card
+          aria-label={course.courseTitle}
           key={course.id}
           className={
             "bg-light_foreground min-h-16 max-h-16 rounded-sm scroll-none drop-shadow-lg transition-colors"
@@ -155,6 +167,7 @@ export default function CreatePlan(props: any) {
             </div>
 
             <Button
+              aria-label={"Remove " + course.courseTitle + " from plan"}
               isIconOnly
               startContent={<HighlightOffIcon />}
               size={"sm"}
@@ -216,11 +229,15 @@ export default function CreatePlan(props: any) {
                 }}
               />
               <Button
+                aria-label="Create new plan! Name required."
                 startContent={<AddIcon />}
                 size="md"
                 onClick={() => createPlan()}
               ></Button>
             </div>
+            {alert ? (
+              <div className="mt-2 text-red-500 text-center">{alert}</div>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-3 items-center">
@@ -263,6 +280,7 @@ export default function CreatePlan(props: any) {
               ) : null}
 
               <Button
+                aria-label="Delete the current plan"
                 isIconOnly
                 size="md"
                 startContent={<DeleteIcon />}
@@ -270,6 +288,7 @@ export default function CreatePlan(props: any) {
               />
               {edit ? (
                 <Button
+                  aria-label="Save new plan name"
                   isIconOnly
                   size="md"
                   onClick={() => setEdit(false)}
@@ -277,15 +296,16 @@ export default function CreatePlan(props: any) {
                 />
               ) : (
                 <Button
+                  aria-label="Edit name of course plan"
                   isIconOnly
                   size="md"
                   onClick={() => {
                     setEdit(true),
                       setEditable(
-                        props.coursePlans?.find(
+                        coursePlans?.find(
                           (plan: any) =>
                             plan.id === parseInt(selectedCoursePlan)
-                        ).name
+                        )?.name
                       );
                   }}
                   startContent={<EditIcon />}
@@ -299,6 +319,7 @@ export default function CreatePlan(props: any) {
           className="flex flex-col h-[45vh] overflow-y-scroll gap-3 scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent"
           id="scrollMe"
           ref={scrollRef}
+          aria-label="List of Courses in plan"
         >
           <CoursesList />
         </div>
