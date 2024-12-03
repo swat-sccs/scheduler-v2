@@ -163,14 +163,11 @@ export const Navbar = (props: any) => {
         {/* Mobile?*/}
 
         <NavbarContent className="flex lg:hidden" justify="end">
-          <li>
-            <ThemeSwitch />
-          </li>
-          <li>
-            <NavbarMenuToggle
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            />
-          </li>
+          <ThemeSwitch />
+
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
         </NavbarContent>
         <NavbarMenu className=" lg:flex">
           <div className="mx-4 mt-2 flex flex-col gap-2">

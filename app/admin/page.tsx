@@ -41,6 +41,9 @@ export default function AdminPage() {
       const email = rating.User?.email;
       rating.name = name;
       rating.email = email;
+      if (!rating.profUid) {
+        rating.profUid = "Not defined";
+      }
 
       filtered_ratings.push(rating);
     }
