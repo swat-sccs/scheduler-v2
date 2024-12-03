@@ -1,10 +1,10 @@
 # Contributing
 
-Thanks for considering contributing to Scheduler-V2!
+Thanks for considering contributing to The SCCS Course Planner!
 
 ## Opening issues
 
-If you find a bug, please feel free to [open an issue](https://github.com/swat-sccs/scheduler-v2/issues).
+If you find a bug, please feel free to [open an issue](https://github.com/swat-sccs/planner/issues).
 
 If you taking the time to mention a problem, even a seemingly minor one, it is greatly appreciated, and a totally valid contribution to this project. Thank you!
 
@@ -12,10 +12,10 @@ If you taking the time to mention a problem, even a seemingly minor one, it is g
 
 We love pull requests. Here’s a quick guide:
 
-1. [Fork this repository](https://github.com/swat-sccs/scheduler-v2/fork) and then clone it locally:
+1. [Fork this repository](https://github.com/swat-sccs/planner/fork) and then clone it locally:
 
   ```bash
-   git clone --recursive https://github.com/swat-sccs/scheduler-v2.git
+   git clone --recursive https://github.com/swat-sccs/planner.git
   ```
 
 2. Create a topic branch for your changes:
@@ -41,9 +41,9 @@ We love pull requests. Here’s a quick guide:
   git push origin fix-for-that-thing
   ```
 
-7. [Submit a pull request.](https://github.com/swat-sccs/scheduler-v2/pulls)
+7. [Submit a pull request.](https://github.com/swat-sccs/planner/pulls)
 
 
 ## Adding new features
 
-Thinking of adding a new feature? Awesome! [open an issue](https://github.com/swat-sccs/scheduler-v2/issues). and let’s work on it together!
+Thinking of adding a new feature? Awesome! [open an issue](https://github.com/swat-sccs/planner/issues). and let’s work on it together!
