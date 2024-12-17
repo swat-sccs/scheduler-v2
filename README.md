@@ -11,7 +11,7 @@
 ![repo_size]
 ![build_status]
 
-<p>Looking to plan your classes? <a href="https://planner.sccs.swarthmore.edu/">Visit the live site!</a></p>
+<p>Looking to plan your classes? <a href="https://plan.sccs.swarthmore.edu/">Visit the live site!</a></p>
 </div>
 
 ## 🏁 Getting Started
