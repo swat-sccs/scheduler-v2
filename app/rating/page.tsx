@@ -17,16 +17,13 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Selection,
   Skeleton,
   Link,
 } from "@nextui-org/react";
-import useSWR from "swr";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { Faculty, Course } from "@prisma/client";
 
-//import { Search, Person, Class, Star } from "@mui/icons-material";
 import Person from "@mui/icons-material/Person";
 import Class from "@mui/icons-material/Class";
 import Star from "@mui/icons-material/Star";
@@ -34,8 +31,6 @@ import Star from "@mui/icons-material/Star";
 import Rating from "@mui/material/Rating";
 
 import axios from "axios";
-import { factory } from "typescript";
-import { Alert } from "@mui/material";
 import { getProfs, getYears } from "../../app/actions/getProfs";
 
 const labels: { [index: string]: string } = {
@@ -107,36 +102,30 @@ export default function RatingPage() {
 
   const [profs, setProfs] = useState<Faculty[] | null>(null);
 
-  const fetcher = (url: any) => fetch(url).then((r) => r.json());
-  /*
-  const {
-    data: profs,
-    isLoading,
-    error,
-  } = useSWR("/api/getProfs", fetcher, {});
-   */
-  async function loadProfs() {
+  const [classes, setClasses] = useState<Course[]>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const getData = useCallback(async () => {
+    setIsLoading(true);
     const myProfs = await getProfs();
     const myYears = await getYears();
     setProfs(myProfs);
     setYearOptions(myYears);
-  }
-  useEffect(() => {
-    // Log the error to an error reporting service
-    loadProfs();
+    setIsLoading(false);
   }, []);
 
-  const {
-    data: classes,
-    isLoading: classesLoading,
-    error: classesError,
-  } = useSWR(`/api/getProfClasses?prof=${selectedProf}`, fetcher, {
-    refreshInterval: 1000,
-  });
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
-  const onProfSelectionChange = (key: any) => {
+  async function onProfSelectionChange(key: any) {
     setSelectedProf(key);
-  };
+    const res: any = await fetch(`/api/getProfClasses?prof=${selectedProf}`);
+    const fetchedClasses = await res.json();
+    console.log(fetchedClasses);
+    setClasses(fetchedClasses);
+  }
+
   const onClassSelectionChange = (key: any) => {
     setSelectedClass(key);
   };
@@ -278,24 +267,26 @@ export default function RatingPage() {
             selectedKey={selectedClass}
             onSelectionChange={onClassSelectionChange}
           >
-            {classes?.map((thing: any) => (
-              <AutocompleteItem
-                aria-label={thing.Subject + " " + thing.courseNumber}
-                key={thing.id}
-                textValue={thing.subject + " " + thing.courseNumber}
-              >
-                <div className="flex gap-2 items-center">
-                  <div className="flex flex-col">
-                    <span className="text-small">
-                      {thing.subject} {thing.courseNumber}
-                    </span>
-                    <span className="text-tiny text-default-400">
-                      {thing.courseTitle}
-                    </span>
-                  </div>
-                </div>
-              </AutocompleteItem>
-            ))}
+            {classes
+              ? classes.map((thing: any) => (
+                  <AutocompleteItem
+                    aria-label={thing.Subject + " " + thing.courseNumber}
+                    key={thing.id}
+                    textValue={thing.subject + " " + thing.courseNumber}
+                  >
+                    <div className="flex gap-2 items-center">
+                      <div className="flex flex-col">
+                        <span className="text-small">
+                          {thing.subject} {thing.courseNumber}
+                        </span>
+                        <span className="text-tiny text-default-400">
+                          {thing.courseTitle}
+                        </span>
+                      </div>
+                    </div>
+                  </AutocompleteItem>
+                ))
+              : null}
           </Autocomplete>
 
           <h2>Select Semester</h2>

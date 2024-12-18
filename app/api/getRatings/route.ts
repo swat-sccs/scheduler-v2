@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "../../../lib/prisma";
 
 export async function GET(request: NextRequest) {
-  const profs = await prisma.rating.findMany({
+  const ratings = await prisma.rating.findMany({
     include: {
       User: {
         select: {
@@ -14,5 +14,5 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  return NextResponse.json(profs, { status: 200 });
+  return NextResponse.json(ratings, { status: 200 });
 }

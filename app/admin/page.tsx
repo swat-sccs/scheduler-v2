@@ -1,7 +1,6 @@
 "use client";
 
-import useSWR from "swr";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
@@ -17,25 +16,31 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
+  Skeleton,
 } from "@nextui-org/react";
+import { useCallback } from "react";
 
 import { MoreVert } from "@mui/icons-material";
 import axios from "axios";
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
-  const fetcher = (url: any) => fetch(url).then((r) => r.json());
+  const [filtered_ratings, setRatings] = React.useState<any>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const {
-    data: ratings,
-    isLoading,
-    error,
-  } = useSWR("/api/getRatings", fetcher, { refreshInterval: 5000 });
-  let columns = [];
-  let filtered_ratings: any = [];
+  //let columns: any[] | undefined = [];
+  const [columns, setColumns] = useState<any>([]);
 
-  if (!isLoading) {
-    console.log(ratings);
+  const getData = useCallback(async () => {
+    setIsLoading(true);
+    const data = await fetch("/api/getRatings");
+    const ratings = await data.json();
+    const the_columns = [];
+    setIsLoading(false);
+
+    const the_ratings = [];
     for (let rating of ratings) {
       const name = rating.User?.name;
       const email = rating.User?.email;
@@ -45,18 +50,24 @@ export default function AdminPage() {
         rating.profUid = "Not defined";
       }
 
-      filtered_ratings.push(rating);
+      the_ratings.push(rating);
     }
 
-    if (filtered_ratings.length > 0) {
-      for (let key in filtered_ratings[0]) {
+    if (the_ratings.length > 0) {
+      for (let key in the_ratings[0]) {
         if (key != "User") {
-          columns.push({ key: key, label: key });
+          the_columns?.push({ key: key, label: key });
         }
       }
     }
-    columns.push({ key: "actions", value: "actions" });
-  }
+    the_columns?.push({ key: "actions", value: "actions" });
+    setRatings(the_ratings);
+    setColumns(the_columns);
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   async function deleteRating(ratingID: any) {
     console.log("Rating Gone, finito, finished");
@@ -87,7 +98,10 @@ export default function AdminPage() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={() => deleteRating(user.id)}>
+                <DropdownItem
+                  key={columnKey}
+                  onPress={() => deleteRating(user.id)}
+                >
                   Delete
                 </DropdownItem>
               </DropdownMenu>
@@ -99,32 +113,37 @@ export default function AdminPage() {
     }
   }, []);
 
+  useEffect(() => {
+    // Log the error to an error reporting service
+    getData();
+  }, [getData]);
+
   if (status === "authenticated") {
     if (session.user?.role === "admin") {
-      return (
-        <div>
-          <Table
-            isHeaderSticky
-            className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent h-[80vh] p-4"
-            fullWidth
-            aria-label="Rating table with dynamic content(ratings)"
-          >
-            <TableHeader columns={columns}>
-              {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={filtered_ratings}>
-              {(item: any) => (
-                <TableRow key={item.id}>
-                  {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
-                  )}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+      return isLoading ? (
+        <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start mt-10" />
+      ) : (
+        <Table
+          isHeaderSticky
+          className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent h-[80vh] p-4"
+          fullWidth
+          aria-label="Rating table with dynamic content(ratings)"
+        >
+          <TableHeader columns={columns}>
+            {(column: any) => (
+              <TableColumn key={column.key}>{column.label}</TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={filtered_ratings}>
+            {(item: any) => (
+              <TableRow key={item.id}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       );
     }
   }

@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import useSWR from "swr";
+
 import { useCookies } from "next-client-cookies";
 
 import { setPlanCookie } from "../app/actions/actions";
