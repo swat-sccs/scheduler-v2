@@ -85,7 +85,6 @@ export function FullCourseList({
   }, [inView, loadMoreCourses]);
 
   useEffect(() => {
-    console.log("hello world");
     setIsDone(false);
     loadMoreCourses();
     loadCourseIds();

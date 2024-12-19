@@ -19,6 +19,7 @@ import {
 } from "@nextui-org/dropdown";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
+
 import { usePathname } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { button as buttonStyles } from "@nextui-org/theme";
@@ -151,7 +152,7 @@ export const Navbar = (props: any) => {
             ) : (
               <Button
                 variant="bordered"
-                onClick={() => signIn("keycloak", { callbackUrl: "/" })}
+                onPress={() => signIn("keycloak", { callbackUrl: "/" })}
                 className="border-primary"
               >
                 <InputIcon className="fill-white text-primary" /> Log In
@@ -175,7 +176,6 @@ export const Navbar = (props: any) => {
               <NavbarMenuItem key={`${item}-${index}`}>
                 <Link
                   href={item.href}
-                  size="lg"
                   onClick={() => {
                     cookies.set("pagePref", item.href);
                   }}

@@ -4,13 +4,15 @@ import { Input } from "@nextui-org/input";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Select, SelectItem } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { Chip } from "@mui/material";
+import { useCookies } from "next-client-cookies";
 
 export default function Search(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const cookies = useCookies();
   const [selectedTerm, setSelectedTerm]: any = useState([]);
   const [selectedDOTW, setSelectedDOTW]: any = useState([]);
   const [selectedCodes, setSelectedCodes]: any = useState([]);
@@ -47,6 +49,7 @@ export default function Search(props: any) {
     if (term) {
       decodeURIComponent;
       params.set("query", filtered_term);
+      cookies.set("searchTermCookie", filtered_term);
     } else {
       params.delete("query");
     }
@@ -58,6 +61,7 @@ export default function Search(props: any) {
 
     if (e.target.value) {
       params.set("term", e.target.value);
+      cookies.set("termCookie", e.target.value);
     } else {
       params.delete("term");
     }
@@ -78,6 +82,28 @@ export default function Search(props: any) {
     }
     replace(`${pathname}?${params.toString()}`);
   };
+  const firstLoad = useCallback(async () => {
+    let termCookie = cookies.get("termCookie");
+    let searchTermCookie = cookies.get("searchTermCookie");
+    if (!termCookie) {
+      cookies.set("termCookie", "S2025");
+      params.set("term", "S2025");
+      replace(`${pathname}?${params.toString()}`);
+      setSelectedTerm(searchParams.get("term")?.toString().split(","));
+    } else {
+      params.set("term", termCookie);
+      replace(`${pathname}?${params.toString()}`);
+      setSelectedTerm(searchParams.get("term")?.toString().split(","));
+    }
+
+    if (searchTermCookie) {
+      params.set("query", searchTermCookie);
+      setSearch(searchTermCookie);
+      replace(`${pathname}?${params.toString()}`);
+    }
+
+    //searchTermCookie;
+  }, []);
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -89,10 +115,8 @@ export default function Search(props: any) {
 
   useEffect(() => {
     // Update the document title using the browser API
-    params.set("term", "S2025");
-    replace(`${pathname}?${params.toString()}`);
-    setSelectedTerm(searchParams.get("term")?.toString().split(","));
-  }, [searchParams, params, pathname, replace]);
+    firstLoad();
+  }, [firstLoad]);
 
   const handleDOTWChange = (e: any) => {
     setSelectedDOTW(...[e]);
@@ -141,13 +165,14 @@ export default function Search(props: any) {
     <div className="grid grid-cols-9 gap-3 w-[97%]">
       <Input
         isClearable
-        className="col-span-9 lg:col-span-3"
+        size={"lg"}
+        type="search"
+        className="col-span-9 lg:col-span-3 text-[16px]"
         classNames={{
           inputWrapper: ["border-primary", "border-[0.5px]"],
         }}
         defaultValue={searchParams.get("query")?.toString()}
-        label="Search"
-        labelPlacement="inside"
+        placeholder="Search"
         value={search}
         variant="bordered"
         onChange={(e) => {

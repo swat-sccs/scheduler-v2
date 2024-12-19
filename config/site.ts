@@ -13,7 +13,7 @@ export const siteConfig = {
       href: "/calendar",
     },
     {
-      label: "Ratings",
+      label: "Leave a Rating",
       href: "/rating",
     },
   ],
