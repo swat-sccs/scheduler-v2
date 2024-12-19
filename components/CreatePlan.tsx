@@ -1,12 +1,5 @@
 "use client";
-import {
-  Card,
-  Divider,
-  Input,
-  Button,
-  Skeleton,
-  CardHeader,
-} from "@nextui-org/react";
+import { Card, Divider, Input, Skeleton, CardHeader } from "@nextui-org/react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,6 +21,13 @@ import { generateColorFromName } from "../components/primitives";
 import { useDebouncedCallback } from "use-debounce";
 import { setPlanName } from "../app/actions/setPlanName";
 import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button,
+} from "@nextui-org/react";
+
+import {
   getCourseIds,
   getCoursePlans,
   getPlanCourses1,
@@ -45,23 +45,33 @@ export default function CreatePlan(props: any) {
   const [alert, setAlert]: any = useState(undefined);
 
   const [editable, setEditable]: any = useState("");
+  const [deleteIsOpen, setDeleteIsOpen] = useState(false);
   const [edit, setEdit]: any = useState(false);
   const [courses, setCourses] = useState<Course[]>();
   const [coursePlans, setCoursePlans] = useState<CoursePlan[]>(
     props.coursePlans
   );
+  const [planItems, setPlanItems] = useState([]);
   const [selectedCoursePlan, setSelectedCoursePlan]: any = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const fetcher = (url: any) => fetch(url).then((r) => r.json());
 
-  async function fetchNewData() {
+  const fetchNewData = async (b: any) => {
     const coursePlans: CoursePlan[] = await getCoursePlans();
     setCoursePlans(coursePlans);
-  }
+    genreatePlanList(coursePlans);
+
+    if (b && coursePlans.length > 0) {
+      console.log("deleted generating new list");
+      setSelectedCoursePlan([coursePlans[0].id]);
+      setPlanCookie(String(coursePlans[0].id));
+      genreatePlanList(coursePlans);
+    }
+  };
 
   const handleNameChange = useDebouncedCallback((newName: any, id: string) => {
     setPlanName(newName, id);
-    fetchNewData();
+    fetchNewData(false);
   }, 50);
 
   async function createPlan() {
@@ -75,7 +85,7 @@ export default function CreatePlan(props: any) {
           setCoursePlanName("");
           setSelectedCoursePlan([response.data.id]);
           setPlanCookie(response.data.id);
-          fetchNewData();
+          fetchNewData(false);
           //console.log(response);
         })
         .catch(function (error) {
@@ -110,6 +120,8 @@ export default function CreatePlan(props: any) {
         })
         .then(function (response) {
           setSelectedCoursePlan([]);
+          setCourses([]);
+          fetchNewData(true);
           //setPlanCookie("-55");
           //console.log(response);
         })
@@ -128,6 +140,7 @@ export default function CreatePlan(props: any) {
 
   useEffect(() => {
     updateLocalPlan();
+    genreatePlanList(props.coursePlans);
   }, [props.initialPlan, props.coursePlans, cookies.get("selectedCourses")]);
 
   useEffect(() => {
@@ -171,7 +184,7 @@ export default function CreatePlan(props: any) {
               isIconOnly
               startContent={<HighlightOffIcon />}
               size={"sm"}
-              onClick={() =>
+              onPress={() =>
                 removeCourseFromPlan(selectedCoursePlan[0], course)
               }
             />
@@ -197,6 +210,15 @@ export default function CreatePlan(props: any) {
       behavior: "smooth",
     });
     setIsScrolled(false);
+  };
+
+  const genreatePlanList = (plans: any) => {
+    let output: any = [];
+    output.push();
+
+    plans?.map((plan: any) => output.push({ key: plan.id, label: plan.name }));
+
+    setPlanItems(output);
   };
 
   return (
@@ -260,10 +282,15 @@ export default function CreatePlan(props: any) {
                   selectionMode="single"
                   size="lg"
                   onChange={handleSelectionChange}
+                  items={planItems}
                 >
-                  {coursePlans?.map((plan: any) => (
+                  {
+                    /*   {coursePlans?.map((plan: any) => (
                     <SelectItem key={plan.id}>{plan.name}</SelectItem>
-                  ))}
+                  ))}*/ (plan: any) => (
+                      <SelectItem key={plan.key}>{plan.label}</SelectItem>
+                    )
+                  }
                 </Select>
               ) : null}
               {edit ? (
@@ -279,13 +306,35 @@ export default function CreatePlan(props: any) {
                 />
               ) : null}
 
-              <Button
-                aria-label="Delete the current plan"
-                isIconOnly
-                size="md"
-                startContent={<DeleteIcon />}
-                onClick={deletePlan}
-              />
+              <Popover
+                placement="bottom"
+                showArrow={true}
+                color={"foreground"}
+                isOpen={deleteIsOpen}
+                onOpenChange={(open) => setDeleteIsOpen(open)}
+              >
+                <PopoverTrigger>
+                  <Button
+                    aria-label="Delete the current plan"
+                    isIconOnly
+                    size="md"
+                    startContent={<DeleteIcon />}
+                  />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="px-1 py-2">
+                    <div
+                      role="button"
+                      onClick={() => {
+                        deletePlan(), setDeleteIsOpen(false);
+                      }}
+                      className="text-small font-bold"
+                    >
+                      Delete Plan?
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
               {edit ? (
                 <Button
                   aria-label="Save new plan name"

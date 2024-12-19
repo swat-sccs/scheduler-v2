@@ -29,6 +29,7 @@ import Class from "@mui/icons-material/Class";
 import Star from "@mui/icons-material/Star";
 
 import Rating from "@mui/material/Rating";
+import { Alert } from "@nextui-org/alert";
 
 import axios from "axios";
 import { getProfs, getYears } from "../../app/actions/getProfs";
@@ -120,7 +121,7 @@ export default function RatingPage() {
 
   async function onProfSelectionChange(key: any) {
     setSelectedProf(key);
-    const res: any = await fetch(`/api/getProfClasses?prof=${selectedProf}`);
+    const res: any = await fetch(`/api/getProfClasses?prof=${key}`);
     const fetchedClasses = await res.json();
     console.log(fetchedClasses);
     setClasses(fetchedClasses);
@@ -193,21 +194,21 @@ export default function RatingPage() {
   return (
     <>
       <div className="overflow-auto h-[83vh] scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent">
-        {submitSuccess ? (
-          <Card className="absolute top-30 right-20 border-green-700 bg-transparent border-2 w-1/12 h-8 justify-center ">
-            Success!
-          </Card>
-        ) : (
-          <></>
-        )}
-
-        {submitError ? (
-          <Card className="absolute top-30 right-20 border-red-700 bg-transparent border-2 w-1/12 h-8 justify-center ">
-            Error!
-          </Card>
-        ) : (
-          <></>
-        )}
+        <div className="absolute top-30 right-20 bg-transparent w-2/12 z-50 ">
+          <Alert
+            isVisible={submitSuccess}
+            color={"success"}
+            title={`Success!`}
+            description={"Rating submitted"}
+          />
+          <Alert
+            isVisible={submitError}
+            className="absolute top-30 right-20 bg-transparent border-2 w-1/12 "
+            color={"danger"}
+            title={`Error!`}
+            description={"Error submitted rating. Please try again."}
+          />{" "}
+        </div>
 
         <Card className="mx-10 justify-center items-center sm:w-3/6 flex ml-auto mr-auto w-5/6">
           <CardHeader className="">
@@ -232,7 +233,7 @@ export default function RatingPage() {
               {profs ? (
                 profs.map((prof: Faculty) => (
                   <AutocompleteItem
-                    onClick={() => setSelectedProfessor(prof)}
+                    onPress={() => setSelectedProfessor(prof)}
                     key={prof.id}
                     textValue={prof.displayName}
                   >
@@ -475,8 +476,9 @@ export default function RatingPage() {
                     </Button>
                     <Button
                       color="primary"
-                      onPress={onClose}
-                      onClick={submitReview}
+                      onPress={() => {
+                        onClose(), submitReview();
+                      }}
                     >
                       Submit
                     </Button>

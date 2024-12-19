@@ -82,6 +82,7 @@ export default function AdminPage() {
       .catch(function (error) {
         console.log(error);
       });
+    getData();
   }
 
   const renderCell = React.useCallback((user: any, columnKey: React.Key) => {
@@ -108,6 +109,8 @@ export default function AdminPage() {
             </Dropdown>
           </div>
         );
+      case "review":
+        return <div className="max-h-36 overflow-y-scroll ">{cellValue}</div>;
       default:
         return cellValue;
     }
@@ -124,6 +127,7 @@ export default function AdminPage() {
         <Skeleton className="rounded-md w-[98%] h-48 align-top justify-start mt-10" />
       ) : (
         <Table
+          isStriped
           isHeaderSticky
           className="overflow-scroll scrollbar-thin scrollbar-thumb-accent-500 scrollbar-track-transparent h-[80vh] p-4"
           fullWidth
@@ -134,7 +138,10 @@ export default function AdminPage() {
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
-          <TableBody items={filtered_ratings}>
+          <TableBody
+            items={filtered_ratings}
+            emptyContent={"No rows to display."}
+          >
             {(item: any) => (
               <TableRow key={item.id}>
                 {(columnKey) => (
