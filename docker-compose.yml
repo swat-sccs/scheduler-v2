@@ -17,7 +17,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik"
         - "traefik.http.routers.planner.entrypoints=https"
-        - "traefik.http.routers.planner.rule=Host(`plan.sccs.swarthmore.edu`) && !PathPrefix(`/pgadmin`)"
+        - "traefik.http.routers.planner.rule=Host(`plan.sccs.swarthmore.edu`)"
         - "traefik.http.routers.planner.tls=true"
         - "traefik.http.routers.planner.tls.certresolver=letsEncrypt"
         - "traefik.http.services.planner.loadbalancer.server.port=3000"
@@ -44,6 +44,8 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      SCRIPT_NAME: /pgadmin
     deploy:
       labels:
         - "traefik.enable=true"
