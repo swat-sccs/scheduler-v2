@@ -27,11 +27,6 @@ export default function Search(props: any) {
     [searchParams]
   );
 
-  const replaceText = (text: any) => {
-    setSearch(text?.replace(/\w+:/, <Chip>{text}</Chip>));
-    console.log(search);
-  };
-
   const handleSearch = useDebouncedCallback((term: string) => {
     //replaceText(term);
     //setSearch(term);
@@ -94,12 +89,6 @@ export default function Search(props: any) {
       params.set("term", termCookie);
       replace(`${pathname}?${params.toString()}`);
       setSelectedTerm(searchParams.get("term")?.toString().split(","));
-    }
-
-    if (searchTermCookie) {
-      params.set("query", searchTermCookie);
-      setSearch(searchTermCookie);
-      replace(`${pathname}?${params.toString()}`);
     }
 
     //searchTermCookie;
@@ -166,7 +155,6 @@ export default function Search(props: any) {
       <Input
         isClearable
         size={"lg"}
-        type="search"
         className="col-span-9 lg:col-span-3 text-[16px]"
         classNames={{
           inputWrapper: ["border-primary", "border-[0.5px]"],
