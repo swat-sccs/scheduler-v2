@@ -17,7 +17,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik"
         - "traefik.http.routers.planner.entrypoints=https"
-        - "traefik.http.routers.planner.rule=Host(`plan.sccs.swarthmore.edu`)"
+        - "traefik.http.routers.planner.rule=Host(`plan.sccs.swarthmore.edu`) && !PathPrefix(`/pgadmin`)"
         - "traefik.http.routers.planner.tls=true"
         - "traefik.http.routers.planner.tls.certresolver=letsEncrypt"
         - "traefik.http.services.planner.loadbalancer.server.port=3000"
@@ -37,6 +37,28 @@ services:
       - 5432:5432
     networks:
       - internal
+
+  planner-pgadmin:
+    image: dpage/pgadmin4
+    container_name: planner-pgadmin
+    restart: always
+    env_file:
+      - .env
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.routers.planner_pgadmin.entrypoints=https"
+        - "traefik.http.routers.planner_pgadmin.rule=Host(`plan.sccs.swarthmore.edu`) && PathPrefix(`/pgadmin`)"
+        - "traefik.http.routers.planner_pgadmin.tls=true"
+        - "traefik.http.routers.planner_pgadmin.tls.certresolver=letsEncrypt"
+        - "traefik.http.services.planner_pgadmin.loadbalancer.server.port=80"
+    depends_on:
+      - planner-db
+    networks:
+      - internal
+    volumes:
+      - planner-pgadmindata:/var/lib/pgadmin
 
   planner-cron:
     image: registry.sccs.swarthmore.edu/sccs/planner-cron/planner-cron:latest
@@ -66,3 +88,9 @@ volumes:
       type: nfs
       o: "nfsvers=4,addr=130.58.218.26,rw,nolock,soft"
       device: ":/volumes/scheduler-dbdata"
+  planner-pgadmindata:
+    name: planner-pgadmindata
+    driver_opts:
+      type: nfs
+      o: "nfsvers=4,addr=130.58.218.26,rw,nolock,soft"
+      device: ":/volumes/planner-pgadmindata"
