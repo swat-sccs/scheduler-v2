@@ -61,6 +61,7 @@ services:
       - planner-db
     networks:
       - internal
+      - traefik
     volumes:
       - planner-pgadmindata:/var/lib/pgadmin
 
